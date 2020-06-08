@@ -1,0 +1,22 @@
+{
+    "Items": [
+        {
+            "Key": "Narrator_Level_1_1",
+            "Value": {
+                "english": "It was a regular day for Alex, he turned on his computer and entered his password. His password was simple; He never forgot it."
+            }
+        },
+        {
+            "Key": "Narrator_Level_1_2",
+            "Value": {
+                "english": "Alex was feeling slow today but he always remembered his password was simple."
+            }
+        },
+        {
+           	"Key": "Narrator_Level_1_3",
+            "Value": {
+                "english": "Alex finally remembered his password and used it to login."
+            }
+        }
+    ]
+}

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class LoadingUI : MonoBehaviour
 {
-    public CanvasGroup loginUI;
+    public LoginUI loginUI;
     public CanvasGroup desktopUI;
 
     void Start()
     {
         Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
-            loginUI.ToggleVisibility();
+            loginUI.Display();
             GetComponent<CanvasGroup>().ToggleVisibility();
         } );
     }

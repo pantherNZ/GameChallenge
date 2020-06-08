@@ -574,7 +574,7 @@ RectTransform:
   - {fileID: 201032512}
   - {fileID: 1357519913}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -766,7 +766,7 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &321835315
 Rigidbody2D:
@@ -1166,25 +1166,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 58
+    m_FontSize: 32
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 82
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'It was a regular day for Alex, he turned on his computer and entered his
+    password. His password was simple; He never forgot it. '
 --- !u!222 &517596453
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1288,7 +1289,7 @@ RectTransform:
   - {fileID: 700247553}
   - {fileID: 1004892579}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1319,7 +1320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ad8e94c6f43b54e96b38eb424793a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loginUI: {fileID: 1897650525}
+  loginUI: {fileID: 1897650524}
   desktopUI: {fileID: 203328298}
 --- !u!1 &533462466
 GameObject:
@@ -2435,6 +2436,7 @@ GameObject:
   - component: {fileID: 1009632334}
   - component: {fileID: 1009632333}
   - component: {fileID: 1009632337}
+  - component: {fileID: 1009632338}
   m_Layer: 5
   m_Name: SubtitlesPanel
   m_TagString: Untagged
@@ -2451,8 +2453,8 @@ CanvasGroup:
   m_GameObject: {fileID: 1009632332}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1009632334
 MonoBehaviour:
@@ -2461,7 +2463,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009632332}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -2503,12 +2505,12 @@ RectTransform:
   m_Children:
   - {fileID: 517596451}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.259, y: -3.847}
-  m_SizeDelta: {x: 898.841, y: 162.556}
+  m_AnchoredPosition: {x: 0.259, y: -4}
+  m_SizeDelta: {x: 898.841, y: 135.892}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1009632337
 Canvas:
@@ -2531,6 +2533,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1009632338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009632332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4b3445a4cbead4c8d39700b7daa08f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 517596452}
+  appearInstantly: 1
+  updateIntervalSec: 0.05
 --- !u!1 &1025685069
 GameObject:
   m_ObjectHideFlags: 0
@@ -2603,7 +2620,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1070019962
 GameObject:
@@ -3214,7 +3231,7 @@ Transform:
   - {fileID: 2067623556}
   - {fileID: 333125283}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1557870344
 GameObject:
@@ -3761,6 +3778,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649992832}
   m_CullTransparentMesh: 0
+--- !u!1 &1695569588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1695569590}
+  - component: {fileID: 1695569589}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1695569589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695569588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb672f80e56ff244bb8c4c721c649e88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stringsJson: {fileID: 4900000, guid: 973078cac03d47146b44ddbd02f6a86d, type: 3}
+  language: 0
+--- !u!4 &1695569590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695569588}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.0015202, y: 0.5514112, z: -188.39453}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1795195861
 GameObject:
   m_ObjectHideFlags: 0
@@ -4094,7 +4156,7 @@ RectTransform:
   - {fileID: 1841373565}
   - {fileID: 1127619245}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4237,7 +4299,7 @@ Transform:
   m_LocalScale: {x: 16.425, y: 4.6, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2002760141
 GameObject:
