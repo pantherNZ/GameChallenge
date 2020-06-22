@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class LoginUI : MonoBehaviour
 {
-    public Button loginButton = null;
-    public InputField passworldInput = null;
-    public CanvasGroup loginDisplay = null;
-    public CanvasGroup incorrectPasswordDisplay = null;
-    public CanvasGroup desktopUI = null;
-    public Button incorrectPasswordButton = null;
+    [SerializeField] Button loginButton = null;
+    [SerializeField] InputField passworldInput = null;
+    [SerializeField] CanvasGroup loginDisplay = null;
+    [SerializeField] CanvasGroup incorrectPasswordDisplay = null;
+    [SerializeField] CanvasGroup desktopUI = null;
+    [SerializeField] Button incorrectPasswordButton = null;
     readonly string password = "simple";
 
     private void Start()
@@ -51,7 +51,7 @@ public class LoginUI : MonoBehaviour
 
     public void Display()
     {
-        GetComponent<CanvasGroup>().ToggleVisibility();
+        GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( 1.0f, () => SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_1" ) ) );
         Utility.FunctionTimer.CreateTimer( 20.0f, () => SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_2" ) ), "2nd_prompt" );
         Utility.FunctionTimer.CreateTimer( 35.0f, () =>

@@ -3,7 +3,7 @@
         {
             "Key": "Narrator_Level_1_1",
             "Value": {
-                "english": "It was a regular day for Alex, he turned on his computer and entered his password. His password was simple; He never forgot it."
+                "english": "It was a regular day for Alex, he turned on his computer and entered his password. His password was simple, he never forgot it."
             }
         },
         {
@@ -15,7 +15,7 @@
         {
            	"Key": "Narrator_Level_1_3",
             "Value": {
-                "english": "Alex finally remembered his password and used it to login."
+                "english": "Alex recalled his password and used it to login."
             }
         }
     ]

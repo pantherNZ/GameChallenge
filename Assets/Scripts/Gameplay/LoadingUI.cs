@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class LoadingUI : MonoBehaviour
 {
-    public LoginUI loginUI;
-    public CanvasGroup desktopUI;
+    [SerializeField] LoginUI loginUI = null;
+    [SerializeField] DesktopUIManager desktopUI = null;
+    [SerializeField] bool startEnabled = true;
 
     void Start()
     {
+        if( !startEnabled )
+            return;
+
+        GetComponent<CanvasGroup>().SetVisibility( true );
+        loginUI.GetComponent<CanvasGroup>().SetVisibility( false );
+        desktopUI.GetComponent<CanvasGroup>().SetVisibility( false );
+
         Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
             loginUI.Display();
