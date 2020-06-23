@@ -7,20 +7,30 @@ using System.Linq;
 
 public class DesktopUIManager : MonoBehaviour
 {
-    [SerializeField] GameObject windowCamera = null;
-    public GameObject WindowCamera { get => windowCamera; private set { } }
+    [SerializeField] Camera windowCamera = null;
+    public Camera WindowCamera { get => windowCamera; private set { } }
+    public Camera MainCamera { get; private set; }
+    public Vector3 windowCameraStartPosition { get; private set; }
 
     [SerializeField] GameObject windowBase = null;
     [SerializeField] CanvasGroup startMenu = null;
     [SerializeField] Button startMenuButton = null;
     [SerializeField] Text timeDateText = null;
     System.DateTime currentTime;
-    GameObject currentPointerTarget;
 
     // Selection box
     [SerializeField] GameObject selectionBoxPrefab = null;
     GameObject selectionBox;
     Vector3? selectionStartPos;
+
+    List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
+
+    private void Start()
+    {
+        startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
+        windowCameraStartPosition = WindowCamera.transform.position.SetZ( 0.0f );
+        MainCamera = Camera.main;
+    }
 
     public void Display()
     {
@@ -33,17 +43,26 @@ public class DesktopUIManager : MonoBehaviour
         Application.Quit();
     }
 
-    public GameObject CreateWindow()
+    public GameObject CreateWindow( string title )
     {
-        return Instantiate( windowBase, transform );
+        var window = Instantiate( windowBase, transform ).GetComponent<Window>();
+        window.transform.position = transform.position;
+        window.SetTitle( title );
+        windows.Add( new Pair<Window, string>( window, title ) );
+        return window.gameObject;
     }
 
-    void Start()
+    public bool DestroyWindow( string title )
     {
-        startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
+        return windows.RemoveBySwap( ( pair ) =>
+        {
+            if( pair.Second == title )
+                pair.First.DestroyObject();
+            return pair.Second == title;
+        } );
     }
 
-    void Update()
+    private void Update()
     {
         if( Input.GetMouseButtonDown( 0 ) && selectionStartPos == null )
         {
@@ -94,6 +113,17 @@ public class DesktopUIManager : MonoBehaviour
         {
             currentTime = newTime;
             timeDateText.text = newTime.ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );
+        }
+
+        var window = windows.IsEmpty() ? null : windows.Front().First;
+
+        if( window != null )
+        {
+            Vector3[] corners = new Vector3[4];
+            window.GetCameraViewWorldCorners( corners );
+            var windowViewPosWorld = ( corners[3] + corners[0] ) / 2.0f;
+            var offset = windowViewPosWorld - transform.position;
+            windowCamera.transform.position = windowCameraStartPosition + offset;
         }
     }
 }

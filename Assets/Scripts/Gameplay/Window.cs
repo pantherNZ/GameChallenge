@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class Window : MonoBehaviour
@@ -7,12 +8,19 @@ public class Window : MonoBehaviour
     Vector3 offset;
     new Camera camera;
     new RectTransform transform;
+    [SerializeField] GameObject cameraView = null;
+    [SerializeField] Text titleText = null;
     [SerializeField] GameObject child = null;
 
     void Start()
     {
         camera = Camera.main;
         transform = base.transform as RectTransform;
+    }
+
+    public void SetTitle( string title )
+    {
+        titleText.text = title;
     }
 
     public void StartDrag( EventTrigger button )
@@ -44,5 +52,10 @@ public class Window : MonoBehaviour
             if( child != null )
                 child.transform.position = targetPos;
         }
+    }
+
+    public void GetCameraViewWorldCorners( Vector3[] corners )
+    {
+        ( cameraView.transform as RectTransform ).GetWorldCorners( corners );
     }
 }

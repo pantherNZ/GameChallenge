@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\SubtitlesManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Window.cs" />
+    <Compile Include="Assets\Scripts\Utility\EventDispatcher.cs" />
     <Compile Include="Assets\Scripts\Utility\Extensions.cs" />
     <Compile Include="Assets\Scripts\Utility\FunctionTimer.cs" />
     <Compile Include="Assets\Scripts\Utility\SecureHash.cs" />

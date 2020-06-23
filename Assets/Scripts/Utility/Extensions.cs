@@ -37,10 +37,10 @@ public static partial class Extensions
         list.RemoveAt( list.Count - 1 );
     }
 
-    public static void RemoveBySwap<T>( this List<T> list, Func< T, bool > predicate )
+    public static bool RemoveBySwap<T>( this List<T> list, Func< T, bool > predicate )
     {
         if( list.IsEmpty() )
-            return;
+            return false;
 
         var end = list.Count;
 
@@ -56,7 +56,9 @@ public static partial class Extensions
             }
         }
 
+        bool removed = end < list.Count;
         list.Resize( end );
+        return removed;
     }
 
     public static bool IsVisible( this CanvasGroup group )
