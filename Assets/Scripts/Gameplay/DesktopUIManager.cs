@@ -32,9 +32,10 @@ public class DesktopUIManager : MonoBehaviour
         MainCamera = Camera.main;
     }
 
-    public void Display()
+    public void StartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
+        Utility.FunctionTimer.CreateTimer( 2.0f, () => { SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelect" ) ); } );
     }
 
     public void CloseGame()

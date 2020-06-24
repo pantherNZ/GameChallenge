@@ -12,7 +12,6 @@ public class Level1_BouncingBall : MonoBehaviour
     [SerializeField] GameObject platform = null;
     [SerializeField] GameObject goal = null;
     [SerializeField] float goalOffset = 10.0f;
-    [SerializeField] bool test = false;
 
     List<GameObject> objects = new List<GameObject>();
     DesktopUIManager desktop;
@@ -21,6 +20,9 @@ public class Level1_BouncingBall : MonoBehaviour
 
     public void StartLevel()
     {
+        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_1" ) );
+        Utility.FunctionTimer.CreateTimer( 10.0f, () => { SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_2" ) ); }, "Narrator_Level_2_2" );
+
         desktop = GetComponent<DesktopUIManager>();
         desktop.CreateWindow( "Bouncy Balls" );
 
@@ -73,12 +75,6 @@ public class Level1_BouncingBall : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        if( test )
-            StartLevel();
-    }
-
     private void CheckComplete()
     {
         if( overlaps >= 2 )
@@ -87,6 +83,10 @@ public class Level1_BouncingBall : MonoBehaviour
                 obj.Destroy();
             objects.Clear();
             Utility.FunctionTimer.StopTimer( "CreateBall" );
+            Utility.FunctionTimer.StopTimer( "Narrator_Level_2_2" );
+
+            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
+
             desktop.DestroyWindow( "Bouncy Balls" );
         }
     }

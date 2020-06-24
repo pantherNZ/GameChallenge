@@ -6,20 +6,29 @@ public class LoadingUI : MonoBehaviour
 {
     [SerializeField] LoginUI loginUI = null;
     [SerializeField] DesktopUIManager desktopUI = null;
-    [SerializeField] bool startEnabled = true;
+    [SerializeField] int forceStartLevelId = 0;
 
     void Start()
     {
-        if( !startEnabled )
-            return;
-
         GetComponent<CanvasGroup>().SetVisibility( true );
         loginUI.GetComponent<CanvasGroup>().SetVisibility( false );
         desktopUI.GetComponent<CanvasGroup>().SetVisibility( false );
 
+        if( forceStartLevelId != 0 )
+        {
+            GetComponent<CanvasGroup>().ToggleVisibility();
+            if( forceStartLevelId == -1 )
+                Utility.FunctionTimer.CreateTimer( 0.1f, desktopUI.StartLevel );
+            else if( forceStartLevelId == 1 )
+                Utility.FunctionTimer.CreateTimer( 0.1f, desktopUI.GetComponent<Level1_BouncingBall>().StartLevel );
+            else
+                Debug.LogError( "LoadingUI: forceStartLevelId invalid value: " + forceStartLevelId.ToString() );
+            return;
+        }
+
         Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
-            loginUI.Display();
+            loginUI.StartLevel();
             GetComponent<CanvasGroup>().ToggleVisibility();
         } );
     }

@@ -13,9 +13,39 @@
             }
         },
         {
-           	"Key": "Narrator_Level_1_3",
+           	"Key": "Narrator_Level_1_Complete",
             "Value": {
                 "english": "Alex recalled his password and used it to login."
+            }
+        },
+        {
+           	"Key": "Narrator_Level_2_DifficultySelect",
+            "Value": {
+                "english": "To begin his day, Alex liked to play some <select=easy|hard> games."
+            }
+        },
+        {
+           	"Key": "Narrator_Level_2_DifficultySelectHard",
+            "Value": {
+                "english": "Ummm... He liked to play some difficult games."
+            }
+        },
+        {
+           	"Key": "Narrator_Level_2_1",
+            "Value": {
+                "english": "Alex enjoyed playing different games; Sometimes ones that featured unique mechanics or problems."
+            }
+        },
+        {
+           	"Key": "Narrator_Level_2_2",
+            "Value": {
+                "english": "Alex knew that shifting his perspective would allow him to get a better picture of the problem at hand."
+            }
+        },
+        {
+           	"Key": "Narrator_Level_2_Complete",
+            "Value": {
+                "english": "His perspective was clear and his goal was complete. On to the next challenge he thought!"
             }
         }
     ]

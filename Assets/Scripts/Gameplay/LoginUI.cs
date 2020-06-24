@@ -49,7 +49,7 @@ public class LoginUI : MonoBehaviour
 
     int index;
 
-    public void Display()
+    public void StartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( 1.0f, () => SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_1" ) ) );

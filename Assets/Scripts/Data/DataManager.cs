@@ -166,7 +166,7 @@ public class DataManager : MonoBehaviour
     {
         if( !strings.ContainsKey( key ) )
         {
-            Debug.LogWarning( "Game string for stat not found, stat: " + key );
+            Debug.LogError( "Game string for stat not found, stat: " + key );
             return "";
         }
 
@@ -177,7 +177,7 @@ public class DataManager : MonoBehaviour
     {
         if( !strings.ContainsKey( key ) )
         {
-            Debug.LogWarning( "Game string for stat not found, stat: " + key );
+            Debug.LogError( "Game string for stat not found, stat: " + key );
             return "";
         }
 
