@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,17 @@ public class SubtitlesManager : MonoBehaviour
     public bool appearInstantly;
     public float updateIntervalSec = 0.05f;
     public int selectionMargin = 4;
+
+    public class Selection
+    {
+        public int index;
+        public string first, second;
+        public GameObject obj;
+    }
+
     List<Selection> selections = new List<Selection>();
+
+    [HideInInspector] public Action<string> onSelectionEvent;
 
     CanvasGroup canvasGroup;
 
@@ -70,14 +81,9 @@ public class SubtitlesManager : MonoBehaviour
         }
     }
 
-    public struct Selection
+    public void AddSubtitle( string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
     {
-        public int index;
-        public string first, second;
-    }
-
-    public void AddSubtitle( string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f )
-    {
+        onSelectionEvent = onSelection;
         selectionGroup.SetActive( false );
         selections.Clear();
         CheckForSelections( ref subtitle );
@@ -96,12 +102,36 @@ public class SubtitlesManager : MonoBehaviour
 
             if( !selections.IsEmpty() )
             {
-                selectionGroup.SetActive( true );
-                ( selectionGroup.transform as RectTransform ).localPosition = GetCharacterPosition( text, selections.Front().index - 1 + selectionMargin + Mathf.Max( selections.Front().first.Length, selections.Front().second.Length ) / 2 );
-                var buttons = selectionGroup.GetComponentsInChildren<Button>();
-                buttons[0].GetComponentInChildren<Text>().text = selections.Front().first;
-                buttons[1].GetComponentInChildren<Text>().text = selections.Front().second;
-             }
+                var selection = selections.Front();
+                selection.obj.SetActive( true );
+                ( selection.obj.transform as RectTransform ).localPosition = GetCharacterPosition( text, selection.index + selectionMargin + Mathf.Max( selection.first.Length, selection.second.Length ) / 2 );
+                var texts = selections.Front().obj.GetComponentsInChildren<Text>();
+                texts[0].text = selections.Front().first;
+                texts[1].text = selections.Front().second;
+                var events = selections.Front().obj.GetComponentsInChildren<EventDispatcher>();
+
+                Action<int, Color> updateColour = ( int index, Color colour ) =>
+                {
+                    if( selections.Contains( selection ) )
+                        texts[index].color = colour;
+                };
+
+                events[0].OnPointerEnterEvent += ( x ) => { updateColour( 0, Color.blue ); };
+                events[0].OnPointerExitEvent += ( x ) => { updateColour( 0, Color.white ); };
+                events[1].OnPointerEnterEvent += ( x ) => { updateColour( 1, Color.blue ); };
+                events[1].OnPointerExitEvent += ( x ) => { updateColour( 1, Color.white ); };
+
+                Action< int > selectionEvent = ( int index ) =>
+                {
+                    selection.obj.transform.GetChild( 1 - index ).gameObject.Destroy();
+                    updateColour( index, Color.blue );
+                    selections.Remove( selection );
+                    onSelectionEvent?.Invoke( text.text );
+                };
+
+                events[0].OnPointerDownEvent += ( x ) => { selectionEvent( 0 ); };
+                events[1].OnPointerDownEvent += ( x ) => { selectionEvent( 1 ); };
+            }
         }
     }
 
@@ -140,7 +170,8 @@ public class SubtitlesManager : MonoBehaviour
                 {
                     index = start + 1,
                     first = subtitle.Substring( startSelect, end - startSelect ),
-                    second = subtitle.Substring( end + 1, index - end - 1 )
+                    second = subtitle.Substring( end + 1, index - end - 1 ),
+                    obj = Instantiate( selectionGroup, transform )
                 } );
 
                 subtitle = subtitle.Remove( start, index - start + 1 );

@@ -24,6 +24,7 @@ public class DesktopUIManager : MonoBehaviour
     Vector3? selectionStartPos;
 
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
+    bool easyDifficulty = true;
 
     private void Start()
     {
@@ -35,7 +36,21 @@ public class DesktopUIManager : MonoBehaviour
     public void StartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
-        Utility.FunctionTimer.CreateTimer( 2.0f, () => { SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelect" ) ); } );
+        Utility.FunctionTimer.CreateTimer( 2.0f, () => 
+        {
+            var str = DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelect" );
+            SubtitlesManager.Instance.AddSubtitle( str, 0, 0, ( selection ) =>
+           {
+               if( selection == "hard" )
+                   easyDifficulty = false;
+           } );
+        } );
+
+        Utility.FunctionTimer.CreateTimer( 5.0f, () =>
+        {
+            if( !easyDifficulty )
+                SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
+        } );
     }
 
     public void CloseGame()
