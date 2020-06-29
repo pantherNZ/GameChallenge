@@ -16,6 +16,8 @@ public class DesktopUIManager : MonoBehaviour
     [SerializeField] CanvasGroup startMenu = null;
     [SerializeField] Button startMenuButton = null;
     [SerializeField] Text timeDateText = null;
+    [SerializeField] GameObject background = null;
+
     System.DateTime currentTime;
 
     // Selection box
@@ -23,8 +25,12 @@ public class DesktopUIManager : MonoBehaviour
     GameObject selectionBox;
     Vector3? selectionStartPos;
 
+    // Desktop context menu
+    [SerializeField] GameObject contextMenu = null;
+
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     bool easyDifficulty = true;
+    Utility.FunctionTimer difficultyTimer;
 
     private void Start()
     {
@@ -40,13 +46,18 @@ public class DesktopUIManager : MonoBehaviour
         {
             var str = DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelect" );
             SubtitlesManager.Instance.AddSubtitle( str, 0, 0, ( selection ) =>
-           {
-               if( selection == "hard" )
-                   easyDifficulty = false;
-           } );
+            {
+                if( selection == "hard" )
+                {
+                    easyDifficulty = false;
+
+                    if( !difficultyTimer.active )
+                        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
+                }
+            } );
         } );
 
-        Utility.FunctionTimer.CreateTimer( 5.0f, () =>
+        difficultyTimer = Utility.FunctionTimer.CreateTimer( 5.0f, () =>
         {
             if( !easyDifficulty )
                 SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
@@ -80,7 +91,7 @@ public class DesktopUIManager : MonoBehaviour
 
     private void Update()
     {
-        if( Input.GetMouseButtonDown( 0 ) && selectionStartPos == null )
+        if( ( Input.GetMouseButtonDown( 0 ) || Input.GetMouseButtonDown( 1 ) ) && selectionStartPos == null )
         {
             var pointerData = new PointerEventData( EventSystem.current ) { pointerId = -1, position = Input.mousePosition };
             var results = new List<RaycastResult>();
@@ -97,7 +108,7 @@ public class DesktopUIManager : MonoBehaviour
             }
 
             // Start selection box
-            if( pointerTarget == null )
+            if( Input.GetMouseButtonDown( 0 ) && ( pointerTarget == null || pointerTarget == background ) )
                 selectionStartPos = Input.mousePosition;
         }
 
@@ -109,12 +120,14 @@ public class DesktopUIManager : MonoBehaviour
                 selectionBox.Destroy();
         }
 
+        // Selection box positioning
         if( selectionStartPos != null && Input.mousePosition != selectionStartPos )
         {
             if( selectionBox == null )
             {
                 selectionBox = Instantiate( selectionBoxPrefab, transform );
                 selectionBox.transform.SetAsFirstSibling();
+                background.transform.SetAsFirstSibling();
             }
 
             var difference = Input.mousePosition - selectionStartPos.Value;
@@ -141,5 +154,14 @@ public class DesktopUIManager : MonoBehaviour
             var offset = windowViewPosWorld - transform.position;
             windowCamera.transform.position = windowCameraStartPosition + offset;
         }
+
+        if( Input.GetMouseButtonDown( 1 ) )
+        {
+            contextMenu.GetComponent<CanvasGroup>().SetVisibility( true );
+            ( contextMenu.transform as RectTransform ).anchoredPosition = Input.mousePosition;
+        }
+
+        if( Input.GetMouseButtonDown( 0 ) )
+            contextMenu.GetComponent<CanvasGroup>().SetVisibility( false );
     }
 }
