@@ -159,6 +159,7 @@ public class DesktopUIManager : MonoBehaviour
         {
             contextMenu.GetComponent<CanvasGroup>().SetVisibility( true );
             ( contextMenu.transform as RectTransform ).anchoredPosition = Input.mousePosition;
+            ( contextMenu.transform as RectTransform ).pivot = new Vector2( 0.0f, Input.mousePosition.y <= 160.0f ? 0.0f : 1.0f );
         }
 
         if( Input.GetMouseButtonDown( 0 ) )
