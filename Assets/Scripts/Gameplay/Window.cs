@@ -4,54 +4,25 @@ using UnityEngine.EventSystems;
 
 public class Window : MonoBehaviour
 {
-    bool dragging;
-    Vector3 offset;
     new Camera camera;
-    new RectTransform transform;
     [SerializeField] GameObject cameraView = null;
     [SerializeField] Text titleText = null;
-    [SerializeField] GameObject child = null;
+    [SerializeField] Button closeButton = null;
 
     void Start()
     {
         camera = Camera.main;
-        transform = base.transform as RectTransform;
     }
 
-    public void SetTitle( string title )
+    public void Initialise( string title, DesktopUIManager desktop )
     {
         titleText.text = title;
+        closeButton.onClick.AddListener( () => { desktop.DestroyWindow( this ); } );
     }
 
-    public void StartDrag( EventTrigger button )
+    public string GetTitle()
     {
-        if( dragging )
-            return;
-
-        dragging = true;
-        var targetPos = Input.mousePosition;
-        targetPos.z = 150.0f;
-        offset = transform.anchoredPosition - new Vector2( targetPos.x, targetPos.y );
-    }
-     
-    public void EndDrag( EventTrigger button )
-    {
-        if( !dragging )
-            return;
-        dragging = false;
-    }
-
-    private void Update()
-    {
-        if( dragging )
-        {
-            var targetPos = Input.mousePosition + offset;
-            transform.anchoredPosition = targetPos;
-            targetPos.z = 100.0f;
-
-            if( child != null )
-                child.transform.position = targetPos;
-        }
+        return titleText.text;
     }
 
     public void GetCameraViewWorldCorners( Vector3[] corners )

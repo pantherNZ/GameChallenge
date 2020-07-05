@@ -13,6 +13,8 @@ public class DesktopUIManager : MonoBehaviour
     public Vector3 windowCameraStartPosition { get; private set; }
 
     [SerializeField] GameObject windowBase = null;
+    [SerializeField] GameObject optionsWindow = null;
+    [SerializeField] GameObject helpWindow = null;
     [SerializeField] CanvasGroup startMenu = null;
     [SerializeField] Button startMenuButton = null;
     [SerializeField] Text timeDateText = null;
@@ -70,23 +72,46 @@ public class DesktopUIManager : MonoBehaviour
         Application.Quit();
     }
 
-    public GameObject CreateWindow( string title )
+    public GameObject CreateWindow( string title, bool destroyExisting = false )
     {
-        var window = Instantiate( windowBase, transform ).GetComponent<Window>();
+        return CreateWindowInternal( title, windowBase, destroyExisting );
+    }
+
+    public void CreateOptionsWindow()
+    {
+        CreateWindowInternal( "Options", optionsWindow, true );
+    }
+
+    public void CreateHelpWindow()
+    {
+        CreateWindowInternal( "Help", helpWindow, true );
+    }
+
+    private GameObject CreateWindowInternal( string title, GameObject windowPrefab, bool destroyExisting )
+    {
+        if( destroyExisting )
+            DestroyWindow( title );
+
+        var window = Instantiate( windowPrefab, transform ).GetComponent<Window>();
         window.transform.position = transform.position;
-        window.SetTitle( title );
+        window.Initialise( title, this );
         windows.Add( new Pair<Window, string>( window, title ) );
         return window.gameObject;
     }
 
-    public bool DestroyWindow( string title )
+    public void DestroyWindow( string title )
     {
-        return windows.RemoveBySwap( ( pair ) =>
+        windows.RemoveBySwap( ( pair ) =>
         {
             if( pair.Second == title )
                 pair.First.DestroyObject();
             return pair.Second == title;
         } );
+    }
+
+    public void DestroyWindow( Window window )
+    {
+        DestroyWindow( window.GetTitle() );
     }
 
     private void Update()
@@ -110,6 +135,9 @@ public class DesktopUIManager : MonoBehaviour
             // Start selection box
             if( Input.GetMouseButtonDown( 0 ) && ( pointerTarget == null || pointerTarget == background ) )
                 selectionStartPos = Input.mousePosition;
+
+            if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( contextMenu.transform ) )
+                contextMenu.GetComponent<CanvasGroup>().SetVisibility( false );
         }
 
         // End selection box
@@ -161,8 +189,5 @@ public class DesktopUIManager : MonoBehaviour
             ( contextMenu.transform as RectTransform ).anchoredPosition = Input.mousePosition;
             ( contextMenu.transform as RectTransform ).pivot = new Vector2( 0.0f, Input.mousePosition.y <= 160.0f ? 0.0f : 1.0f );
         }
-
-        if( Input.GetMouseButtonDown( 0 ) )
-            contextMenu.GetComponent<CanvasGroup>().SetVisibility( false );
     }
 }

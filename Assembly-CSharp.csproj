@@ -73,13 +73,16 @@
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\SubtitlesManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Window.cs" />
+    <Compile Include="Assets\Scripts\Utility\Draggable.cs" />
     <Compile Include="Assets\Scripts\Utility\EventDispatcher.cs" />
     <Compile Include="Assets\Scripts\Utility\Extensions.cs" />
     <Compile Include="Assets\Scripts\Utility\FunctionTimer.cs" />
+    <Compile Include="Assets\Scripts\Utility\LockToGrid.cs" />
     <Compile Include="Assets\Scripts\Utility\SecureHash.cs" />
     <Compile Include="Assets\Scripts\Utility\SimplexNoise.cs" />
     <Compile Include="Assets\Scripts\Utility\Utility.cs" />
     <Compile Include="Assets\Scripts\Utility\UtilityComponent.cs" />
+    <Compile Include="Assets\Scripts\Utility\UtilityComponentEditor.cs" />
     <Compile Include="Assets\Scripts\Utility\xxHash.cs" />
     <None Include="Assets\Resources\Shaders\empty.txt" />
     <None Include="Assets\Resources\Audio\empty.txt" />
