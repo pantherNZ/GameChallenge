@@ -195,6 +195,18 @@ public static partial class Extensions
         return new Vector3( vec.x, vec.y, z );
     }
 
+    public static Vector2 ToVector2( this Vector2Int vec )
+    {
+        return new Vector2( vec.x, vec.y );
+    }
+
+    public static Vector2Int ToVector2Int( this Vector2 vec, bool round = false )
+    {
+        if( round )
+            return new Vector2Int( Mathf.RoundToInt( vec.x ), Mathf.RoundToInt( vec.y ) );
+        return new Vector2Int( Mathf.FloorToInt( vec.x ), Mathf.FloorToInt( vec.y ) );
+    }
+
     public static float Angle( this Vector2 vec )
     {
         if( vec.x < 0 )

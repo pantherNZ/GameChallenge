@@ -15,6 +15,7 @@ public class DesktopUIManager : MonoBehaviour
     [SerializeField] GameObject windowBase = null;
     [SerializeField] GameObject optionsWindow = null;
     [SerializeField] GameObject helpWindow = null;
+    [SerializeField] GameObject shortcut = null;
     [SerializeField] CanvasGroup startMenu = null;
     [SerializeField] Button startMenuButton = null;
     [SerializeField] Text timeDateText = null;
@@ -30,6 +31,9 @@ public class DesktopUIManager : MonoBehaviour
     // Desktop context menu
     [SerializeField] GameObject contextMenu = null;
 
+    // Shortcuts
+    [SerializeField] Vector2Int gridSize = new Vector2Int( 100, 100 );
+
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     bool easyDifficulty = true;
     Utility.FunctionTimer difficultyTimer;
@@ -39,6 +43,8 @@ public class DesktopUIManager : MonoBehaviour
         startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
         windowCameraStartPosition = WindowCamera.transform.position.SetZ( 0.0f );
         MainCamera = Camera.main;
+
+        CreateShortcut( "Recycle Bin", Resources.Load< Texture2D >( "Textures/Full_Recycle_Bin" ), new Vector2Int() );
     }
 
     public void StartLevel()
@@ -112,6 +118,24 @@ public class DesktopUIManager : MonoBehaviour
     public void DestroyWindow( Window window )
     {
         DestroyWindow( window.GetTitle() );
+    }
+
+    private GameObject CreateShortcut( string title, Texture2D icon, Vector2Int index )
+    {
+        var newShortcut = Instantiate( shortcut, transform );
+        ( newShortcut.transform as RectTransform ).anchoredPosition = ( index * gridSize ).ToVector2();
+        newShortcut.GetComponentInChildren<Text>().text = title;
+        newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon, new Rect( 0.0f, 0.0f, icon.width, icon.height ), new Vector2( 0.5f, 0.5f ) );
+        startMenu.transform.parent.transform.SetAsLastSibling();
+
+        var grid = newShortcut.GetComponent<LockToGrid>();
+        grid.gridWidth = gridSize.x;
+        grid.gridHeight = gridSize.y;
+        var rect = ( transform as RectTransform ).rect;
+        grid.minPos = new Vector2( 0.0f, -( Mathf.Floor( rect.height / gridSize.y ) - 0.5f ) * gridSize.y );
+        grid.maxPos = new Vector2( ( Mathf.Floor( rect.width / gridSize.x ) - 0.5f ) * gridSize.x, 0.0f );
+
+        return newShortcut;
     }
 
     private void Update()
