@@ -248,8 +248,7 @@ public class SubtitlesManager : MonoBehaviour
         currentText = currentText.Remove( timer.index, timer.timerTextLength );
         currentText = currentText.Insert( timer.index, newStr );
         index += ( newStr.Length - timer.timerTextLength );
-        if( index + 1 < currentText.Length )
-            text.text = currentText.Substring( 0, index + 1 );
+        text.text = index < currentText.Length ? currentText.Substring( 0, index + 1 ) : currentText;
         timer.timerTextLength = newStr.Length;
     }
 
