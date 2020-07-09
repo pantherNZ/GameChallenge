@@ -20,6 +20,8 @@ public class Level1_BouncingBall : MonoBehaviour
 
     public void StartLevel()
     {
+        GetComponent<CanvasGroup>().SetVisibility( true );
+
         SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_1" ) );
         Utility.FunctionTimer.CreateTimer( 10.0f, () => { SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_2" ) ); }, "Narrator_Level_2_2" );
 

@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Data\SaveGame.cs" />
     <Compile Include="Assets\Scripts\Gameplay\DesktopUIManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level1_BouncingBall.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Level3_Recycling.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingWidget.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />

@@ -21,6 +21,8 @@ public class LoadingUI : MonoBehaviour
                 Utility.FunctionTimer.CreateTimer( 0.1f, desktopUI.StartLevel );
             else if( forceStartLevelId == 1 )
                 Utility.FunctionTimer.CreateTimer( 0.1f, desktopUI.GetComponent<Level1_BouncingBall>().StartLevel );
+            else if( forceStartLevelId == 3 )
+                Utility.FunctionTimer.CreateTimer( 0.1f, desktopUI.GetComponent<Level3_Recycling>().StartLevel );
             else
                 Debug.LogError( "LoadingUI: forceStartLevelId invalid value: " + forceStartLevelId.ToString() );
             return;

@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 674552462}
   m_Layer: 0
   m_Name: DesktopIcon
-  m_TagString: Untagged
+  m_TagString: DesktopShortcut
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -362,5 +362,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridWidth: 100
   gridHeight: 100
+  disableOverlapWithTag: DesktopShortcut
   minPos: {x: -Infinity, y: -Infinity}
   maxPos: {x: Infinity, y: Infinity}

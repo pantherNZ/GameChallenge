@@ -12,6 +12,7 @@ public class DesktopUIManager : MonoBehaviour
     public Camera MainCamera { get; private set; }
     public Vector3 windowCameraStartPosition { get; private set; }
 
+    // UI stuff
     [SerializeField] GameObject windowBase = null;
     [SerializeField] GameObject optionsWindow = null;
     [SerializeField] GameObject helpWindow = null;
@@ -21,7 +22,8 @@ public class DesktopUIManager : MonoBehaviour
     [SerializeField] Text timeDateText = null;
     [SerializeField] GameObject background = null;
 
-    System.DateTime currentTime;
+    // Camera
+    [SerializeField] Camera blueScreenCamera = null;
 
     // Selection box
     [SerializeField] GameObject selectionBoxPrefab = null;
@@ -33,10 +35,12 @@ public class DesktopUIManager : MonoBehaviour
 
     // Shortcuts
     [SerializeField] Vector2Int gridSize = new Vector2Int( 100, 100 );
+    [HideInInspector] public List<GameObject> shortcuts = new List<GameObject>();
 
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     bool easyDifficulty = true;
     Utility.FunctionTimer difficultyTimer;
+    System.DateTime currentTime;
 
     private void Start()
     {
@@ -45,6 +49,11 @@ public class DesktopUIManager : MonoBehaviour
         MainCamera = Camera.main;
 
         CreateShortcut( "Recycle Bin", Resources.Load< Texture2D >( "Textures/Full_Recycle_Bin" ), new Vector2Int() );
+    }
+
+    public bool IsEasyMode()
+    {
+        return easyDifficulty;
     }
 
     public void StartLevel()
@@ -76,6 +85,12 @@ public class DesktopUIManager : MonoBehaviour
     {
         // Save
         Application.Quit();
+    }
+
+    public void GameOver()
+    {
+        MainCamera.gameObject.SetActive( false );
+        blueScreenCamera.gameObject.SetActive( true );
     }
 
     public GameObject CreateWindow( string title, bool destroyExisting = false )
@@ -120,10 +135,22 @@ public class DesktopUIManager : MonoBehaviour
         DestroyWindow( window.GetTitle() );
     }
 
-    private GameObject CreateShortcut( string title, Texture2D icon, Vector2Int index )
+    public Rect GetGridBounds()
+    {
+        var rect = ( transform as RectTransform ).rect;
+        return new Rect( 0.0f, 0.0f,
+             ( Mathf.Floor( rect.width / gridSize.x ) - 0.5f ) * gridSize.x,
+            -( Mathf.Floor( rect.height / gridSize.y ) - 0.5f ) * gridSize.y );
+    }
+    public GameObject CreateShortcut( string title, Texture2D icon, Vector2Int index )
+    {
+        return CreateShortcut( title, icon, ( index * gridSize ).ToVector2() );
+    }
+
+    public GameObject CreateShortcut( string title, Texture2D icon, Vector2 position )
     {
         var newShortcut = Instantiate( shortcut, transform );
-        ( newShortcut.transform as RectTransform ).anchoredPosition = ( index * gridSize ).ToVector2();
+        ( newShortcut.transform as RectTransform ).anchoredPosition = position;
         newShortcut.GetComponentInChildren<Text>().text = title;
         newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon, new Rect( 0.0f, 0.0f, icon.width, icon.height ), new Vector2( 0.5f, 0.5f ) );
         startMenu.transform.parent.transform.SetAsLastSibling();
@@ -131,9 +158,20 @@ public class DesktopUIManager : MonoBehaviour
         var grid = newShortcut.GetComponent<LockToGrid>();
         grid.gridWidth = gridSize.x;
         grid.gridHeight = gridSize.y;
-        var rect = ( transform as RectTransform ).rect;
-        grid.minPos = new Vector2( 0.0f, -( Mathf.Floor( rect.height / gridSize.y ) - 0.5f ) * gridSize.y );
-        grid.maxPos = new Vector2( ( Mathf.Floor( rect.width / gridSize.x ) - 0.5f ) * gridSize.x, 0.0f );
+        var bounds = GetGridBounds();
+        grid.minPos = new Vector2( bounds.x, bounds.height );
+        grid.maxPos = new Vector2( bounds.width, bounds.y );
+
+        grid.onOverlapWith += ( obj ) => 
+        {
+            if( obj == shortcuts[0] )
+            {
+                shortcuts.Remove( newShortcut );
+                newShortcut.Destroy();
+            }
+        };
+
+        shortcuts.Add( newShortcut );
 
         return newShortcut;
     }

@@ -27,7 +27,7 @@
         {
            	"Key": "Narrator_Level_2_DifficultySelectHard",
             "Value": {
-                "english": "Ummm... He liked to play some difficult games."
+                "english": "Excuse me... He liked to play some difficult games."
             }
         },
         {
@@ -46,6 +46,24 @@
            	"Key": "Narrator_Level_2_Complete",
             "Value": {
                 "english": "His perspective was clear and his goal was complete. On to the next challenge he thought!"
+            }
+        },
+        {
+           	"Key": "Narrator_Level_3_1",
+            "Value": {
+                "english": "Alex needed to urgently clean up his mess! <timer=Level_3>"
+            }
+        },
+        {
+           	"Key": "Narrator_Level_3_Failed",
+            "Value": {
+                "english": "A messy desktop leads to a messy life.."
+            }
+        },
+        {
+           	"Key": "Narrator_Level_3_Complete",
+            "Value": {
+                "english": "Ah, clean and concise. Alex could now relax and focus on other tasks."
             }
         }
     ]

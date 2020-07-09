@@ -29,6 +29,16 @@ public class SubtitlesManager : MonoBehaviour
 
     [HideInInspector] public Action<string> onSelectionEvent;
 
+    public class Timer
+    {
+        public int index;
+        public int timerTextLength;
+        public string timerName;
+        public Utility.FunctionTimer timer;
+    }
+
+    List<Timer> timers = new List<Timer>();
+
     CanvasGroup canvasGroup;
 
     void Start()
@@ -62,9 +72,7 @@ public class SubtitlesManager : MonoBehaviour
                 index++;
 
                 if( index >= currentText.Length )
-                {
                     timer = 0.0f;
-                }
             }
         }
         else if( timer < fadeOutDelay + fadeOutTime )
@@ -79,6 +87,19 @@ public class SubtitlesManager : MonoBehaviour
                     ClearSubtitles();
             }
         }
+
+        foreach( var timer in timers )
+        {
+            if( index >= timer.index && timer.timer != null )
+            {
+                UpdateTimerText( timer );
+            }
+        }
+    }
+
+    public void AddSubtitleGameString( string gameString, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
+    {
+        AddSubtitle( DataManager.Instance.GetGameString( gameString ), fadeOutDelay, fadeOutTime, onSelection );
     }
 
     public void AddSubtitle( string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
@@ -135,6 +156,22 @@ public class SubtitlesManager : MonoBehaviour
         }
     }
 
+    public void QueueSubtitle( float delay, string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
+    {
+        Utility.FunctionTimer.CreateTimer( delay, () =>
+        {
+            AddSubtitle( subtitle, fadeOutDelay, fadeOutTime, onSelection );
+        }, subtitle );
+    }
+
+    public void QueueSubtitleGameString( float delay, string gameString, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
+    {
+        Utility.FunctionTimer.CreateTimer( delay, () =>
+        {
+            AddSubtitle( DataManager.Instance.GetGameString( gameString ), fadeOutDelay, fadeOutTime, onSelection );
+        }, gameString );
+    }
+
     public void ClearSubtitles()
     {
         text.text = currentText = string.Empty;
@@ -145,12 +182,12 @@ public class SubtitlesManager : MonoBehaviour
 
     void CheckForSelections( ref string subtitle )
     {
-        int index = 0;
+        int counter = 0;
 
-        while( index != -1 && index < subtitle.Length )
+        while( counter != -1 && counter < subtitle.Length )
         {
             var keyword = "<select=";
-            index = subtitle.IndexOf( keyword, index );
+            var index = subtitle.IndexOf( keyword, counter );
             if( index != -1 )
             {
                 int start = index;
@@ -176,8 +213,44 @@ public class SubtitlesManager : MonoBehaviour
 
                 subtitle = subtitle.Remove( start, index - start + 1 );
                 subtitle = subtitle.Insert( start, new string( ' ', Mathf.Max( selections.Back().first.Length, selections.Back().second.Length ) + selectionMargin * 2 ) );
+                counter = end;
+            }
+
+            keyword = "<timer=";
+            index = subtitle.IndexOf( keyword );
+            if( index != -1 )
+            {
+                int end = subtitle.IndexOf( '>', index );
+                counter = end;
+
+                if( index == -1 )
+                    Debug.LogError( "AddSubtitle called with <timer=.. keyword without closing '>' in subtitle: " + subtitle );
+
+                timers.Add( new Timer() { index = index, timerName = subtitle.Substring( index + keyword.Length, end - index - keyword.Length ) } );
+                subtitle = subtitle.Remove( index, end - index + 1 );
             }
         }
+    }
+
+    public void AssignTimer( Utility.FunctionTimer timer )
+    {
+        var timerObj = timers.Find( ( x ) => x.timerName == timer.name );
+
+        if( timerObj == null )
+            Debug.LogError( "AssignTimer failed to find a matching timer object in the subtitle: " + timer.name );
+
+        timerObj.timer = timer;
+    }
+
+    private void UpdateTimerText( Timer timer )
+    {
+        var newStr = string.Format( "{0}s", timer.timer.timeLeft.ToString() );
+        currentText = currentText.Remove( timer.index, timer.timerTextLength );
+        currentText = currentText.Insert( timer.index, newStr );
+        index += ( newStr.Length - timer.timerTextLength );
+        if( index + 1 < currentText.Length )
+            text.text = currentText.Substring( 0, index + 1 );
+        timer.timerTextLength = newStr.Length;
     }
 
     Vector3 GetCharacterPosition( Text text, int charIndex )

@@ -151,8 +151,7 @@ public static partial class Extensions
     {
         if( list.IsEmpty() )
             return defaultValue;
-
-        return list[ ( int )( ( list.Count - 1 ) * UnityEngine.Random.value )];
+        return list[UnityEngine.Random.Range( 0, list.Count )];
     }
 
 #if UNITY_EDITOR
@@ -222,5 +221,20 @@ public static partial class Extensions
     public static Vector2 Rotate( this Vector2 vec, float angleDegrees )
     {
         return Quaternion.AngleAxis( angleDegrees, Vector3.forward ) * vec;
+    }
+
+    public static Vector2 RandomPosition( this Rect rect )
+    {
+        return new Vector2(
+            rect.x + UnityEngine.Random.value * rect.width,
+            rect.y + UnityEngine.Random.value * rect.height );
+    }
+
+    public static bool Overlaps( this RectTransform rectTrans1, RectTransform rectTrans2 )
+    {
+        Rect rect1 = new Rect( rectTrans1.localPosition.x, rectTrans1.localPosition.y, rectTrans1.rect.width * rectTrans1.localScale.x, rectTrans1.rect.height * rectTrans1.localScale.y );
+        Rect rect2 = new Rect( rectTrans2.localPosition.x, rectTrans2.localPosition.y, rectTrans2.rect.width * rectTrans1.localScale.x, rectTrans2.rect.height * rectTrans1.localScale.y );
+
+        return rect1.Overlaps( rect2 );
     }
 }
