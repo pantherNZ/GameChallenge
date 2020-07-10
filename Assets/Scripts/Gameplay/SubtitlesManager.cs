@@ -91,9 +91,9 @@ public class SubtitlesManager : MonoBehaviour
         foreach( var timer in timers )
         {
             if( index >= timer.index && timer.timer != null )
-            {
                 UpdateTimerText( timer );
-            }
+            else if( timer.timer == null && timer.timerTextLength != 0 )
+                UpdateTimerText( timer, string.Empty );
         }
     }
 
@@ -182,9 +182,7 @@ public class SubtitlesManager : MonoBehaviour
 
     void CheckForSelections( ref string subtitle )
     {
-        int counter = 0;
-
-        while( counter != -1 && counter < subtitle.Length )
+        for( int counter = 0; counter < subtitle.Length; ++counter )
         {
             var keyword = "<select=";
             var index = subtitle.IndexOf( keyword, counter );
@@ -213,7 +211,6 @@ public class SubtitlesManager : MonoBehaviour
 
                 subtitle = subtitle.Remove( start, index - start + 1 );
                 subtitle = subtitle.Insert( start, new string( ' ', Mathf.Max( selections.Back().first.Length, selections.Back().second.Length ) + selectionMargin * 2 ) );
-                counter = end;
             }
 
             keyword = "<timer=";
@@ -221,7 +218,6 @@ public class SubtitlesManager : MonoBehaviour
             if( index != -1 )
             {
                 int end = subtitle.IndexOf( '>', index );
-                counter = end;
 
                 if( index == -1 )
                     Debug.LogError( "AddSubtitle called with <timer=.. keyword without closing '>' in subtitle: " + subtitle );
@@ -244,7 +240,11 @@ public class SubtitlesManager : MonoBehaviour
 
     private void UpdateTimerText( Timer timer )
     {
-        var newStr = string.Format( "{0}s", timer.timer.timeLeft.ToString() );
+        UpdateTimerText( timer, string.Format( "{0}s", timer.timer.timeLeft.ToString( "N1" ) ) );
+    }
+
+    private void UpdateTimerText( Timer timer, string newStr )
+    {
         currentText = currentText.Remove( timer.index, timer.timerTextLength );
         currentText = currentText.Insert( timer.index, newStr );
         index += ( newStr.Length - timer.timerTextLength );

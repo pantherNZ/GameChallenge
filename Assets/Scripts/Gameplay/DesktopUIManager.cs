@@ -89,8 +89,8 @@ public class DesktopUIManager : MonoBehaviour
 
     public void GameOver()
     {
-        MainCamera.gameObject.SetActive( false );
         blueScreenCamera.gameObject.SetActive( true );
+        MainCamera.gameObject.SetActive( false );
     }
 
     public GameObject CreateWindow( string title, bool destroyExisting = false )

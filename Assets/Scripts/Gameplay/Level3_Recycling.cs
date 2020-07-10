@@ -42,7 +42,17 @@ public class Level3_Recycling : MonoBehaviour
         var timer = Utility.FunctionTimer.CreateTimer( desktop.IsEasyMode() ? rounds[roundNumber].timerEasySec : rounds[roundNumber].timerHardSec, () =>
         {
             SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_Failed" ) );
-            //desktop.LevelFailed();
+
+            for( int i = desktop.shortcuts.Count - 1; i < 0; --i )
+            {
+                desktop.shortcuts[i].Destroy();
+                desktop.shortcuts.RemoveAt( i );
+            }
+
+            enabled = false;
+
+            Utility.FunctionTimer.CreateTimer( 3.0f, () => desktop.GameOver() );
+
         }, "Level_3" );
 
         SubtitlesManager.Instance.AssignTimer( timer );
@@ -53,6 +63,7 @@ public class Level3_Recycling : MonoBehaviour
     {
         if( desktop != null && desktop.shortcuts.Count == 1 )
         {
+            enabled = false;
             Utility.FunctionTimer.StopTimer( "Level_3" );
             SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_Complete" ) );
         }
