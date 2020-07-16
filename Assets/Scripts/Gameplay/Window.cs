@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class Window : MonoBehaviour
 {
     new Camera camera;
-    [SerializeField] GameObject cameraView = null;
+    public GameObject image = null;
     [SerializeField] Text titleText = null;
     [SerializeField] Button closeButton = null;
 
@@ -27,6 +27,13 @@ public class Window : MonoBehaviour
 
     public void GetCameraViewWorldCorners( Vector3[] corners )
     {
-        ( cameraView.transform as RectTransform ).GetWorldCorners( corners );
+        Debug.Assert( HasViewPort() );
+        if( HasViewPort() )
+            ( image.transform as RectTransform ).GetWorldCorners( corners );
+    }
+
+    public bool HasViewPort()
+    {
+        return image != null;
     }
 }

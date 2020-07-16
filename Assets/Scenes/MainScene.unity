@@ -727,7 +727,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0c564e19b9a1b44af2a1bd8b69c6f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windowCamera: {fileID: 1025685071}
+  loginUI: {fileID: 1897650524}
   windowBase: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
   optionsWindow: {fileID: 8192425387029815819, guid: 4ee1cc8c8afd319429c3620b7424ce1a,
@@ -741,11 +741,17 @@ MonoBehaviour:
   timeDateText: {fileID: 2034746898}
   background: {fileID: 1820640188}
   blueScreenCamera: {fileID: 514073134}
+  windowCamera: {fileID: 1025685071}
   selectionBoxPrefab: {fileID: 7310331534112248394, guid: b9b8a4f2ec0fc6144b537734fd68023a,
     type: 3}
   contextMenu: {fileID: 1391013267}
   gridSize: {x: 100, y: 100}
   shortcuts: []
+  lifeLostDisplayTime: 3
+  levelFailFadeOutTime: 2
+  levelFailFadeInTime: 2
+  restartGameFadeOutTime: 5
+  restartGameFadeInTime: 2
 --- !u!225 &203328298
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1389,8 +1395,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 9, y: -0.0000047684}
-  m_SizeDelta: {x: 921.4, y: 127.7}
+  m_AnchoredPosition: {x: 3.1, y: -0.0000047684}
+  m_SizeDelta: {x: 909.5, y: 127.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &517596452
 MonoBehaviour:
@@ -1561,7 +1567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loginUI: {fileID: 1897650524}
   desktopUI: {fileID: 203328297}
-  forceStartLevelId: -1
+  forceStartLevelId: 3
 --- !u!1 &533462466
 GameObject:
   m_ObjectHideFlags: 0
@@ -6445,6 +6451,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 8088437432361642798, guid: 8212756b264631d4590e23d0c5706c93,
+        type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8212756b264631d4590e23d0c5706c93, type: 3}

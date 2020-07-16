@@ -88,12 +88,18 @@ public class SubtitlesManager : MonoBehaviour
             }
         }
 
-        foreach( var timer in timers )
+        foreach( var ( idx, timer ) in timers.Enumerate() )
         {
             if( index >= timer.index && timer.timer != null )
                 UpdateTimerText( timer );
             else if( timer.timer == null && timer.timerTextLength != 0 )
                 UpdateTimerText( timer, string.Empty );
+
+            if( timer.timer != null && timer.timer.timeLeft <= 0.0f )
+            {
+                timers.RemoveBySwap( idx );
+                break;
+            }
         }
     }
 
@@ -107,6 +113,7 @@ public class SubtitlesManager : MonoBehaviour
         onSelectionEvent = onSelection;
         selectionGroup.SetActive( false );
         selections.Clear();
+        timers.Clear();
         CheckForSelections( ref subtitle );
 
         currentText = subtitle;

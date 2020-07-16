@@ -7,12 +7,12 @@ using System.Linq;
 
 public class DesktopUIManager : MonoBehaviour
 {
-    [SerializeField] Camera windowCamera = null;
     public Camera WindowCamera { get => windowCamera; private set { } }
     public Camera MainCamera { get; private set; }
     public Vector3 windowCameraStartPosition { get; private set; }
 
     // UI stuff
+    [SerializeField] LoginUI loginUI = null;
     [SerializeField] GameObject windowBase = null;
     [SerializeField] GameObject optionsWindow = null;
     [SerializeField] GameObject helpWindow = null;
@@ -22,8 +22,9 @@ public class DesktopUIManager : MonoBehaviour
     [SerializeField] Text timeDateText = null;
     [SerializeField] GameObject background = null;
 
-    // Camera
+    // Cameras
     [SerializeField] Camera blueScreenCamera = null;
+    [SerializeField] Camera windowCamera = null;
 
     // Selection box
     [SerializeField] GameObject selectionBoxPrefab = null;
@@ -37,13 +38,27 @@ public class DesktopUIManager : MonoBehaviour
     [SerializeField] Vector2Int gridSize = new Vector2Int( 100, 100 );
     [HideInInspector] public List<GameObject> shortcuts = new List<GameObject>();
 
+    // Errors
+    List<Texture2D> errorTextures = new List<Texture2D>();
+
+    // Misc
+    [SerializeField] float lifeLostDisplayTime = 3.0f;
+    [SerializeField] float levelFailFadeOutTime = 2.0f;
+    [SerializeField] float levelFailFadeInTime = 2.0f;
+    [SerializeField] float restartGameFadeOutTime = 5.0f;
+    [SerializeField] float restartGameFadeInTime = 2.0f;
+
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     bool easyDifficulty = true;
+    int lives = 3;
     Utility.FunctionTimer difficultyTimer;
     System.DateTime currentTime;
 
     private void Start()
     {
+        blueScreenCamera.gameObject.SetActive( false );
+        errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
+
         startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
         windowCameraStartPosition = WindowCamera.transform.position.SetZ( 0.0f );
         MainCamera = Camera.main;
@@ -87,10 +102,51 @@ public class DesktopUIManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void LevelFailed( BaseLevel level )
+    {
+        lives--;
+
+        if( lives == 0 )
+        {
+            Utility.FunctionTimer.CreateTimer( 3.0f, GameOver );
+        }
+        else
+        {
+            var errorTexture = errorTextures.RandomItem();
+            var window = CreateWindow( "Critical Error" );
+            window.GetComponent<Window>().image.GetComponent<RawImage>().texture = errorTexture;
+            ( window.transform as RectTransform ).sizeDelta = new Vector2( errorTexture.width, errorTexture.height );
+
+            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime, () => StartCoroutine( Utility.FadeToBlack( GetComponent<CanvasGroup>(), levelFailFadeOutTime ) ) );
+            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime, () =>
+            {
+                StartCoroutine( Utility.FadeFromBlack( GetComponent<CanvasGroup>(), levelFailFadeInTime ) );
+            } );
+            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime + levelFailFadeInTime, () =>
+            {
+                level.StartLevel();
+                DestroyWindow( window );
+            } );
+        }
+    }
+
     public void GameOver()
     {
         blueScreenCamera.gameObject.SetActive( true );
         MainCamera.gameObject.SetActive( false );
+    }
+
+    public void RestartGame()
+    {
+        StartCoroutine( Utility.FadeToBlack( GetComponent<CanvasGroup>(), restartGameFadeOutTime ) );
+
+        Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime, () =>
+        {
+            StartCoroutine( Utility.FadeFromBlack( GetComponent<CanvasGroup>(), restartGameFadeInTime ) );
+            MainCamera.gameObject.SetActive( true );
+            blueScreenCamera.gameObject.SetActive( false );
+            loginUI.StartLevel();
+        } );
     }
 
     public GameObject CreateWindow( string title, bool destroyExisting = false )
@@ -135,6 +191,11 @@ public class DesktopUIManager : MonoBehaviour
         DestroyWindow( window.GetTitle() );
     }
 
+    public void DestroyWindow( GameObject window )
+    {
+        DestroyWindow( window.GetComponent<Window>().GetTitle() );
+    }
+
     public Rect GetGridBounds()
     {
         var rect = ( transform as RectTransform ).rect;
@@ -153,7 +214,6 @@ public class DesktopUIManager : MonoBehaviour
         ( newShortcut.transform as RectTransform ).anchoredPosition = position;
         newShortcut.GetComponentInChildren<Text>().text = title;
         newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon, new Rect( 0.0f, 0.0f, icon.width, icon.height ), new Vector2( 0.5f, 0.5f ) );
-        startMenu.transform.parent.transform.SetAsLastSibling();
 
         var grid = newShortcut.GetComponent<LockToGrid>();
         grid.gridWidth = gridSize.x;
@@ -172,6 +232,8 @@ public class DesktopUIManager : MonoBehaviour
         };
 
         shortcuts.Add( newShortcut );
+
+        FixChildOrdering();
 
         return newShortcut;
     }
@@ -216,8 +278,7 @@ public class DesktopUIManager : MonoBehaviour
             if( selectionBox == null )
             {
                 selectionBox = Instantiate( selectionBoxPrefab, transform );
-                selectionBox.transform.SetAsFirstSibling();
-                background.transform.SetAsFirstSibling();
+                FixChildOrdering();
             }
 
             var difference = Input.mousePosition - selectionStartPos.Value;
@@ -236,7 +297,8 @@ public class DesktopUIManager : MonoBehaviour
 
         var window = windows.IsEmpty() ? null : windows.Front().First;
 
-        if( window != null )
+        // Wiewport inside window
+        if( window != null && window.HasViewPort() )
         {
             Vector3[] corners = new Vector3[4];
             window.GetCameraViewWorldCorners( corners );
@@ -245,11 +307,27 @@ public class DesktopUIManager : MonoBehaviour
             windowCamera.transform.position = windowCameraStartPosition + offset;
         }
 
+        // Context menu on desktop
         if( Input.GetMouseButtonDown( 1 ) )
         {
             contextMenu.GetComponent<CanvasGroup>().SetVisibility( true );
             ( contextMenu.transform as RectTransform ).anchoredPosition = Input.mousePosition;
             ( contextMenu.transform as RectTransform ).pivot = new Vector2( 0.0f, Input.mousePosition.y <= 160.0f ? 0.0f : 1.0f );
         }
+
+        if( blueScreenCamera.gameObject.activeSelf )
+            if( Input.anyKeyDown )
+                RestartGame();
+    }
+
+    private void FixChildOrdering()
+    {
+        selectionBox?.transform.SetAsFirstSibling();
+
+        foreach( var shortcut in shortcuts )
+            shortcut.transform.SetAsFirstSibling();
+
+        background.transform.SetAsFirstSibling();
+        startMenu.transform.parent.transform.SetAsLastSibling();
     }
 }

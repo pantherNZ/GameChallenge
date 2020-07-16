@@ -3,7 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Level3_Recycling : MonoBehaviour
+abstract public class BaseLevel : MonoBehaviour
+{
+    abstract public void StartLevel();
+}
+
+public class Level3_Recycling : BaseLevel
 {
     [Serializable]
     class Round
@@ -23,7 +28,7 @@ public class Level3_Recycling : MonoBehaviour
     List<GameObject> shortcuts = new List<GameObject>();
     DesktopUIManager desktop;
 
-    public void StartLevel()
+    public override void StartLevel()
     {
         desktop = GetComponent<DesktopUIManager>();
         GetComponent<CanvasGroup>().SetVisibility( true );
@@ -34,7 +39,12 @@ public class Level3_Recycling : MonoBehaviour
         for( int i = 0; i < ( desktop.IsEasyMode() ? rounds[roundNumber].numShortcutsEasy : rounds[roundNumber].numShortcutsHard ); ++i )
         {
             var item = data.RandomItem();
-            shortcuts.Add( desktop.CreateShortcut( item.First, item.Second, desktop.GetGridBounds().RandomPosition() ) );
+
+            var shortcut = desktop.CreateShortcut( item.First, item.Second, desktop.GetGridBounds().RandomPosition() );
+            var rectTransform = ( shortcut.transform as RectTransform );
+
+            while( ( SubtitlesManager.Instance.transform as RectTransform ).Overlaps( rectTransform ) )
+                rectTransform.anchoredPosition = desktop.GetGridBounds().RandomPosition();
         }
 
         SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_1" ) );
@@ -51,12 +61,10 @@ public class Level3_Recycling : MonoBehaviour
 
             enabled = false;
 
-            Utility.FunctionTimer.CreateTimer( 3.0f, () => desktop.GameOver() );
-
+            desktop.LevelFailed( this );
         }, "Level_3" );
 
         SubtitlesManager.Instance.AssignTimer( timer );
-        SubtitlesManager.Instance.QueueSubtitleGameString( desktop.IsEasyMode() ? rounds[roundNumber].timerEasySec : rounds[roundNumber].timerHardSec, "Narrator_Level_3_Failed" );
     }
 
     private void Update()
