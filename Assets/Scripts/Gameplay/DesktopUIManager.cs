@@ -62,6 +62,7 @@ public class DesktopUIManager : MonoBehaviour
         startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
         windowCameraStartPosition = WindowCamera.transform.position.SetZ( 0.0f );
         MainCamera = Camera.main;
+        contextMenu.GetComponent<BoxCollider2D>().enabled = false;
 
         CreateShortcut( "Recycle Bin", Resources.Load< Texture2D >( "Textures/Full_Recycle_Bin" ), new Vector2Int() );
     }
@@ -261,7 +262,10 @@ public class DesktopUIManager : MonoBehaviour
                 selectionStartPos = Input.mousePosition;
 
             if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( contextMenu.transform ) )
+            {
                 contextMenu.GetComponent<CanvasGroup>().SetVisibility( false );
+                contextMenu.GetComponent<BoxCollider2D>().enabled = false;
+            }
         }
 
         // End selection box
@@ -311,6 +315,7 @@ public class DesktopUIManager : MonoBehaviour
         if( Input.GetMouseButtonDown( 1 ) )
         {
             contextMenu.GetComponent<CanvasGroup>().SetVisibility( true );
+            contextMenu.GetComponent<BoxCollider2D>().enabled = true;
             ( contextMenu.transform as RectTransform ).anchoredPosition = Input.mousePosition;
             ( contextMenu.transform as RectTransform ).pivot = new Vector2( 0.0f, Input.mousePosition.y <= 160.0f ? 0.0f : 1.0f );
         }
@@ -322,7 +327,8 @@ public class DesktopUIManager : MonoBehaviour
 
     private void FixChildOrdering()
     {
-        selectionBox?.transform.SetAsFirstSibling();
+        if( selectionBox != null )
+            selectionBox.transform.SetAsFirstSibling();
 
         foreach( var shortcut in shortcuts )
             shortcut.transform.SetAsFirstSibling();

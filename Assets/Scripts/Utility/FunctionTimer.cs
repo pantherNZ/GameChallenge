@@ -35,10 +35,14 @@ public static partial class Utility
 
         public bool RemoveTimer( string name )
         {
-            var found = GetTimer( name );
-            if( found != null )
-                timerList.Remove( found );
-            return found != null;
+            return RemoveTimer( GetTimer( name ) );
+        }
+
+        public bool RemoveTimer( FunctionTimer timer )
+        {
+            if( timer != null )
+                timerList.Remove( timer );
+            return timer != null;
         }
 
         void Update()
@@ -100,6 +104,21 @@ public static partial class Utility
                 return false;
             timer.active = true;
             return true;
+        }
+
+        public bool StopTimer()
+        {
+            return FunctionTimerHandler.Instance.RemoveTimer( this );
+        }
+
+        public void PauseTimer()
+        {
+            active = false;
+        }
+
+        public void ResumeTimer()
+        {
+            active = true;
         }
 
         public static FunctionTimer GetTimer( string name )

@@ -3,11 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract public class BaseLevel : MonoBehaviour
-{
-    abstract public void StartLevel();
-}
-
 public class Level3_Recycling : BaseLevel
 {
     [Serializable]
@@ -25,16 +20,19 @@ public class Level3_Recycling : BaseLevel
     [SerializeField] List<Data> data = new List<Data>();
     [SerializeField] List<Round> rounds = new List<Round>();
     [SerializeField] int roundNumber = 0;
+    [SerializeField] int fixedSeed = 0;
     List<GameObject> shortcuts = new List<GameObject>();
-    DesktopUIManager desktop;
 
     public override void StartLevel()
     {
-        desktop = GetComponent<DesktopUIManager>();
+        if( fixedSeed != 0 )
+            UnityEngine.Random.InitState( fixedSeed );
         GetComponent<CanvasGroup>().SetVisibility( true );
 
         if( roundNumber >= rounds.Count )
             return;
+
+        var worldRect = ( SubtitlesManager.Instance.transform as RectTransform ).GetWorldRect();
 
         for( int i = 0; i < ( desktop.IsEasyMode() ? rounds[roundNumber].numShortcutsEasy : rounds[roundNumber].numShortcutsHard ); ++i )
         {
@@ -42,9 +40,16 @@ public class Level3_Recycling : BaseLevel
 
             var shortcut = desktop.CreateShortcut( item.First, item.Second, desktop.GetGridBounds().RandomPosition() );
             var rectTransform = ( shortcut.transform as RectTransform );
+            int safety = 0;
 
-            while( ( SubtitlesManager.Instance.transform as RectTransform ).Overlaps( rectTransform ) )
+            while( ++safety <= 300 )
+            {
                 rectTransform.anchoredPosition = desktop.GetGridBounds().RandomPosition();
+                rectTransform.ForceUpdateRectTransforms();
+                var shortcutWorldRect = rectTransform.GetWorldRect();
+                if( !worldRect.Overlaps( shortcutWorldRect ) )
+                    break;
+            }
         }
 
         SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_1" ) );

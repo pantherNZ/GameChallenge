@@ -2,30 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Level1_BouncingBall : MonoBehaviour
+abstract public class BaseLevel : MonoBehaviour
 {
-    [SerializeField] GameObject ball = null;
+    protected DesktopUIManager desktop;
+
+    private void Start()
+    {
+        desktop = GetComponent<DesktopUIManager>();
+    }
+
+    abstract public void StartLevel();
+}
+
+public class Level1_BouncingBall : BaseLevel
+{
+    [SerializeField] GameObject ballPrefab = null;
     [SerializeField] float ballOffset = 3.0f;
     [SerializeField] float ballVelocity = 140.0f;
     [SerializeField] float ballHeight = 4.0f;
+    [SerializeField] float ballFrequency = 2.0f;
 
     [SerializeField] GameObject platform = null;
     [SerializeField] GameObject goal = null;
     [SerializeField] float goalOffset = 10.0f;
 
     List<GameObject> objects = new List<GameObject>();
-    DesktopUIManager desktop;
     bool alternate;
     int overlaps = 0;
 
-    public void StartLevel()
+    public override void StartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
 
         SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_1" ) );
         Utility.FunctionTimer.CreateTimer( 10.0f, () => { SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_2" ) ); }, "Narrator_Level_2_2" );
 
-        desktop = GetComponent<DesktopUIManager>();
         desktop.CreateWindow( "Bouncy Balls" );
 
         var newPlatform = Instantiate( platform, desktop.WindowCamera.transform );
@@ -52,12 +63,12 @@ public class Level1_BouncingBall : MonoBehaviour
         background.layer = LayerMask.NameToLayer( "SecondaryCamera" );
         objects.Add( background );
 
-        Utility.FunctionTimer.CreateTimer( 2.0f, CreateBall, "CreateBall", true );
+        Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
     }
 
     private void CreateBall()
     {
-        var newBall = Instantiate( ball, desktop.windowCameraStartPosition + new Vector3( alternate ? ballOffset : -ballOffset, ballHeight, 50.0f ), Quaternion.identity );
+        var newBall = Instantiate( ballPrefab, desktop.windowCameraStartPosition + new Vector3( alternate ? ballOffset : -ballOffset, ballHeight, 50.0f ), Quaternion.identity );
         newBall.GetComponent<Rigidbody2D>().AddForce( new Vector2( alternate ? -ballVelocity : ballVelocity, 0.0f ) );
         objects.Add( newBall );
 
