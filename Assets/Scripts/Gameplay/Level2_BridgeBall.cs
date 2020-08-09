@@ -16,7 +16,7 @@ public class Level2_BridgeBall : BaseLevel
     List<GameObject> objects = new List<GameObject>();
     Utility.FunctionTimer timer;
 
-    public override void StartLevel()
+    public override void OnStartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
@@ -40,7 +40,7 @@ public class Level2_BridgeBall : BaseLevel
         }
     }
 
-    private void Update()
+    protected override void OnLevelUpdate()
     {
         foreach( var ball in objects )
         {

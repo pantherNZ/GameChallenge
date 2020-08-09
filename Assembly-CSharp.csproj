@@ -66,10 +66,12 @@
     <Compile Include="Assets\Scripts\Data\DataManager.cs" />
     <Compile Include="Assets\Scripts\Data\DataTypes.cs" />
     <Compile Include="Assets\Scripts\Data\SaveGame.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\BaseLevel.cs" />
     <Compile Include="Assets\Scripts\Gameplay\DesktopUIManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level1_BouncingBall.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level2_BridgeBall.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level3_Recycling.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Level4_TargetPractice.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingWidget.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />

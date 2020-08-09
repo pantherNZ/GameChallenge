@@ -627,6 +627,7 @@ GameObject:
   - component: {fileID: 203328299}
   - component: {fileID: 203328301}
   - component: {fileID: 203328300}
+  - component: {fileID: 203328302}
   m_Layer: 5
   m_Name: Desktop
   m_TagString: Untagged
@@ -709,7 +710,7 @@ RectTransform:
   - {fileID: 1391013273}
   - {fileID: 1357519913}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -728,6 +729,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0c564e19b9a1b44af2a1bd8b69c6f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levels:
+  - {fileID: 522668005}
+  - {fileID: 203328297}
+  - {fileID: 203328299}
+  - {fileID: 203328301}
+  - {fileID: 203328300}
+  - {fileID: 203328302}
+  startingLevelId: 5
   loginUI: {fileID: 1897650524}
   windowBase: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -738,6 +747,7 @@ MonoBehaviour:
   shortcut: {fileID: 8885744749734479079, guid: 5184ac46c4828d94087e0089839f14b8,
     type: 3}
   startMenu: {fileID: 1533748190}
+  taskBar: {fileID: 1357519912}
   startMenuButton: {fileID: 1649992834}
   timeDateText: {fileID: 2034746898}
   background: {fileID: 1820640188}
@@ -745,6 +755,7 @@ MonoBehaviour:
   windowCamera: {fileID: 1025685071}
   selectionBoxPrefab: {fileID: 7310331534112248394, guid: b9b8a4f2ec0fc6144b537734fd68023a,
     type: 3}
+  desktopSelectionEnabled: 1
   contextMenu: {fileID: 1391013267}
   gridSize: {x: 100, y: 100}
   shortcuts: []
@@ -817,7 +828,7 @@ MonoBehaviour:
     numShortcutsEasy: 10
     numShortcutsHard: 20
   roundNumber: 0
-  fixedSeed: 444
+  fixedSeed: 0
 --- !u!114 &203328301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -840,6 +851,28 @@ MonoBehaviour:
   ballScale: 3.5
   ballFrequency: 2
   successDelayTimer: 2
+--- !u!114 &203328302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203328292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f56d00567c84f744c9fa0b76cccafcdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPrefab: {fileID: 2079181064363612512, guid: 70b968ea5a8c9404eaa81940a831e4b0,
+    type: 3}
+  gunPrefab: {fileID: 1404946478504284874, guid: 981e9351629abe04888f13fcd4bcef15,
+    type: 3}
+  targetSize: 1
+  targetSpawnRateBaseSec: 0.75
+  targetSpawnRateVarianceSec: 0
+  targetsMax: 30
+  targetSpeed: 0
+  targetDuration: 2
 --- !u!1 &214368265
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,7 +1473,7 @@ RectTransform:
   - {fileID: 700247553}
   - {fileID: 1004892579}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1473,7 +1506,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loginUI: {fileID: 1897650524}
   desktopUI: {fileID: 203328297}
-  forceStartLevelId: 2
 --- !u!1 &533462466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3025,7 +3057,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1036812304
 GameObject:
@@ -3040,7 +3072,7 @@ GameObject:
   - component: {fileID: 1036812306}
   - component: {fileID: 1036812305}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Subtitles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3119,7 +3151,7 @@ RectTransform:
   m_Children:
   - {fileID: 1009632336}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3895,7 +3927,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.028169194}
   m_AnchoredPosition: {x: 0, y: 3.9000244}
-  m_SizeDelta: {x: 0, y: 7.799988}
+  m_SizeDelta: {x: 0, y: 7.8000336}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1357519914
 MonoBehaviour:
@@ -4389,7 +4421,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 148.03003, y: 182.2}
+  m_AnchoredPosition: {x: 148.03003, y: 182.19998}
   m_SizeDelta: {x: 295.94995, y: 365.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1533748188
@@ -5341,7 +5373,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1792337091
 GameObject:
@@ -5742,8 +5774,8 @@ GameObject:
   - component: {fileID: 1897650522}
   - component: {fileID: 1897650521}
   - component: {fileID: 1897650520}
-  - component: {fileID: 1897650524}
   - component: {fileID: 1897650525}
+  - component: {fileID: 1897650524}
   m_Layer: 5
   m_Name: LoginSceen
   m_TagString: Untagged
@@ -5825,7 +5857,7 @@ RectTransform:
   - {fileID: 1841373565}
   - {fileID: 1127619245}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

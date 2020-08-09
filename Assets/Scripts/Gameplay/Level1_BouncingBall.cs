@@ -2,18 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract public class BaseLevel : MonoBehaviour
-{
-    protected DesktopUIManager desktop;
-
-    private void Start()
-    {
-        desktop = GetComponent<DesktopUIManager>();
-    }
-
-    abstract public void StartLevel();
-}
-
 public class Level1_BouncingBall : BaseLevel
 {
     [SerializeField] GameObject ballPrefab = null;
@@ -30,7 +18,7 @@ public class Level1_BouncingBall : BaseLevel
     bool alternate;
     int overlaps = 0;
 
-    public override void StartLevel()
+    public override void OnStartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
 
@@ -54,14 +42,7 @@ public class Level1_BouncingBall : BaseLevel
 
         CreateBall();
 
-        var background = new GameObject();
-        background.transform.position = desktop.windowCameraStartPosition + new Vector3( 0.0f, 0.0f, 20.0f );
-        var spriteRenderer = background.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = Resources.Load<Sprite>( "Textures/Backgrounds/1_game_background" );
-        spriteRenderer.sortingOrder = -1;
-        background.transform.localScale = new Vector3( 2.0f, 2.0f, 1.0f );
-        background.layer = LayerMask.NameToLayer( "SecondaryCamera" );
-        objects.Add( background );
+        objects.Add( Utility.CreateSprite( "Textures/Backgrounds/1_game_background", desktop.windowCameraStartPosition + new Vector3( 0.0f, 0.0f, 20.0f ), new Vector3( 2.0f, 2.0f ), Quaternion.identity, "SecondaryCamera" ) );
 
         Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
     }
@@ -75,7 +56,7 @@ public class Level1_BouncingBall : BaseLevel
         alternate = !alternate;
     }
 
-    private void Update()
+    protected override void OnLevelUpdate()
     {
         foreach( var ball in objects )
         {

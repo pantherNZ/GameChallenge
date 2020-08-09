@@ -37,7 +37,7 @@ public static partial class Extensions
         list.RemoveAt( list.Count - 1 );
     }
 
-    public static bool RemoveBySwap<T>( this List<T> list, Func< T, bool > predicate )
+    public static bool RemoveBySwap<T>( this List<T> list, Func<T, bool> predicate )
     {
         if( list.IsEmpty() )
             return false;
@@ -105,7 +105,7 @@ public static partial class Extensions
             throw new System.ArgumentException( "You cannot use PopFront on an empty list!" );
 
         var last = list[0];
-        list.RemoveAt(0);
+        list.RemoveAt( 0 );
         return last;
     }
 
@@ -223,6 +223,21 @@ public static partial class Extensions
         return Quaternion.AngleAxis( angleDegrees, Vector3.forward ) * vec;
     }
 
+    public static Vector3 RotateX( this Vector3 vec, float angleDegrees )
+    {
+        return Quaternion.AngleAxis( angleDegrees, Vector3.right ) * vec;
+    }
+
+    public static Vector3 RotateY( this Vector3 vec, float angleDegrees )
+    {
+        return Quaternion.AngleAxis( angleDegrees, Vector3.up ) * vec;
+    }
+
+    public static Vector3 RotateZ( this Vector3 vec, float angleDegrees )
+    {
+        return Quaternion.AngleAxis( angleDegrees, Vector3.forward ) * vec;
+    }
+
     public static Vector2 RandomPosition( this Rect rect )
     {
         return new Vector2(
@@ -238,7 +253,7 @@ public static partial class Extensions
         return rect1.Overlaps( rect2 );
     }
 
-    public static IEnumerable<Tuple< int, T > > Enumerate<T>( this IEnumerable<T> collection )
+    public static IEnumerable<Tuple<int, T>> Enumerate<T>( this IEnumerable<T> collection )
     {
         int counter = 0;
         foreach( var item in collection )
@@ -248,11 +263,31 @@ public static partial class Extensions
         }
     }
 
-    static public Rect GetWorldRect( this RectTransform rt)
+    static public Rect GetWorldRect( this RectTransform rt )
     {
         Vector3[] corners = new Vector3[4];
         rt.GetWorldCorners( corners );
         Vector2 scaledSize = new Vector2( rt.localScale.x * rt.rect.size.x, rt.localScale.y * rt.rect.size.y );
         return new Rect( ( corners[1] + corners[3] ) / 2.0f, scaledSize );
+    }
+
+    static public Vector2 TopLeft( this Rect rect )
+    {
+        return new Vector2( rect.xMin, rect.yMax );
+    }
+
+    static public Vector2 TopRight( this Rect rect )
+    {
+        return new Vector2( rect.xMax, rect.yMax );
+    }
+
+    static public Vector2 BottomLeft( this Rect rect )
+    {
+        return new Vector2( rect.xMin, rect.yMin );
+    }
+
+    static public Vector2 BottomRight( this Rect rect )
+    {
+        return new Vector2( rect.xMax, rect.yMin );
     }
 }

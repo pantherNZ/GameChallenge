@@ -5,11 +5,14 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Linq;
 
-public class DesktopUIManager : MonoBehaviour
+public class DesktopUIManager : BaseLevel
 {
     public Camera WindowCamera { get => windowCamera; private set { } }
     public Camera MainCamera { get; private set; }
     public Vector3 windowCameraStartPosition { get; private set; }
+
+    [SerializeField] List<BaseLevel> levels = new List<BaseLevel>();
+    [SerializeField] int startingLevelId = 0;
 
     // UI stuff
     [SerializeField] LoginUI loginUI = null;
@@ -18,6 +21,7 @@ public class DesktopUIManager : MonoBehaviour
     [SerializeField] GameObject helpWindow = null;
     [SerializeField] GameObject shortcut = null;
     [SerializeField] CanvasGroup startMenu = null;
+    [SerializeField] GameObject taskBar = null;
     [SerializeField] Button startMenuButton = null;
     [SerializeField] Text timeDateText = null;
     [SerializeField] GameObject background = null;
@@ -30,6 +34,7 @@ public class DesktopUIManager : MonoBehaviour
     [SerializeField] GameObject selectionBoxPrefab = null;
     GameObject selectionBox;
     Vector3? selectionStartPos;
+    [HideInInspector] public bool desktopSelectionEnabled = true;
 
     // Desktop context menu
     [SerializeField] GameObject contextMenu = null;
@@ -65,14 +70,11 @@ public class DesktopUIManager : MonoBehaviour
         contextMenu.GetComponent<BoxCollider2D>().enabled = false;
 
         CreateShortcut( "Recycle Bin", Resources.Load< Texture2D >( "Textures/Full_Recycle_Bin" ), new Vector2Int() );
+
+        Utility.FunctionTimer.CreateTimer( 0.001f, GetLevel( startingLevelId ).StartLevel );
     }
 
-    public bool IsEasyMode()
-    {
-        return easyDifficulty;
-    }
-
-    public void StartLevel()
+    public override void OnStartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( 2.0f, () => 
@@ -95,6 +97,33 @@ public class DesktopUIManager : MonoBehaviour
             if( !easyDifficulty )
                 SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
         } );
+    }
+
+    public BaseLevel GetLevel( int index )
+    {
+        if( index < 0 || index >= levels.Count || levels[index] == null )
+        {
+            Debug.LogError( "LoadingUI: forceStartLevelId invalid value: " + index.ToString() );
+            return null;
+        }
+
+        return levels[index];
+    }
+
+    public Rect GetWorldBound( float margin = 0.0f, bool includeStartBar = false )
+    {
+        var startBarHeight = ( taskBar.transform as RectTransform ).rect.height;
+        var startOffset = includeStartBar ? 0.0f : ( ( startBarHeight / MainCamera.pixelHeight ) * MainCamera.orthographicSize * 2.0f );
+        var width = MainCamera.aspect * MainCamera.orthographicSize * 2.0f - margin * 2.0f;
+        var height = MainCamera.orthographicSize * 2.0f - margin * 2.0f - startOffset;
+        var xPos = -width / 2.0f;
+        var yPos = -height / 2.0f + startOffset / 2.0f;
+        return new Rect( xPos, yPos, width, height );
+    }
+
+    public bool IsEasyMode()
+    {
+        return easyDifficulty;
     }
 
     public void CloseGame()
@@ -277,7 +306,7 @@ public class DesktopUIManager : MonoBehaviour
         }
 
         // Selection box positioning
-        if( selectionStartPos != null && Input.mousePosition != selectionStartPos )
+        if( selectionStartPos != null && Input.mousePosition != selectionStartPos && desktopSelectionEnabled )
         {
             if( selectionBox == null )
             {

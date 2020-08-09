@@ -23,7 +23,7 @@ public class Level3_Recycling : BaseLevel
     [SerializeField] int fixedSeed = 0;
     List<GameObject> shortcuts = new List<GameObject>();
 
-    public override void StartLevel()
+    public override void OnStartLevel()
     {
         if( fixedSeed != 0 )
             UnityEngine.Random.InitState( fixedSeed );
@@ -72,7 +72,7 @@ public class Level3_Recycling : BaseLevel
         SubtitlesManager.Instance.AssignTimer( timer );
     }
 
-    private void Update()
+    protected override void OnLevelUpdate()
     {
         if( desktop != null && desktop.shortcuts.Count == 1 )
         {

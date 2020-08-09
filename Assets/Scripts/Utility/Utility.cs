@@ -86,8 +86,9 @@ public static partial class Utility
     public static float DistanceSq( Transform a, Transform b ) { return DistanceSq( a.position, b.position ); }
     public static float DistanceSq( Vector3 a, Vector3 b ) { return ( a - b ).sqrMagnitude; }
 
-    public static void DrawCircle( Vector3 position, float diameter, float lineWidth )
+    public static void DrawCircle( Vector3 position, float diameter, float lineWidth, Color? colour = null )
     {
+        colour = colour ?? new Color( 1.0f, 1.0f, 1.0f, 1.0f );
         var newObj = new GameObject();
         newObj.transform.position = position;
 
@@ -97,6 +98,7 @@ public static partial class Utility
         line.startWidth = lineWidth;
         line.endWidth = lineWidth;
         line.positionCount = segments + 1;
+        line.startColor = line.endColor = colour.Value;
 
         var pointCount = segments + 1;
         var points = new Vector3[pointCount];
@@ -110,6 +112,15 @@ public static partial class Utility
         line.SetPositions( points );
 
         FunctionTimer.CreateTimer( 5.0f, () => newObj.Destroy() );
+    }
+
+    public static void DrawRect( Rect rect, Color? colour = null )
+    {
+        colour = colour ?? new Color( 1.0f, 1.0f, 1.0f, 1.0f );
+        Debug.DrawLine( rect.TopLeft(), rect.TopRight(), colour.Value );
+        Debug.DrawLine( rect.TopRight(), rect.BottomRight(), colour.Value );
+        Debug.DrawLine( rect.BottomRight(), rect.BottomLeft(), colour.Value );
+        Debug.DrawLine( rect.BottomLeft(), rect.TopLeft(), colour.Value );
     }
 
     public class FunctionComponent : MonoBehaviour
@@ -145,6 +156,19 @@ public static partial class Utility
             if( actionWithResult?.Invoke() ?? false )
                 Destroy( this );
         }
+    }
+
+    public static GameObject CreateSprite( string path, Vector3 pos, Vector2 scale, Quaternion? rotation = null, string layer = "Default", int order = 1 )
+    {
+        var sprite = new GameObject();
+        sprite.transform.position = pos;
+        sprite.transform.rotation = rotation ?? Quaternion.identity;
+        var spriteRenderer = sprite.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = Resources.Load<Sprite>( path );
+        spriteRenderer.sortingOrder = order;
+        sprite.transform.localScale = scale.ToVector3( 1.0f );
+        sprite.layer = LayerMask.NameToLayer( layer );
+        return sprite;
     }
 }
 
