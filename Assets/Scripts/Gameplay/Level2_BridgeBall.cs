@@ -28,10 +28,14 @@ public class Level2_BridgeBall : BaseLevel
         goal.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { timer.StopTimer(); };
 
         if( desktop.IsEasyMode() )
-            levelObj.transform.GetChild( 2 ).gameObject.Destroy();
+        {
+            levelObj.transform.GetChild( 1 ).gameObject.Destroy();
+            levelObj.transform.GetChild( 3 ).gameObject.Destroy();
+        }
         else
         {
             levelObj.transform.GetChild( 1 ).gameObject.Destroy();
+            levelObj.transform.GetChild( 2 ).gameObject.Destroy();
             levelObj.transform.GetChild( 3 ).gameObject.Destroy();
         }
     }
