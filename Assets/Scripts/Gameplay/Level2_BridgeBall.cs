@@ -64,5 +64,7 @@ public class Level2_BridgeBall : BaseLevel
     private void CheckComplete()
     {
 
+
+        Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
     }
 }

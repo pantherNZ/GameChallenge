@@ -7,24 +7,6 @@ using System.Collections;
 
 public static partial class Utility
 {
-    public static IEnumerator FadeToBlack( this CanvasGroup group, float fadeDurationSec )
-    {
-        while( group.alpha > 0.0f )
-        {
-            group.alpha = Mathf.Max( 0.0f, group.alpha - Time.deltaTime * ( 1.0f / fadeDurationSec ) );
-            yield return null;
-        }
-    }
-
-    public static IEnumerator FadeFromBlack( this CanvasGroup group, float fadeDurationSec )
-    {
-        while( group.alpha < 1.0f )
-        {
-            group.alpha = Mathf.Min( 1.0f, group.alpha + Time.deltaTime * ( 1.0f / fadeDurationSec ) );
-            yield return null;
-        }
-    }
-
     public class DestroySelf : MonoBehaviour
     {
         public void DestroyMe()

@@ -71,6 +71,13 @@ public class DesktopUIManager : BaseLevel
 
         CreateShortcut( "Recycle Bin", Resources.Load< Texture2D >( "Textures/Full_Recycle_Bin" ), new Vector2Int() );
 
+        for( int i = 0; i < levels.Count; ++i )
+        {
+            levels[i].levelIdx = i;
+            if( i < levels.Count - 1 )
+                levels[i].nextLevel = levels[i + 1];
+        }
+
         Utility.FunctionTimer.CreateTimer( 0.001f, GetLevel( startingLevelId ).StartLevel );
     }
 
@@ -88,6 +95,7 @@ public class DesktopUIManager : BaseLevel
 
                     if( !difficultyTimer.active )
                         SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
+                    Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
                 }
             } );
         } );
@@ -96,6 +104,7 @@ public class DesktopUIManager : BaseLevel
         {
             if( !easyDifficulty )
                 SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
+            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
         } );
     }
 
@@ -147,10 +156,10 @@ public class DesktopUIManager : BaseLevel
             window.GetComponent<Window>().image.GetComponent<RawImage>().texture = errorTexture;
             ( window.transform as RectTransform ).sizeDelta = new Vector2( errorTexture.width, errorTexture.height );
 
-            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime, () => StartCoroutine( Utility.FadeToBlack( GetComponent<CanvasGroup>(), levelFailFadeOutTime ) ) );
+            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime, () => this.FadeToBlack( levelFailFadeOutTime ) ); 
             Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime, () =>
             {
-                StartCoroutine( Utility.FadeFromBlack( GetComponent<CanvasGroup>(), levelFailFadeInTime ) );
+                this.FadeFromBlack( levelFailFadeInTime );
             } );
             Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime + levelFailFadeInTime, () =>
             {
@@ -168,11 +177,11 @@ public class DesktopUIManager : BaseLevel
 
     public void RestartGame()
     {
-        StartCoroutine( Utility.FadeToBlack( GetComponent<CanvasGroup>(), restartGameFadeOutTime ) );
+        this.FadeToBlack( restartGameFadeOutTime );
 
         Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime, () =>
         {
-            StartCoroutine( Utility.FadeFromBlack( GetComponent<CanvasGroup>(), restartGameFadeInTime ) );
+            this.FadeFromBlack( restartGameFadeInTime );
             MainCamera.gameObject.SetActive( true );
             blueScreenCamera.gameObject.SetActive( false );
             loginUI.StartLevel();

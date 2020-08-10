@@ -82,6 +82,8 @@ public class Level1_BouncingBall : BaseLevel
             SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
 
             desktop.DestroyWindow( "Bouncy Balls" );
+
+            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
         }
     }
 }
