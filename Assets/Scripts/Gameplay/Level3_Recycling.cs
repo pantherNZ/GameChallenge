@@ -14,10 +14,7 @@ public class Level3_Recycling : BaseLevel
         public int numShortcutsHard = 25;
     }
 
-    [Serializable]
-    class Data : Pair<string, Texture2D>{ }
-
-    [SerializeField] List<Data> data = new List<Data>();
+    [SerializeField] List<DesktopIcon> data = new List<DesktopIcon>();
     [SerializeField] List<Round> rounds = new List<Round>();
     [SerializeField] int roundNumber = 0;
     [SerializeField] int fixedSeed = 0;
@@ -38,7 +35,7 @@ public class Level3_Recycling : BaseLevel
         {
             var item = data.RandomItem();
 
-            var shortcut = desktop.CreateShortcut( item.First, item.Second, desktop.GetGridBounds().RandomPosition() );
+            var shortcut = desktop.CreateShortcut( item, desktop.GetGridBounds().RandomPosition() );
             var rectTransform = ( shortcut.transform as RectTransform );
             int safety = 0;
 

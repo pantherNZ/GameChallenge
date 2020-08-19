@@ -152,6 +152,15 @@ public static partial class Utility
         sprite.layer = LayerMask.NameToLayer( layer );
         return sprite;
     }
+
+    public static GameObject CreateWorldObjectFromScreenSpaceRect( RectTransform rect )
+    {
+        var r = rect.GetWorldRect();
+        var obj = new GameObject();
+        obj.transform.position = r.position;
+        obj.transform.localScale = r.size;
+        return obj;
+    }
 }
 
 public class WeightedSelector< T >

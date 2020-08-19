@@ -267,7 +267,7 @@ public static partial class Extensions
     {
         Vector3[] corners = new Vector3[4];
         rt.GetWorldCorners( corners );
-        Vector2 scaledSize = new Vector2( rt.localScale.x * rt.rect.size.x, rt.localScale.y * rt.rect.size.y );
+        Vector2 scaledSize = new Vector2( rt.lossyScale.x * rt.rect.size.x, rt.lossyScale.y * rt.rect.size.y );
         return new Rect( ( corners[1] + corners[3] ) / 2.0f, scaledSize );
     }
 

@@ -5,11 +5,19 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Linq;
 
+[System.Serializable]
+public class DesktopIcon
+{
+    public string name;
+    public Texture2D icon;
+}
+
 public class DesktopUIManager : BaseLevel
 {
     public Camera WindowCamera { get => windowCamera; private set { } }
     public Camera MainCamera { get; private set; }
     public Vector3 windowCameraStartPosition { get; private set; }
+    public GameObject Taskbar { get => taskBar; private set { } }
 
     [SerializeField] List<BaseLevel> levels = new List<BaseLevel>();
     [SerializeField] int startingLevelId = 0;
@@ -52,6 +60,7 @@ public class DesktopUIManager : BaseLevel
     [SerializeField] float levelFailFadeInTime = 2.0f;
     [SerializeField] float restartGameFadeOutTime = 5.0f;
     [SerializeField] float restartGameFadeInTime = 2.0f;
+    [SerializeField] bool enabledAudio = true;
 
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     bool easyDifficulty = true;
@@ -67,9 +76,10 @@ public class DesktopUIManager : BaseLevel
         startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
         windowCameraStartPosition = WindowCamera.transform.position.SetZ( 0.0f );
         MainCamera = Camera.main;
+        MainCamera.GetComponent<AudioListener>().enabled = enabledAudio;
         contextMenu.GetComponent<BoxCollider2D>().enabled = false;
 
-        CreateShortcut( "Recycle Bin", Resources.Load< Texture2D >( "Textures/Full_Recycle_Bin" ), new Vector2Int() );
+        CreateShortcut( new DesktopIcon() { name = "Recycle Bin", icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" ) }, new Vector2Int() );
 
         for( int i = 0; i < levels.Count; ++i )
         {
@@ -238,28 +248,33 @@ public class DesktopUIManager : BaseLevel
     public Rect GetGridBounds()
     {
         var rect = ( transform as RectTransform ).rect;
-        return new Rect( 0.0f, 0.0f,
-             ( Mathf.Floor( rect.width / gridSize.x ) - 0.5f ) * gridSize.x,
-            -( Mathf.Floor( rect.height / gridSize.y ) - 0.5f ) * gridSize.y );
-    }
-    public GameObject CreateShortcut( string title, Texture2D icon, Vector2Int index )
-    {
-        return CreateShortcut( title, icon, ( index * gridSize ).ToVector2() );
+        float height = ( Mathf.Floor( rect.height / gridSize.y ) - 0.5f ) * gridSize.y;
+        return new Rect( rect.xMin, rect.yMin + rect.height - height, ( Mathf.Floor( rect.width / gridSize.x ) - 0.5f ) * gridSize.x, height );
     }
 
-    public GameObject CreateShortcut( string title, Texture2D icon, Vector2 position )
+    public GameObject CreateShortcut( DesktopIcon icon, Vector2Int index )
     {
+        return CreateShortcut( icon, GetGridBounds().TopLeft() + new Vector2( index.x * gridSize.x, -index.y * gridSize.y ) );
+    }
+
+    public GameObject CreateShortcut( DesktopIcon icon, Vector2 position )
+    {
+        if( icon == null )
+            return null;
+
         var newShortcut = Instantiate( shortcut, transform );
-        ( newShortcut.transform as RectTransform ).anchoredPosition = position;
-        newShortcut.GetComponentInChildren<Text>().text = title;
-        newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon, new Rect( 0.0f, 0.0f, icon.width, icon.height ), new Vector2( 0.5f, 0.5f ) );
+        ( newShortcut.transform as RectTransform ).localPosition = position - new Vector2( 0.0f, gridSize.y / 2.0f );
+        ( newShortcut.transform as RectTransform ).pivot = new Vector2( 0.5f, 0.5f );
+        newShortcut.GetComponentInChildren<Text>().text = icon.name;
+        newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon.icon, new Rect( 0.0f, 0.0f, icon.icon.width, icon.icon.height ), new Vector2( 0.5f, 0.5f ) );
 
         var grid = newShortcut.GetComponent<LockToGrid>();
         grid.gridWidth = gridSize.x;
         grid.gridHeight = gridSize.y;
         var bounds = GetGridBounds();
-        grid.minPos = new Vector2( bounds.x, bounds.height );
-        grid.maxPos = new Vector2( bounds.width, bounds.y );
+        grid.rootPos = bounds.TopLeft();
+        grid.minPos = bounds.min;
+        grid.maxPos = bounds.max;
 
         grid.onOverlapWith += ( obj ) => 
         {
@@ -274,7 +289,13 @@ public class DesktopUIManager : BaseLevel
 
         FixChildOrdering();
 
-        return newShortcut;
+        return shortcuts.Back();
+    }
+
+    public GameObject GetShortcut( int index )
+    {
+        Debug.Assert( index >= 0 && index < shortcuts.Count );
+        return shortcuts[index];
     }
 
     private void Update()
@@ -373,5 +394,10 @@ public class DesktopUIManager : BaseLevel
 
         background.transform.SetAsFirstSibling();
         startMenu.transform.parent.transform.SetAsLastSibling();
+    }
+
+    public GameObject GetBackground()
+    {
+        return background;
     }
 }

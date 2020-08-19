@@ -4,7 +4,11 @@ abstract public class BaseLevel : MonoBehaviour
 {
     protected DesktopUIManager desktop;
     bool levelStarted;
+
+    [HideInInspector]
     public int levelIdx = 0;
+
+    [HideInInspector]
     public BaseLevel nextLevel;
 
     private void Start()
@@ -14,13 +18,16 @@ abstract public class BaseLevel : MonoBehaviour
 
     public void StartLevel()
     {
-        OnStartLevel();
+        if( levelStarted )
+            return;
+
         levelStarted = true;
+        OnStartLevel();
     }
 
     public void StartNextLevel()
     {
-        nextLevel?.OnStartLevel();
+        nextLevel?.StartLevel();
     }
 
     public bool HasStarted()

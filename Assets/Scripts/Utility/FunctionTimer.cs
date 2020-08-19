@@ -41,13 +41,19 @@ public static partial class Utility
         public bool RemoveTimer( FunctionTimer timer )
         {
             if( timer != null )
-                timerList.Remove( timer );
+            {
+                var idx = timerList.IndexOf( timer );
+                if( idx != -1 )
+                    timerList[idx].timeLeft = 0.0f;
+            }
             return timer != null;
         }
 
         void Update()
         {
-            for( var idx = timerList.Count - 1; idx >= 0; --idx )
+            var cached_idx = timerList.Count;
+
+            for( var idx = 0; idx < cached_idx; ++idx )
             {
                 var timer = timerList[idx];
                 timer.timeLeft -= ( timer.useUnscaledDeltaTime ? Time.unscaledDeltaTime : Time.deltaTime );
@@ -58,20 +64,18 @@ public static partial class Utility
                     timer.action();
                     
                     if( timer.loop )
-                    {
                         timer.timeLeft += timer.duration;
-                    }
-                    else
-                    {
-                        timerList.RemoveAt( idx );
-
-                        if( timerList.IsEmpty() )
-                        {
-                            functionTimerHandler.gameObject.Destroy();
-                            functionTimerHandler = null;
-                        }
-                    }
                 }
+            }
+
+            for( var idx = timerList.Count - 1; idx >= 0; --idx )
+                if( timerList[idx].timeLeft <= 0.0f )
+                    timerList.RemoveAt( idx );
+
+            if( timerList.IsEmpty() )
+            {
+                functionTimerHandler.gameObject.Destroy();
+                functionTimerHandler = null;
             }
         }
     }

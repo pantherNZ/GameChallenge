@@ -10,6 +10,7 @@ public class LockToGrid : MonoBehaviour
     public string disableOverlapWithTag;
     public Vector2 minPos = new Vector2( float.NegativeInfinity, float.NegativeInfinity );
     public Vector2 maxPos = new Vector2( float.PositiveInfinity, float.PositiveInfinity );
+    public Vector2 rootPos = new Vector2( 0.0f, 0.0f );
     public Action<GameObject> onOverlapWith;
 
     void Update()
@@ -22,10 +23,11 @@ public class LockToGrid : MonoBehaviour
 
             do
             {
-                var pos = rectTransform.anchoredPosition;
-                rectTransform.anchoredPosition = new Vector2(
-                    Mathf.Clamp( ( Mathf.Floor( ( pos.x + gridWidth / 2.0f ) / gridWidth ) ) * gridWidth, minPos.x, maxPos.x ),
-                    Mathf.Clamp( ( Mathf.Floor( ( pos.y + gridHeight / 2.0f ) / gridHeight ) ) * gridHeight, minPos.y, maxPos.y ) );
+                var pos = rectTransform.localPosition.ToVector2();
+                pos -= rootPos;
+                var coord = new Vector2( Mathf.Floor( pos.x / gridWidth ), Mathf.Floor( pos.y / gridHeight ) );
+                pos = new Vector3( rootPos.x + coord.x * gridWidth + gridWidth / 2.0f, rootPos.y + coord.y * gridHeight + gridHeight / 2.0f, rectTransform.position.z );
+                rectTransform.localPosition = pos;
 
                 if( disableOverlapWithTag.Length > 0 && ( overlap || ( pos - rectTransform.anchoredPosition ).sqrMagnitude > 0.001f ) )
                 {

@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\Gameplay\Level2_BridgeBall.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level3_Recycling.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level4_TargetPractice.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Level5_Earthquake.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingWidget.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Assets\Scripts\Utility\Extensions.cs" />
     <Compile Include="Assets\Scripts\Utility\FunctionTimer.cs" />
     <Compile Include="Assets\Scripts\Utility\LockToGrid.cs" />
+    <Compile Include="Assets\Scripts\Utility\Quad.cs" />
     <Compile Include="Assets\Scripts\Utility\SecureHash.cs" />
     <Compile Include="Assets\Scripts\Utility\SimplexNoise.cs" />
     <Compile Include="Assets\Scripts\Utility\Utility.cs" />
@@ -89,8 +91,8 @@
     <Compile Include="Assets\Scripts\Utility\UtilityComponentEditor.cs" />
     <Compile Include="Assets\Scripts\Utility\UtilityCoroutines.cs" />
     <Compile Include="Assets\Scripts\Utility\xxHash.cs" />
+    <None Include="Assets\Resources\Misc\DarknessShader.shader" />
     <None Include="Assets\Resources\Shaders\empty.txt" />
-    <None Include="Assets\Resources\Audio\empty.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Projects/GameChallenge.git/trunk/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

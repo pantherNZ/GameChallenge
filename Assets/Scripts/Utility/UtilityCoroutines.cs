@@ -40,7 +40,7 @@ public static partial class Utility
         {
             var diff = targetScale - transform.localScale;
             var delta = Time.deltaTime * ( 1.0f / durationSec );
-            transform.localScale = new Vector3( 
+            transform.localScale = new Vector3(
                 transform.localScale.x + Mathf.Min( Mathf.Abs( diff.x ), Mathf.Abs( interp.x ) * delta ) * Mathf.Sign( diff.x ),
                 transform.localScale.y + Mathf.Min( Mathf.Abs( diff.y ), Mathf.Abs( interp.y ) * delta ) * Mathf.Sign( diff.y ),
                 transform.localScale.z + Mathf.Min( Mathf.Abs( diff.z ), Mathf.Abs( interp.z ) * delta ) * Mathf.Sign( diff.z ) );
@@ -72,5 +72,38 @@ public static partial class Utility
     public static void InterpolatePosition( this MonoBehaviour mono, Vector3 targetPosition, float durationSec )
     {
         mono.StartCoroutine( InterpolatePosition( mono.transform, targetPosition, durationSec ) );
+    }
+
+    public static IEnumerator Shake( Transform transform, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
+    {
+        var elapsed = 0.0f;
+        var originalPos = transform.localPosition;
+
+        while( elapsed < duration )
+        {
+            elapsed += Time.deltaTime;
+
+            var dynamicAmplitude = Mathf.Lerp( amplitudeStart, amplitudeEnd, elapsed / duration );
+            transform.localPosition = originalPos + new Vector3(
+                Mathf.Sin( elapsed * frequency ) * dynamicAmplitude,
+                Mathf.Sin( elapsed * frequency * yMultiplier ) * dynamicAmplitude / yMultiplier, 
+                0.0f );
+
+            yield return null;
+        }
+
+        //yield return InterpolatePosition( transform, originalPos, 0.1f );
+
+        transform.localPosition = originalPos;
+    }
+
+    public static void Shake( this MonoBehaviour mono, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
+    {
+        mono.StartCoroutine( Shake( mono.transform, duration, amplitudeStart, amplitudeEnd, frequency, yMultiplier ) );
+    }
+
+    public static void ShakeTarget( this MonoBehaviour mono, Transform target, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
+    {
+        mono.StartCoroutine( Shake( target, duration, amplitudeStart, amplitudeEnd, frequency, yMultiplier ) );
     }
 }
