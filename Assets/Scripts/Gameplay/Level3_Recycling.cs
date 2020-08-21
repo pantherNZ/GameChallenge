@@ -36,6 +36,7 @@ public class Level3_Recycling : BaseLevel
             var item = data.RandomItem();
 
             var shortcut = desktop.CreateShortcut( item, desktop.GetGridBounds().RandomPosition() );
+            shortcuts.Add( shortcut );
             var rectTransform = ( shortcut.transform as RectTransform );
             int safety = 0;
 
@@ -55,12 +56,10 @@ public class Level3_Recycling : BaseLevel
         {
             SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_Failed" ) );
 
-            for( int i = desktop.shortcuts.Count - 1; i < 0; --i )
-            {
-                desktop.shortcuts[i].Destroy();
-                desktop.shortcuts.RemoveAt( i );
-            }
+            for( int i = shortcuts.Count - 1; i < 0; --i )
+                desktop.RemoveShortcut( shortcuts[i] );
 
+            shortcuts.Clear();
             enabled = false;
 
             desktop.LevelFailed( this );
@@ -71,7 +70,7 @@ public class Level3_Recycling : BaseLevel
 
     protected override void OnLevelUpdate()
     {
-        if( desktop != null && desktop.shortcuts.Count == 1 )
+        if( desktop != null && shortcuts.Count == 0 )
         {
             enabled = false;
             Utility.FunctionTimer.StopTimer( "Level_3" );

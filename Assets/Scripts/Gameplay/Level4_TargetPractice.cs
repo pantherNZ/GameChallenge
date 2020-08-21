@@ -58,6 +58,8 @@ public class Level4_TargetPractice : BaseLevel
         countdownSprite?.Destroy();
         gun?.Destroy();
         crosshair?.Destroy();
+
+        LevelFinished();
     }
 
     private void CountDown()
@@ -116,7 +118,7 @@ public class Level4_TargetPractice : BaseLevel
         ++targetsCount;
 
         var target = Instantiate( targetPrefab, desktop.GetWorldBound( 1.0f ).RandomPosition().ToVector3( 20.0f ), Quaternion.identity, desktop.MainCamera.transform );
-        target.transform.localScale = new Vector3();
+        target.transform.localScale = new Vector3( 0.1f, 0.1f, 0.1f );
         StartCoroutine( Utility.InterpolateScale( target.transform, new Vector3( targetSize, targetSize, 1.0f ), targetFadeDuration ) );
         Utility.FunctionTimer.CreateTimer( targetFadeDuration + targetDuration, () =>
         {

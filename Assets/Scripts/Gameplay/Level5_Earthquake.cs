@@ -15,9 +15,7 @@ public class Level5_Earthquake : BaseLevel
     int targetsCount, countdown, fails;
     GameObject lightSwitch;
     GameObject taskbarPhysics;
-    List<Pair<GameObject, GameObject>> shortcuts = new List<Pair<GameObject, GameObject>>();
-
-    Vector3 rootPos = new Vector3( -20.0f, 0.0f, 0.0f );
+    List<GameObject> shortcuts = new List<GameObject>();
 
     public override void OnStartLevel()
     {
@@ -29,28 +27,25 @@ public class Level5_Earthquake : BaseLevel
         Utility.FunctionTimer.CreateTimer( 2.95f, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f );
         //Utility.FunctionTimer.CreateTimer( 5.0f, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f );
 
-        var taskbarPhysics = Utility.CreateWorldObjectFromScreenSpaceRect( desktop.Taskbar.transform as RectTransform );
-        taskbarPhysics.transform.position = taskbarPhysics.transform.position + rootPos;
-        taskbarPhysics.AddComponent<Quad>();
-        taskbarPhysics.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
+        desktop.TaskbarCreatePhysics();
 
         for( int i = 0; i < ( desktop.IsEasyMode() ? numIconsEasy : numIconsHard ) && data.Count > 0; ++i )
         {
-            var item = data.RandomItem();
+            var item = i == 0 ? data[0] : data.RandomItem();
             var icon = desktop.CreateShortcut( item, desktop.GetGridBounds().RandomPosition() );
-            icon.GetComponent<LockToGrid>().enabled = false;
+            shortcuts.Add( icon );
             data.Remove( item );
-
-            var physics = Utility.CreateWorldObjectFromScreenSpaceRect( icon.transform as RectTransform );
-            var test = ( icon.transform as RectTransform ).GetWorldRect();
-
-            physics.transform.position = physics.transform.position + rootPos;
-            physics.AddComponent<Quad>();
-            physics.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
-            physics.AddComponent<Rigidbody2D>();
-
-            shortcuts.Add( new Pair<GameObject, GameObject>( icon, physics ) );
+            desktop.ShortcutAddPhysics( icon );
+            Utility.FunctionTimer.CreateTimer( 4.0f, () => desktop.ShortcutRemovePhysics( icon ) );
         }
+    }
+
+    protected override void OnLevelFinished()
+    {
+        desktop.TaskbarRemovePhysics();
+
+        foreach( var x in shortcuts )
+            desktop.RemoveShortcut( x );
     }
 
     private void Update()
@@ -58,16 +53,6 @@ public class Level5_Earthquake : BaseLevel
         if( Input.GetMouseButtonDown( 0 ) )
         {
             // Create light
-        }
-    }
-
-    private void LateUpdate()
-    {
-        foreach( var shortcut in shortcuts )
-        {
-            var newPos = shortcut.Second.transform.position - rootPos;// + shortcut.Second.transform.localScale / 2.0f;
-            ( shortcut.First.transform as RectTransform ).localPosition = ( desktop.transform as RectTransform ).InverseTransformPoint( newPos ).SetZ( 0.0f );
-            ( shortcut.First.transform as RectTransform ).localRotation = shortcut.Second.transform.rotation;
         }
     }
 }

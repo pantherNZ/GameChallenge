@@ -49,7 +49,15 @@ public class DesktopUIManager : BaseLevel
 
     // Shortcuts
     [SerializeField] Vector2Int gridSize = new Vector2Int( 100, 100 );
-    [HideInInspector] public List<GameObject> shortcuts = new List<GameObject>();
+
+    public class Shortcut
+    {
+        public GameObject shortcut;
+        public GameObject physics;
+        public System.Action<GameObject> onOpened;
+    }
+
+    [HideInInspector] public List<Shortcut> shortcuts = new List<Shortcut>();
 
     // Errors
     List<Texture2D> errorTextures = new List<Texture2D>();
@@ -61,6 +69,9 @@ public class DesktopUIManager : BaseLevel
     [SerializeField] float restartGameFadeOutTime = 5.0f;
     [SerializeField] float restartGameFadeInTime = 2.0f;
     [SerializeField] bool enabledAudio = true;
+
+    Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
+    GameObject taskbarPhysics;
 
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     bool easyDifficulty = true;
@@ -257,7 +268,7 @@ public class DesktopUIManager : BaseLevel
         return CreateShortcut( icon, GetGridBounds().TopLeft() + new Vector2( index.x * gridSize.x, -index.y * gridSize.y ) );
     }
 
-    public GameObject CreateShortcut( DesktopIcon icon, Vector2 position )
+    public GameObject CreateShortcut( DesktopIcon icon, Vector2 position, System.Action<GameObject> onOpened = null )
     {
         if( icon == null )
             return null;
@@ -278,21 +289,87 @@ public class DesktopUIManager : BaseLevel
 
         grid.onOverlapWith += ( obj ) => 
         {
-            if( obj == shortcuts[0] )
-            {
-                shortcuts.Remove( newShortcut );
-                newShortcut.Destroy();
-            }
+            // Recycling bin
+            if( obj == shortcuts[0].shortcut )
+                RemoveShortcut( obj );
         };
 
-        shortcuts.Add( newShortcut );
-
+        shortcuts.Add( new Shortcut() { shortcut = newShortcut, onOpened = onOpened } );
         FixChildOrdering();
 
-        return shortcuts.Back();
+        return newShortcut;
     }
 
-    public GameObject GetShortcut( int index )
+    public void RemoveShortcut( GameObject shortcut )
+    {
+        if( shortcut == null )
+            return;
+
+        var idx = shortcuts.FindIndex( ( x ) => x.shortcut == shortcut );
+
+        if( idx == -1 )
+            return;
+
+        shortcuts[idx].physics?.Destroy();
+        shortcuts[idx].shortcut?.Destroy();
+        shortcuts.RemoveBySwap( idx );
+    }
+
+    public void ShortcutAddPhysics( GameObject shortcut )
+    {
+        if( shortcut == null )
+            return;
+
+        var idx = shortcuts.FindIndex( ( x ) => x.shortcut == shortcut );
+
+        if( idx == -1 )
+            return;
+
+        if( shortcuts[idx].physics != null )
+            return;
+
+        var physics = Utility.CreateWorldObjectFromScreenSpaceRect( shortcut.transform as RectTransform );
+        physics.transform.position = physics.transform.position + physicsRootOffset;
+        physics.AddComponent<Quad>();
+        physics.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
+        physics.AddComponent<Rigidbody2D>();
+        shortcuts[idx].physics = physics;
+        shortcuts[idx].shortcut.GetComponent<LockToGrid>().enabled = false;
+    }
+
+    public void ShortcutRemovePhysics( GameObject shortcut, bool relock_to_grid = false )
+    {
+        if( shortcut == null )
+            return;
+
+        var idx = shortcuts.FindIndex( ( x ) => x.shortcut == shortcut );
+
+        if( idx == -1 )
+            return;
+
+        shortcuts[idx].shortcut.GetComponent<LockToGrid>().enabled = relock_to_grid;
+        shortcuts[idx].physics?.Destroy();
+    }
+
+    public void TaskbarCreatePhysics()
+    {
+        if( taskbarPhysics != null )
+            return;
+
+        taskbarPhysics = Utility.CreateWorldObjectFromScreenSpaceRect( Taskbar.transform as RectTransform );
+        taskbarPhysics.transform.position = taskbarPhysics.transform.position + physicsRootOffset;
+        taskbarPhysics.AddComponent<Quad>();
+        taskbarPhysics.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
+    }
+
+    public void TaskbarRemovePhysics()
+    {
+        if( taskbarPhysics == null )
+            return;
+        taskbarPhysics.Destroy();
+    }
+
+    public Shortcut GetShortcut( int index )
     {
         Debug.Assert( index >= 0 && index < shortcuts.Count );
         return shortcuts[index];
@@ -382,6 +459,23 @@ public class DesktopUIManager : BaseLevel
         if( blueScreenCamera.gameObject.activeSelf )
             if( Input.anyKeyDown )
                 RestartGame();
+
+        //for( int i = shortcuts.Count - 1; i >= 0; --i )
+        //    if( shortcuts[i] == null )
+        //        shortcuts.RemoveBySwap( i );
+    }
+
+    private void LateUpdate()
+    {
+        foreach( var shortcut in shortcuts )
+        {
+            if( shortcut.physics != null )
+            {
+                var newPos = shortcut.physics.transform.position - physicsRootOffset;// + shortcut.Second.transform.localScale / 2.0f;
+                ( shortcut.shortcut.transform as RectTransform ).localPosition = ( transform as RectTransform ).InverseTransformPoint( newPos ).SetZ( 0.0f );
+                ( shortcut.shortcut.transform as RectTransform ).localRotation = shortcut.physics.transform.rotation;
+            }
+        }
     }
 
     private void FixChildOrdering()
@@ -390,7 +484,7 @@ public class DesktopUIManager : BaseLevel
             selectionBox.transform.SetAsFirstSibling();
 
         foreach( var shortcut in shortcuts )
-            shortcut.transform.SetAsFirstSibling();
+            shortcut.shortcut.transform.SetAsFirstSibling();
 
         background.transform.SetAsFirstSibling();
         startMenu.transform.parent.transform.SetAsLastSibling();
