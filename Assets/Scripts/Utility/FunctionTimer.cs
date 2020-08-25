@@ -74,7 +74,9 @@ public static partial class Utility
 
             if( timerList.IsEmpty() )
             {
-                functionTimerHandler.gameObject.Destroy();
+
+                if( functionTimerHandler.gameObject != null )
+                    functionTimerHandler.gameObject.Destroy();
                 functionTimerHandler = null;
             }
         }

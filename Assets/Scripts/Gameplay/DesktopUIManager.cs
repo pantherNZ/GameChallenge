@@ -278,6 +278,16 @@ public class DesktopUIManager : BaseLevel
         ( newShortcut.transform as RectTransform ).pivot = new Vector2( 0.5f, 0.5f );
         newShortcut.GetComponentInChildren<Text>().text = icon.name;
         newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon.icon, new Rect( 0.0f, 0.0f, icon.icon.width, icon.icon.height ), new Vector2( 0.5f, 0.5f ) );
+        newShortcut.name = icon.name;
+
+        float timer = 0.0f;
+
+        newShortcut.AddComponent<EventDispatcher>().OnPointerUpEvent += ( x ) =>
+        {
+            if( Time.time - timer <= 0.5f )
+                onOpened?.Invoke( newShortcut );
+            timer = Time.time;
+        };
 
         var grid = newShortcut.GetComponent<LockToGrid>();
         grid.gridWidth = gridSize.x;
@@ -287,12 +297,15 @@ public class DesktopUIManager : BaseLevel
         grid.minPos = bounds.min;
         grid.maxPos = bounds.max;
 
-        grid.onOverlapWith += ( obj ) => 
+        if( !shortcuts.IsEmpty() )
         {
+            grid.onOverlapWith += ( obj ) =>
+            {
             // Recycling bin
             if( obj == shortcuts[0].shortcut )
-                RemoveShortcut( obj );
-        };
+                    RemoveShortcut( newShortcut );
+            };
+        }
 
         shortcuts.Add( new Shortcut() { shortcut = newShortcut, onOpened = onOpened } );
         FixChildOrdering();
@@ -335,6 +348,7 @@ public class DesktopUIManager : BaseLevel
         physics.AddComponent<Rigidbody2D>();
         shortcuts[idx].physics = physics;
         shortcuts[idx].shortcut.GetComponent<LockToGrid>().enabled = false;
+        shortcuts[idx].shortcut.GetComponent<EventTrigger>().enabled = false;
     }
 
     public void ShortcutRemovePhysics( GameObject shortcut, bool relock_to_grid = false )
@@ -348,6 +362,7 @@ public class DesktopUIManager : BaseLevel
             return;
 
         shortcuts[idx].shortcut.GetComponent<LockToGrid>().enabled = relock_to_grid;
+        shortcuts[idx].shortcut.GetComponent<EventTrigger>().enabled = relock_to_grid;
         shortcuts[idx].physics?.Destroy();
     }
 

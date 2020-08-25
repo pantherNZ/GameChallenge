@@ -23,13 +23,13 @@ public class LockToGrid : MonoBehaviour
 
             do
             {
-                var pos = rectTransform.localPosition.ToVector2();
-                pos -= rootPos;
+                var oldPos = rectTransform.localPosition.ToVector2();
+                var pos = oldPos - rootPos;
                 var coord = new Vector2( Mathf.Floor( pos.x / gridWidth ), Mathf.Floor( pos.y / gridHeight ) );
                 pos = new Vector3( rootPos.x + coord.x * gridWidth + gridWidth / 2.0f, rootPos.y + coord.y * gridHeight + gridHeight / 2.0f, rectTransform.position.z );
                 rectTransform.localPosition = pos;
 
-                if( disableOverlapWithTag.Length > 0 && ( overlap || ( pos - rectTransform.anchoredPosition ).sqrMagnitude > 0.001f ) )
+                if( disableOverlapWithTag.Length > 0 && ( overlap || ( oldPos - rectTransform.localPosition.ToVector2() ).sqrMagnitude > 0.001f ) )
                 {
                     overlap = false;
 
@@ -39,9 +39,9 @@ public class LockToGrid : MonoBehaviour
 
                         if( child.gameObject != gameObject && child.CompareTag( disableOverlapWithTag ) && ( child.transform as RectTransform ).Overlaps( rectTransform ) )
                         {
-                            var atBottom = rectTransform.anchoredPosition.y - gridHeight <= minPos.y;
-                            var newPos = rectTransform.anchoredPosition + new Vector2( atBottom ? gridWidth : 0.0f, atBottom ? -rectTransform.anchoredPosition.y : -gridHeight );
-                            rectTransform.anchoredPosition = newPos;
+                            var atBottom = rectTransform.localPosition.y - gridHeight <= minPos.y;
+                            var newPos = rectTransform.localPosition.ToVector2() + new Vector2( atBottom ? gridWidth : 0.0f, atBottom ? -rectTransform.localPosition.y : -gridHeight );
+                            rectTransform.localPosition = newPos;
                             onOverlapWith?.Invoke( child.gameObject );
                             overlap = true;
                             break;

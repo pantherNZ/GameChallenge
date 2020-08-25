@@ -42,7 +42,7 @@ public class Level3_Recycling : BaseLevel
 
             while( ++safety <= 300 )
             {
-                rectTransform.anchoredPosition = desktop.GetGridBounds().RandomPosition();
+                rectTransform.localPosition = desktop.GetGridBounds().RandomPosition();
                 rectTransform.ForceUpdateRectTransforms();
                 var shortcutWorldRect = rectTransform.GetWorldRect();
                 if( !worldRect.Overlaps( shortcutWorldRect ) )

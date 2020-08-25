@@ -15,7 +15,7 @@ public class Draggable : MonoBehaviour
 
     public void StartDrag( EventTrigger button )
     {
-        if( dragging )
+        if( dragging || !enabled )
             return;
 
         dragging = true;
@@ -26,7 +26,7 @@ public class Draggable : MonoBehaviour
 
     public void EndDrag( EventTrigger button )
     {
-        if( !dragging )
+        if( !dragging || !enabled )
             return;
         dragging = false;
     }
