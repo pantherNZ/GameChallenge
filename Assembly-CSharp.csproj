@@ -91,8 +91,7 @@
     <Compile Include="Assets\Scripts\Utility\UtilityComponentEditor.cs" />
     <Compile Include="Assets\Scripts\Utility\UtilityCoroutines.cs" />
     <Compile Include="Assets\Scripts\Utility\xxHash.cs" />
-    <None Include="Assets\Resources\Misc\DarknessShader.shader" />
-    <None Include="Assets\Resources\Shaders\empty.txt" />
+    <None Include="Assets\Resources\Shaders\DarknessShader.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Projects/GameChallenge.git/trunk/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

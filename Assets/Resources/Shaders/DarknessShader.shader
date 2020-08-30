@@ -1,10 +1,5 @@
 ﻿Shader "Custom/DarknessShader"
 {
-	Properties
-	{
-		lightRadius( "Light Radius", Float ) = 10.0
-	}
-
 	SubShader
 	{
 		Tags
@@ -30,7 +25,9 @@
 			#define MAX_LIGHT_SOURCES 5
 
 			// X, Y (screen coord), Z = radius
-			float3 lightSources[MAX_LIGHT_SOURCES];
+			float4 lightSources[MAX_LIGHT_SOURCES];
+			int lights = 0;
+			float aspectRatio;
 
 			struct appdata_t
 			{
@@ -48,26 +45,25 @@
 			{
 				v2f OUT;
 				OUT.vertex = UnityObjectToClipPos( IN.vertex );
-				OUT.texcoord = IN.texcoord * 10.0f;
+				OUT.texcoord = float2( IN.texcoord.x, IN.texcoord.y / aspectRatio );
 				return OUT;
+			}
+
+			float4 circle( float2 uv, float2 pos, float radius, float3 color ) 
+			{
+				float d = length( pos - uv ) - max( 0.0f, radius - 0.1f );
+				float t = clamp( d, 0.0f, 1.0f );
+				return float4( color, smoothstep( 0.0f, 0.1f, t ) );
 			}
 
 			float4 frag( v2f IN ) : SV_Target
 			{
 				float alpha = 1.0f;
 
-				lightSources[0] = float3( 0.5f, 0.5f, 0.01f );
-
-				for( int i = 0; i < MAX_LIGHT_SOURCES; ++i )
+				for( int i = 0; i < lights; ++i )
 				{
-					float diffX = lightSources[i].x - IN.texcoord.x;
-					float diffY = lightSources[i].y - IN.texcoord.y;
-					float len = sqrt( diffX * diffX + diffY + diffY );
-
-					return float4( 0.0f, 0.0f, 0.0f, len * 2.0f );
-
-					if( len < lightSources[i].z )
-						alpha = min( alpha, 0.0f );
+					float4 c = circle( IN.texcoord, lightSources[i].xy, lightSources[i].z, float3( 0.0f, 0.0f, 0.0f ) );
+					alpha *= c.w;
 				}
 
 				return float4( 0.0f, 0.0f, 0.0f, alpha );

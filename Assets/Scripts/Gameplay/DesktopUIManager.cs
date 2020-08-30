@@ -328,18 +328,18 @@ public class DesktopUIManager : BaseLevel
         shortcuts.RemoveBySwap( idx );
     }
 
-    public void ShortcutAddPhysics( GameObject shortcut )
+    public GameObject ShortcutAddPhysics( GameObject shortcut )
     {
         if( shortcut == null )
-            return;
+            return null;
 
         var idx = shortcuts.FindIndex( ( x ) => x.shortcut == shortcut );
 
         if( idx == -1 )
-            return;
+            return null;
 
         if( shortcuts[idx].physics != null )
-            return;
+            return null;
 
         var physics = Utility.CreateWorldObjectFromScreenSpaceRect( shortcut.transform as RectTransform );
         physics.transform.position = physics.transform.position + physicsRootOffset;
@@ -349,6 +349,7 @@ public class DesktopUIManager : BaseLevel
         shortcuts[idx].physics = physics;
         shortcuts[idx].shortcut.GetComponent<LockToGrid>().enabled = false;
         shortcuts[idx].shortcut.GetComponent<EventTrigger>().enabled = false;
+        return physics;
     }
 
     public void ShortcutRemovePhysics( GameObject shortcut, bool relock_to_grid = false )
