@@ -280,13 +280,9 @@ public class DesktopUIManager : BaseLevel
         newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon.icon, new Rect( 0.0f, 0.0f, icon.icon.width, icon.icon.height ), new Vector2( 0.5f, 0.5f ) );
         newShortcut.name = icon.name;
 
-        float timer = 0.0f;
-
-        newShortcut.AddComponent<EventDispatcher>().OnPointerUpEvent += ( x ) =>
+        newShortcut.AddComponent<EventDispatcher>().OnDoubleClickEvent += ( x ) =>
         {
-            if( Time.time - timer <= 0.5f )
-                onOpened?.Invoke( newShortcut );
-            timer = Time.time;
+            onOpened?.Invoke( newShortcut );
         };
 
         var grid = newShortcut.GetComponent<LockToGrid>();

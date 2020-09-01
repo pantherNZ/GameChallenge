@@ -13,17 +13,18 @@ public class Level5_Earthquake : BaseLevel
     [SerializeField] GameObject darknessPrefab = null;
     [SerializeField] float torqueForce = 1.0f;
     [SerializeField] float applyForce = 1.0f;
+    [SerializeField] float lightCooldownSec = 0.3f;
+    [SerializeField] float lightRadius = 0.1f;
 
     // Dynamic data
-    int targetsCount, countdown, fails;
-    GameObject lightSwitch;
-    GameObject taskbarPhysics;
     List<GameObject> shortcuts = new List<GameObject>();
     GameObject darkness = null;
     MeshRenderer darknessMesh = null;
-    Vector4[] lightSources = new Vector4[20];
+    Vector4[] lightSources = new Vector4[10];
     int lightIndex = 0;
     bool canCreateLights = false;
+    float cooldown = 0.0f;
+    EventDispatcher generator;
 
     public override void OnStartLevel()
     {
@@ -47,13 +48,15 @@ public class Level5_Earthquake : BaseLevel
             var item = i == 0 ? data[0] : data.RandomItem();
             var icon = desktop.CreateShortcut( item, desktop.GetGridBounds().RandomPosition(), ( x ) =>
             {
-                if( x == shortcuts[0] )
+                if( canCreateLights && x == shortcuts[0] )
                     LevelFinished();
             } );
 
             shortcuts.Add( icon );
             data.Remove( item );
         }
+
+        generator = shortcuts[0].GetComponent<EventDispatcher>();
 
         Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
@@ -62,12 +65,15 @@ public class Level5_Earthquake : BaseLevel
             foreach( var icon in shortcuts )
             {
                 var physics = desktop.ShortcutAddPhysics( icon ).GetComponent<Rigidbody2D>();
+                var eventDispatcher = icon.AddComponent<EventDispatcher>();
+                eventDispatcher.OnPointerUpEvent = null;
+                eventDispatcher.OnPointerDownEvent = null;
                 physics.AddTorque( UnityEngine.Random.Range( -torqueForce / 2.0f, torqueForce / 2.0f ) );
                 physics.AddForce( UnityEngine.Random.insideUnitCircle * applyForce );
-                Utility.FunctionTimer.CreateTimer( 4.0f, () => desktop.ShortcutRemovePhysics( icon ) );
+                //Utility.FunctionTimer.CreateTimer( 4.0f, () => desktop.ShortcutRemovePhysics( icon ) );
             }
 
-            Utility.FunctionTimer.CreateTimer( 4.0f, () => desktop.TaskbarRemovePhysics() );
+            //Utility.FunctionTimer.CreateTimer( 4.0f, () => desktop.TaskbarRemovePhysics() );
         } );
     }
 
@@ -87,24 +93,41 @@ public class Level5_Earthquake : BaseLevel
     {
         if( canCreateLights )
         {
-            if( Input.GetMouseButtonDown( 0 ) )
+            if( cooldown <= 0.0f )
             {
-                // Create light
-                float aspectRatio = darkness.transform.localScale.x / darkness.transform.localScale.y;
-                var mousePos = desktop.MainCamera.ScreenToViewportPoint( Input.mousePosition );
-                var radius = 0.1f;
-                lightSources[lightIndex] = new Vector4( mousePos.x, mousePos.y / aspectRatio, radius, 0.0f );
-                ++lightIndex;
-                darknessMesh.material.SetFloat( "lights", lightIndex );
-                darknessMesh.material.SetVectorArray( "lightSources", lightSources );
+                if( Input.GetMouseButtonDown( 1 ) )
+                {
+                    // Create light
+                    float aspectRatio = darkness.transform.localScale.x / darkness.transform.localScale.y;
+                    var mousePos = desktop.MainCamera.ScreenToViewportPoint( Input.mousePosition );
+                    lightSources[lightIndex] = new Vector4( mousePos.x, mousePos.y / aspectRatio, lightRadius, 0.0f );
+                    darknessMesh.material.SetVectorArray( "lightSources", lightSources );
+                    cooldown = lightCooldownSec;
+                    lightIndex = ( lightIndex + 1 ) % lightSources.Length;
+                }
+            }
+            else
+            {
+                cooldown -= Time.deltaTime;
             }
 
-            //for( int i = 0; i < lightIndex; ++i )
-            //    if( lightSources[i].sqrMagnitude > 0.001f )
-            //        lightSources[i] = lightSources[i].SetZ( lightSources[i].z + 0.01f * Time.deltaTime );
+            if( darknessMesh != null )
+            {
+                for( int i = lightSources.Length - 1; i >= 0; --i )
+                {
+                    if( lightSources[i].sqrMagnitude > 0.001f )
+                    {
+                        float interp = lightSources[i].z >= lightRadius - 0.01f ? 0.05f : 0.3f;
+                        lightSources[i] = lightSources[i].SetZ( Mathf.Max( 0.0f, lightSources[i].z - interp * Time.deltaTime ) );
 
-            //darknessMesh.material.SetFloat( "lights", lightIndex );
-            //darknessMesh.material.SetVectorArray( "lightSources", lightSources );
+                        var screenPos = desktop.MainCamera.ScreenToViewportPoint( ( generator.transform as RectTransform ).localPosition );
+                        var direction = lightSources[i].ToVector2() - ( screenPos.ToVector2() + new Vector2( 0.5f, 0.5f ) );
+                        generator.enabled = direction.SqrMagnitude() <= lightSources[i].z * lightSources[i].z;
+                    }
+                }
+
+                darknessMesh.material.SetVectorArray( "lightSources", lightSources );
+            }
         }
     }
 }

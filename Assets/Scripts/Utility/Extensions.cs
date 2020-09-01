@@ -176,20 +176,11 @@ public static partial class Extensions
     public static Vector4 SetZ( this Vector4 vec, float z ) { vec.z = z; return vec; }
     public static Vector4 SetW( this Vector4 vec, float w ) { vec.w = w; return vec; }
 
-    public static Vector2 ToVector2( this Vector3 vec )
-    {
-        return new Vector2( vec.x, vec.y );
-    }
-
-    public static Vector3 ToVector3( this Vector2 vec, float z = 0.0f )
-    {
-        return new Vector3( vec.x, vec.y, z );
-    }
-
-    public static Vector2 ToVector2( this Vector2Int vec )
-    {
-        return new Vector2( vec.x, vec.y );
-    }
+    public static Vector2 ToVector2( this Vector3 vec ) { return new Vector2( vec.x, vec.y ); }
+    public static Vector2 ToVector2( this Vector4 vec ) { return new Vector2( vec.x, vec.y ); }
+    public static Vector3 ToVector3( this Vector4 vec ) { return new Vector3( vec.x, vec.y, vec.z ); }
+    public static Vector3 ToVector3( this Vector2 vec, float z = 0.0f ) { return new Vector3( vec.x, vec.y, z ); }
+    public static Vector2 ToVector2( this Vector2Int vec ) { return new Vector2( vec.x, vec.y ); }
 
     public static Vector2Int ToVector2Int( this Vector2 vec, bool round = false )
     {

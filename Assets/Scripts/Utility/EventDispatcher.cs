@@ -13,6 +13,9 @@ public class EventDispatcher : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public Action<PointerEventData> OnPointerExitEvent;
     public Action<PointerEventData> OnPointerDownEvent;
     public Action<PointerEventData> OnPointerUpEvent;
+    public Action<PointerEventData> OnDoubleClickEvent;
+    public float doubleClickInterval = 0.5f;
+    float doubleClickTimer = 0.0f;
 
     private void OnTriggerEnter2D( Collider2D collision )
     {
@@ -47,6 +50,10 @@ public class EventDispatcher : MonoBehaviour, IPointerEnterHandler, IPointerExit
     void IPointerDownHandler.OnPointerDown( PointerEventData eventData )
     {
         OnPointerDownEvent?.Invoke( eventData );
+
+        if( Time.time - doubleClickTimer <= doubleClickInterval )
+            OnDoubleClickEvent?.Invoke( eventData );
+        doubleClickTimer = Time.time;
     }
 
     void IPointerUpHandler.OnPointerUp( PointerEventData eventData )

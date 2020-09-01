@@ -930,6 +930,8 @@ MonoBehaviour:
   numIconsHard: 20
   darknessPrefab: {fileID: 2040489229464518862, guid: 488285ba213b6e440954d3f7ebdf6b7c,
     type: 3}
+  torqueForce: 30.21
+  applyForce: 45.5
 --- !u!82 &203328304
 AudioSource:
   m_ObjectHideFlags: 0
