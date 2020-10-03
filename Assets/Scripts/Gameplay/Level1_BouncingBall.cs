@@ -16,7 +16,7 @@ public class Level1_BouncingBall : BaseLevel
 
     List<GameObject> objects = new List<GameObject>();
     bool alternate;
-    int overlaps = 0;
+    bool[] complete = new bool[3];
 
     public override void OnStartLevel()
     {
@@ -33,10 +33,10 @@ public class Level1_BouncingBall : BaseLevel
 
         var goal1 = Instantiate( goal, desktop.windowCameraStartPosition + new Vector3( -goalOffset, -4.0f, 50.0f ), Quaternion.identity );
         var goal2 = Instantiate( goal, desktop.windowCameraStartPosition + new Vector3( goalOffset, -4.0f, 50.0f ), Quaternion.identity );
-        goal1.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { overlaps++; CheckComplete(); };
-        goal2.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { overlaps++; CheckComplete(); };
-        goal1.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { overlaps--; };
-        goal2.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { overlaps--; };
+        goal1.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { complete[0] = true; CheckComplete(); };
+        goal2.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { complete[1] = true; CheckComplete(); };
+        goal1.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { complete[0] = false; };
+        goal2.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { complete[1] = false; };
         objects.Add( goal1 );
         objects.Add( goal2 );
 
@@ -49,11 +49,15 @@ public class Level1_BouncingBall : BaseLevel
 
     private void CreateBall()
     {
+        alternate = !alternate;
+
+        // Don't create ball for side that is already complete
+        if( ( alternate && complete[0] ) || ( !alternate && complete[1] ) )
+            return;
+
         var newBall = Instantiate( ballPrefab, desktop.windowCameraStartPosition + new Vector3( alternate ? ballOffset : -ballOffset, ballHeight, 50.0f ), Quaternion.identity );
         newBall.GetComponent<Rigidbody2D>().AddForce( new Vector2( alternate ? -ballVelocity : ballVelocity, 0.0f ) );
         objects.Add( newBall );
-
-        alternate = !alternate;
     }
 
     protected override void OnLevelUpdate()
@@ -71,19 +75,24 @@ public class Level1_BouncingBall : BaseLevel
 
     private void CheckComplete()
     {
-        if( overlaps >= 2 )
+        if( complete[0] && complete[1] && !complete[2] )
         {
-            foreach( var obj in objects )
-                obj.Destroy();
-            objects.Clear();
-            Utility.FunctionTimer.StopTimer( "CreateBall" );
-            Utility.FunctionTimer.StopTimer( "Narrator_Level_2_2" );
+            complete[2] = true;
 
-            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
+            Utility.FunctionTimer.CreateTimer( 1.0f, () =>
+            {
+                foreach( var obj in objects )
+                    obj.Destroy();
+                objects.Clear();
+                Utility.FunctionTimer.StopTimer( "CreateBall" );
+                Utility.FunctionTimer.StopTimer( "Narrator_Level_2_2" );
 
-            desktop.DestroyWindow( "Bouncy Balls" );
+                SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
 
-            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+                desktop.DestroyWindow( "Bouncy Balls" );
+
+                Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+            } );
         }
     }
 }

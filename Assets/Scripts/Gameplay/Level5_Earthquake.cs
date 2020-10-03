@@ -60,7 +60,7 @@ public class Level5_Earthquake : BaseLevel
 
         Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
-            desktop.TaskbarCreatePhysics();
+            desktop.CreatePhysicsBound();
 
             foreach( var icon in shortcuts )
             {
@@ -79,7 +79,7 @@ public class Level5_Earthquake : BaseLevel
 
     protected override void OnLevelFinished()
     {
-        desktop.TaskbarRemovePhysics();
+        desktop.RemovePhysicsBound();
 
         foreach( var x in shortcuts )
             desktop.RemoveShortcut( x );

@@ -56,15 +56,19 @@ public static partial class Utility
             for( var idx = 0; idx < cached_idx; ++idx )
             {
                 var timer = timerList[idx];
-                timer.timeLeft -= ( timer.useUnscaledDeltaTime ? Time.unscaledDeltaTime : Time.deltaTime );
 
-                if( timer.timeLeft <= 0.0f )
+                if( timer.timeLeft > 0.0f )
                 {
-                    // Timer complete, trigger Action
-                    timer.action();
-                    
-                    if( timer.loop )
-                        timer.timeLeft += timer.duration;
+                    timer.timeLeft -= ( timer.useUnscaledDeltaTime ? Time.unscaledDeltaTime : Time.deltaTime );
+
+                    if( timer.timeLeft <= 0.0f )
+                    {
+                        // Timer complete, trigger Action
+                        timer.action();
+
+                        if( timer.loop )
+                            timer.timeLeft += timer.duration;
+                    }
                 }
             }
 

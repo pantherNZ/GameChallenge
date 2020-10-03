@@ -629,6 +629,7 @@ GameObject:
   - component: {fileID: 203328300}
   - component: {fileID: 203328302}
   - component: {fileID: 203328303}
+  - component: {fileID: 203328305}
   - component: {fileID: 203328304}
   m_Layer: 5
   m_Name: Desktop
@@ -735,13 +736,15 @@ MonoBehaviour:
   nextLevel: {fileID: 0}
   levels:
   - {fileID: 522668005}
+  - {fileID: 1897650524}
   - {fileID: 203328297}
   - {fileID: 203328299}
   - {fileID: 203328301}
   - {fileID: 203328300}
   - {fileID: 203328302}
   - {fileID: 203328303}
-  startingLevelId: 6
+  - {fileID: 203328305}
+  startingLevelId: 0
   loginUI: {fileID: 1897650524}
   windowBase: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -932,6 +935,8 @@ MonoBehaviour:
     type: 3}
   torqueForce: 30.21
   applyForce: 45.5
+  lightCooldownSec: 0.2
+  lightRadius: 0.2
 --- !u!82 &203328304
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1028,6 +1033,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &203328305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203328292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d7fc7c5bdb69e44f900c3f82787d3dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelIdx: 0
+  nextLevel: {fileID: 0}
 --- !u!1 &214368265
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,7 +1680,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelIdx: 0
   nextLevel: {fileID: 0}
-  loginUI: {fileID: 1897650524}
   desktopUI: {fileID: 203328297}
 --- !u!1 &533462466
 GameObject:
@@ -6059,11 +6077,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 000f3ea35bc218f428e42475803827f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelIdx: 0
+  nextLevel: {fileID: 0}
   loginButton: {fileID: 533462468}
   passworldInput: {fileID: 573611295}
   loginDisplay: {fileID: 1127619246}
   incorrectPasswordDisplay: {fileID: 1841373566}
-  desktopUI: {fileID: 203328298}
   incorrectPasswordButton: {fileID: 68581673}
 --- !u!225 &1897650525
 CanvasGroup:

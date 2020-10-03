@@ -23,6 +23,7 @@ public class SubtitlesManager : MonoBehaviour
         public int index;
         public string first, second;
         public GameObject obj;
+        public bool complete;
     }
 
     List<Selection> selections = new List<Selection>();
@@ -110,10 +111,8 @@ public class SubtitlesManager : MonoBehaviour
 
     public void AddSubtitle( string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
     {
+        ClearSubtitles();
         onSelectionEvent = onSelection;
-        selectionGroup.SetActive( false );
-        selections.Clear();
-        timers.Clear();
         CheckForSelections( ref subtitle );
 
         currentText = subtitle;
@@ -140,7 +139,7 @@ public class SubtitlesManager : MonoBehaviour
 
                 Action<int, Color> updateColour = ( int index, Color colour ) =>
                 {
-                    if( selections.Contains( selection ) )
+                    if( !selection.complete && selections.Contains( selection ) )
                         texts[index].color = colour;
                 };
 
@@ -151,10 +150,13 @@ public class SubtitlesManager : MonoBehaviour
 
                 Action< int > selectionEvent = ( int index ) =>
                 {
-                    selection.obj.transform.GetChild( 1 - index ).gameObject.Destroy();
-                    updateColour( index, Color.blue );
-                    selections.Remove( selection );
-                    onSelectionEvent?.Invoke( text.text );
+                    if( !selection.complete )
+                    {
+                        selection.obj.transform.GetChild( 1 - index ).gameObject.Destroy();
+                        updateColour( index, Color.blue );
+                        selection.complete = true;
+                        onSelectionEvent?.Invoke( text.text );
+                    }
                 };
 
                 events[0].OnPointerDownEvent += ( x ) => { selectionEvent( 0 ); };
@@ -184,7 +186,12 @@ public class SubtitlesManager : MonoBehaviour
         text.text = currentText = string.Empty;
         canvasGroup.SetVisibility( false );
         selectionGroup.SetActive( false );
+
+        foreach( var selection in selections )
+            selection.obj?.Destroy();
+
         selections.Clear();
+        timers.Clear();
     }
 
     void CheckForSelections( ref string subtitle )

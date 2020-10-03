@@ -337,7 +337,7 @@ public class DesktopUIManager : BaseLevel
         if( shortcuts[idx].physics != null )
             return null;
 
-        var physics = Utility.CreateWorldObjectFromScreenSpaceRect( shortcut.transform as RectTransform );
+        var physics = Utility.CreateWorldObjectFromScreenSpaceRect( ( shortcut.transform as RectTransform ).GetWorldRect() );
         physics.transform.position = physics.transform.position + physicsRootOffset;
         physics.AddComponent<Quad>();
         physics.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
@@ -363,18 +363,30 @@ public class DesktopUIManager : BaseLevel
         shortcuts[idx].physics?.Destroy();
     }
 
-    public void TaskbarCreatePhysics()
+    public void CreatePhysicsBound()
     {
         if( taskbarPhysics != null )
             return;
 
-        taskbarPhysics = Utility.CreateWorldObjectFromScreenSpaceRect( Taskbar.transform as RectTransform );
+        taskbarPhysics = Utility.CreateWorldObjectFromScreenSpaceRect( ( Taskbar.transform as RectTransform ).GetWorldRect() );
         taskbarPhysics.transform.position = taskbarPhysics.transform.position + physicsRootOffset;
         taskbarPhysics.AddComponent<Quad>();
         taskbarPhysics.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
+
+        var desktopRect = ( transform as RectTransform ).GetWorldRect();
+
+        var leftWall = Utility.CreateWorldObjectFromScreenSpaceRect( new Rect( -desktopRect.width / 2.0f, 0.0f, 0.1f, desktopRect.height ) );
+        leftWall.transform.position = leftWall.transform.position + physicsRootOffset;
+        leftWall.AddComponent<Quad>();
+        leftWall.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
+
+        var rightWall = Utility.CreateWorldObjectFromScreenSpaceRect( new Rect( desktopRect.width / 2.0f, 0.0f, 0.1f, desktopRect.height ) );
+        rightWall.transform.position = rightWall.transform.position + physicsRootOffset;
+        rightWall.AddComponent<Quad>();
+        rightWall.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
     }
 
-    public void TaskbarRemovePhysics()
+    public void RemovePhysicsBound()
     {
         if( taskbarPhysics == null )
             return;

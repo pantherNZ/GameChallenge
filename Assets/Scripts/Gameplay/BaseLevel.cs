@@ -22,6 +22,7 @@ abstract public class BaseLevel : MonoBehaviour
         if( levelStarted )
             return;
 
+        SubtitlesManager.Instance.ClearSubtitles();
         levelStarted = true;
         levelActive = true;
         OnStartLevel();

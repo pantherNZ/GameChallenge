@@ -140,7 +140,7 @@ public static partial class Utility
         }
     }
 
-    public static GameObject CreateSprite( string path, Vector3 pos, Vector2 scale, Quaternion? rotation = null, string layer = "Default", int order = 1 )
+    public static GameObject CreateSprite( string path, Vector3 pos, Vector2 scale, Quaternion? rotation = null, string layer = "Default", int order = 0 )
     {
         var sprite = new GameObject();
         sprite.transform.position = pos;
@@ -153,12 +153,11 @@ public static partial class Utility
         return sprite;
     }
 
-    public static GameObject CreateWorldObjectFromScreenSpaceRect( RectTransform rect )
+    public static GameObject CreateWorldObjectFromScreenSpaceRect( Rect rect )
     {
-        var r = rect.GetWorldRect();
         var obj = new GameObject();
-        obj.transform.position = r.position;
-        obj.transform.localScale = r.size;
+        obj.transform.position = rect.position;
+        obj.transform.localScale = rect.size;
         return obj;
     }
 }

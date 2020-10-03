@@ -1,24 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class LoginUI : MonoBehaviour
+public class LoginUI : BaseLevel
 {
     [SerializeField] Button loginButton = null;
     [SerializeField] InputField passworldInput = null;
     [SerializeField] CanvasGroup loginDisplay = null;
     [SerializeField] CanvasGroup incorrectPasswordDisplay = null;
-    [SerializeField] CanvasGroup desktopUI = null;
     [SerializeField] Button incorrectPasswordButton = null;
     readonly string password = "simple";
 
     private void Start()
     {
+        GetComponent<CanvasGroup>().SetVisibility( false );
+
         loginButton.onClick.AddListener( () =>
         {
             if( passworldInput.text.Length > 0 && passworldInput.text == password )
             {
                 GetComponent<CanvasGroup>().ToggleVisibility();
-                desktopUI.ToggleVisibility();
+                StartNextLevel();
                 Utility.FunctionTimer.StopTimer( "2nd_prompt" );
                 Utility.FunctionTimer.StopTimer( "3nd_prompt" );
                 Utility.FunctionTimer.StopTimer( "input_password" );
@@ -39,7 +40,7 @@ public class LoginUI : MonoBehaviour
         } );
     }
 
-    private void Update()
+    protected override void OnLevelUpdate()
     {
         if( Input.GetKeyUp( KeyCode.Return ) )
         {
@@ -49,7 +50,7 @@ public class LoginUI : MonoBehaviour
 
     int index;
 
-    public void StartLevel()
+    public override void OnStartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( 1.0f, () => SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_1" ) ) );
@@ -69,8 +70,9 @@ public class LoginUI : MonoBehaviour
                 passworldInput.text = password.Substring( 0, index + 1 );
                 index++;
 
-                if( index >= password.Length )
+                if( index + 1 >= password.Length )
                 {
+                    Utility.FunctionTimer.StopTimer( "input_password" );
                     Utility.FunctionTimer.StopTimer( "input_password_loop" );
                     Utility.FunctionTimer.CreateTimer( 0.8f, () => loginButton.onClick.Invoke() );
                 }

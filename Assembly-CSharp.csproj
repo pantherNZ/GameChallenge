@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Gameplay\Level3_Recycling.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level4_TargetPractice.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level5_Earthquake.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Level6_Missile.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingWidget.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />
