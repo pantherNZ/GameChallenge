@@ -744,7 +744,7 @@ MonoBehaviour:
   - {fileID: 203328302}
   - {fileID: 203328303}
   - {fileID: 203328305}
-  startingLevelId: 0
+  startingLevelId: 7
   loginUI: {fileID: 1897650524}
   windowBase: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -765,6 +765,7 @@ MonoBehaviour:
     type: 3}
   desktopSelectionEnabled: 1
   contextMenu: {fileID: 1391013267}
+  contextMenuEnabled: 1
   gridSize: {x: 100, y: 100}
   lifeLostDisplayTime: 3
   levelFailFadeOutTime: 2
@@ -772,6 +773,7 @@ MonoBehaviour:
   restartGameFadeOutTime: 5
   restartGameFadeInTime: 2
   enabledAudio: 0
+  easyDifficulty: 1
 --- !u!225 &203328298
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -856,7 +858,6 @@ MonoBehaviour:
   ballHeight: 4.5
   ballScale: 3.5
   ballFrequency: 2
-  successDelayTimer: 2
 --- !u!114 &203328302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -936,7 +937,8 @@ MonoBehaviour:
   torqueForce: 30.21
   applyForce: 45.5
   lightCooldownSec: 0.2
-  lightRadius: 0.2
+  lightRadius: 0.15
+  lightFadeSpeedSec: 0.2
 --- !u!82 &203328304
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4147,7 +4149,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357519912}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0

@@ -74,7 +74,7 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: Recycle Bin
 --- !u!1 &8885744749672564331
@@ -365,3 +365,4 @@ MonoBehaviour:
   disableOverlapWithTag: DesktopShortcut
   minPos: {x: -Infinity, y: -Infinity}
   maxPos: {x: Infinity, y: Infinity}
+  rootPos: {x: 0, y: 0}

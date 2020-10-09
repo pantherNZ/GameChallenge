@@ -15,6 +15,7 @@ public class Level5_Earthquake : BaseLevel
     [SerializeField] float applyForce = 1.0f;
     [SerializeField] float lightCooldownSec = 0.3f;
     [SerializeField] float lightRadius = 0.1f;
+    [SerializeField] float lightFadeSpeedSec = 0.4f;
 
     // Dynamic data
     List<GameObject> shortcuts = new List<GameObject>();
@@ -29,14 +30,20 @@ public class Level5_Earthquake : BaseLevel
     public override void OnStartLevel()
     {
         desktop.GetComponent<AudioSource>().PlayOneShot( quake );
-        Utility.FunctionTimer.CreateTimer( 1.0f, () => this.ShakeTarget( desktop.GetBackground().transform, 2.0f, 18.0f, 3.0f, 30.0f, 2.0f ) );
-        Utility.FunctionTimer.CreateTimer( 2.0f, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f );
-        Utility.FunctionTimer.CreateTimer( 2.1f, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f );
-        Utility.FunctionTimer.CreateTimer( 2.9f, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f );
-        Utility.FunctionTimer.CreateTimer( 2.95f, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f );
-        Utility.FunctionTimer.CreateTimer( 5.0f, () =>
+        float timer = 1.0f;
+        Utility.FunctionTimer.CreateTimer( timer, () => this.ShakeTarget( desktop.GetBackground().transform, 2.0f, 18.0f, 3.0f, 30.0f, 2.0f ) ); timer += 0.5f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f ); timer += 0.1f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f ); timer += 0.8f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f ); timer += 0.1f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f ); timer += 0.6f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f ); timer += 0.1f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f ); timer += 0.5f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f ); timer += 0.1f;
+        Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f ); timer += 0.9f;
+        Utility.FunctionTimer.CreateTimer( timer, () =>
         {
             canCreateLights = true;
+            desktop.contextMenuEnabled = false;
             darkness = Instantiate( darknessPrefab );
             darknessMesh = darkness.GetComponent<MeshRenderer>();
             darknessMesh.material.SetFloat( "aspectRatio", darkness.transform.localScale.x / darkness.transform.localScale.y );
@@ -64,6 +71,8 @@ public class Level5_Earthquake : BaseLevel
 
             foreach( var icon in shortcuts )
             {
+                if( !icon )
+                    continue;
                 var physics = desktop.ShortcutAddPhysics( icon ).GetComponent<Rigidbody2D>();
                 var eventDispatcher = icon.AddComponent<EventDispatcher>();
                 eventDispatcher.OnPointerUpEvent = null;
@@ -85,6 +94,7 @@ public class Level5_Earthquake : BaseLevel
             desktop.RemoveShortcut( x );
 
         darkness.Destroy();
+        desktop.contextMenuEnabled = true;
 
         Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
     }
@@ -113,16 +123,19 @@ public class Level5_Earthquake : BaseLevel
 
             if( darknessMesh != null )
             {
+                //generator.enabled = false;
+                generator.enabled = true;
+
                 for( int i = lightSources.Length - 1; i >= 0; --i )
                 {
                     if( lightSources[i].sqrMagnitude > 0.001f )
                     {
-                        float interp = lightSources[i].z >= lightRadius - 0.01f ? 0.05f : 0.3f;
+                        float interp = lightSources[i].z >= lightRadius - 0.01f ? 0.05f : lightFadeSpeedSec;
                         lightSources[i] = lightSources[i].SetZ( Mathf.Max( 0.0f, lightSources[i].z - interp * Time.deltaTime ) );
 
                         var screenPos = desktop.MainCamera.ScreenToViewportPoint( ( generator.transform as RectTransform ).localPosition );
                         var direction = lightSources[i].ToVector2() - ( screenPos.ToVector2() + new Vector2( 0.5f, 0.5f ) );
-                        generator.enabled = direction.SqrMagnitude() <= lightSources[i].z * lightSources[i].z;
+                        //generator.enabled |= direction.SqrMagnitude() <= lightSources[i].z * lightSources[i].z;
                     }
                 }
 

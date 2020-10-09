@@ -78,20 +78,19 @@ public class Level1_BouncingBall : BaseLevel
         if( complete[0] && complete[1] && !complete[2] )
         {
             complete[2] = true;
+            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
+            Utility.FunctionTimer.StopTimer( "CreateBall" );
+            Utility.FunctionTimer.StopTimer( "Narrator_Level_2_2" );
 
-            Utility.FunctionTimer.CreateTimer( 1.0f, () =>
+            Utility.FunctionTimer.CreateTimer( 3.0f, () =>
             {
                 foreach( var obj in objects )
                     obj.Destroy();
                 objects.Clear();
-                Utility.FunctionTimer.StopTimer( "CreateBall" );
-                Utility.FunctionTimer.StopTimer( "Narrator_Level_2_2" );
-
-                SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
 
                 desktop.DestroyWindow( "Bouncy Balls" );
 
-                Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+                Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
             } );
         }
     }

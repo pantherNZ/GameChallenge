@@ -12,8 +12,8 @@ public class Level2_BridgeBall : BaseLevel
     [SerializeField] float ballHeight = 5.0f;
     [SerializeField] float ballScale = 2.5f;
     [SerializeField] float ballFrequency = 2.0f;
-    [SerializeField] float successDelayTimer = 2.0f;
     List<GameObject> objects = new List<GameObject>();
+    GameObject levelObj = null;
     Utility.FunctionTimer timer;
 
     public override void OnStartLevel()
@@ -21,21 +21,21 @@ public class Level2_BridgeBall : BaseLevel
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
 
-        var levelObj = Instantiate( levelPrefab, new Vector3( 0.0f, 0.0f, 5.0f ), Quaternion.identity );
+        levelObj = Instantiate( levelPrefab, new Vector3( 0.0f, 0.0f, 5.0f ), Quaternion.identity );
 
         var goal = levelObj.transform.GetChild( levelObj.transform.childCount - 1 );
-        goal.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { timer = Utility.FunctionTimer.CreateTimer( successDelayTimer, CheckComplete ); };
+        goal.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { timer = Utility.FunctionTimer.CreateTimer( 1.0f, CheckComplete ); };
         goal.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { timer.StopTimer(); };
 
         if( desktop.IsEasyMode() )
         {
-            levelObj.transform.GetChild( 1 ).gameObject.Destroy();
-            levelObj.transform.GetChild( 3 ).gameObject.Destroy();
+            levelObj.transform.GetChild( 2 ).gameObject.Destroy();
+            //levelObj.transform.GetChild( 3 ).gameObject.Destroy();
         }
         else
         {
             levelObj.transform.GetChild( 1 ).gameObject.Destroy();
-            levelObj.transform.GetChild( 2 ).gameObject.Destroy();
+           // levelObj.transform.GetChild( 2 ).gameObject.Destroy();
             levelObj.transform.GetChild( 3 ).gameObject.Destroy();
         }
     }
@@ -63,8 +63,18 @@ public class Level2_BridgeBall : BaseLevel
 
     private void CheckComplete()
     {
+        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
+        Utility.FunctionTimer.StopTimer( "CreateBall" );
 
+        Utility.FunctionTimer.CreateTimer( 3.0f, () =>
+        {
+            foreach( var obj in objects )
+                obj?.Destroy();
 
-        Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+            levelObj.Destroy();
+            objects.Clear();
+
+            Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
+        } );
     }
 }

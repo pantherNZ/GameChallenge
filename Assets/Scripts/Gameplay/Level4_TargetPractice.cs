@@ -40,13 +40,19 @@ public class Level4_TargetPractice : BaseLevel
 
     void CheckLevelComplete()
     {
-        if( fails > maxFails )
+        // Failed
+        if( fails >= maxFails )
         {
-            Utility.FunctionTimer.CreateTimer( 1.0f, () => desktop.LevelFailed( this ) );
+            desktop.LevelFailed( this );
+        }
+        // Success
+        else if( targetsCount >= targetsMax && targets.IsEmpty() )
+        {
+            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
         }
         else
         {
-            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+            return;
         }
 
         foreach( var target in targets )
@@ -59,6 +65,9 @@ public class Level4_TargetPractice : BaseLevel
         gun?.Destroy();
         crosshair?.Destroy();
 
+        Utility.FunctionTimer.StopTimer( "CountDown" );
+        Utility.FunctionTimer.StopTimer( "SpawnTarget" );
+
         LevelFinished();
     }
 
@@ -69,7 +78,7 @@ public class Level4_TargetPractice : BaseLevel
         if( countdown <= 3 )
         {
             countdownSprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>( "Textures/Numbers/spell_rank_" + ( 3 - countdown + 1 ).ToString() );
-            Utility.FunctionTimer.CreateTimer( 1.0f, CountDown );
+            Utility.FunctionTimer.CreateTimer( 1.0f, CountDown, "CountDown" );
         }
         else
         {
@@ -97,13 +106,18 @@ public class Level4_TargetPractice : BaseLevel
 
             var hit = Physics2D.Raycast( mousePos, Vector2.zero, 0.0f );
 
-            if( hit.collider != null && targets.Contains( hit.collider.gameObject ) )
+            if( !targets.IsEmpty() )
             {
-                hit.collider.gameObject.Destroy();
-            }
-            else
-            {
-                Miss();
+                if( hit.collider != null && targets.Contains( hit.collider.gameObject ) )
+                {
+                    targets.Remove( hit.collider.gameObject );
+                    hit.collider.gameObject.Destroy();
+                    CheckLevelComplete();
+                }
+                else
+                {
+                    Miss();
+                }
             }
         }
     }
@@ -117,7 +131,15 @@ public class Level4_TargetPractice : BaseLevel
     {
         ++targetsCount;
 
-        var target = Instantiate( targetPrefab, desktop.GetWorldBound( 1.0f ).RandomPosition().ToVector3( 20.0f ), Quaternion.identity, desktop.MainCamera.transform );
+        Vector3 position;
+
+        do
+        {
+            position = desktop.GetWorldBound( 1.0f ).RandomPosition().ToVector3( 20.0f );
+        }
+        while( ( position - gun.transform.position ).sqrMagnitude <= 6.0f * 6.0f );
+
+        var target = Instantiate( targetPrefab, position, Quaternion.identity, desktop.MainCamera.transform );
         target.transform.localScale = new Vector3( 0.1f, 0.1f, 0.1f );
         StartCoroutine( Utility.InterpolateScale( target.transform, new Vector3( targetSize, targetSize, 1.0f ), targetFadeDuration ) );
         Utility.FunctionTimer.CreateTimer( targetFadeDuration + targetDuration, () =>
@@ -143,7 +165,7 @@ public class Level4_TargetPractice : BaseLevel
 
         if( targetsCount < targetsMax )
         {
-            Utility.FunctionTimer.CreateTimer( GetSpawnTime(), SpawnTarget );
+            Utility.FunctionTimer.CreateTimer( GetSpawnTime(), SpawnTarget, "SpawnTarget" );
         }
     }
 

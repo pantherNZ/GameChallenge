@@ -70,6 +70,8 @@ public class Level3_Recycling : BaseLevel
 
     protected override void OnLevelUpdate()
     {
+        shortcuts.RemoveAll( x => x == null );
+
         if( desktop != null && shortcuts.Count == 0 )
         {
             enabled = false;

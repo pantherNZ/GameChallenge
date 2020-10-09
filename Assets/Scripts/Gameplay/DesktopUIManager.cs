@@ -46,6 +46,7 @@ public class DesktopUIManager : BaseLevel
 
     // Desktop context menu
     [SerializeField] GameObject contextMenu = null;
+    [HideInInspector] public bool contextMenuEnabled = true;
 
     // Shortcuts
     [SerializeField] Vector2Int gridSize = new Vector2Int( 100, 100 );
@@ -74,7 +75,7 @@ public class DesktopUIManager : BaseLevel
     GameObject taskbarPhysics;
 
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
-    bool easyDifficulty = true;
+    [SerializeField] bool easyDifficulty = true;
     int lives = 3;
     Utility.FunctionTimer difficultyTimer;
     System.DateTime currentTime;
@@ -297,8 +298,8 @@ public class DesktopUIManager : BaseLevel
         {
             grid.onOverlapWith += ( obj ) =>
             {
-            // Recycling bin
-            if( obj == shortcuts[0].shortcut )
+                // Recycling bin
+                if( obj == shortcuts[0].shortcut )
                     RemoveShortcut( newShortcut );
             };
         }
@@ -336,7 +337,7 @@ public class DesktopUIManager : BaseLevel
 
         if( shortcuts[idx].physics != null )
             return null;
-
+          
         var physics = Utility.CreateWorldObjectFromScreenSpaceRect( ( shortcut.transform as RectTransform ).GetWorldRect() );
         physics.transform.position = physics.transform.position + physicsRootOffset;
         physics.AddComponent<Quad>();
@@ -472,7 +473,7 @@ public class DesktopUIManager : BaseLevel
         }
 
         // Context menu on desktop
-        if( Input.GetMouseButtonDown( 1 ) )
+        if( Input.GetMouseButtonDown( 1 ) && contextMenuEnabled )
         {
             contextMenu.GetComponent<CanvasGroup>().SetVisibility( true );
             contextMenu.GetComponent<BoxCollider2D>().enabled = true;

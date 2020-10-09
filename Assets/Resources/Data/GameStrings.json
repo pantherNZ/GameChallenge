@@ -1,51 +1,57 @@
 {
     "Items": [
         {
-            "Key": "Narrator_Level_1_1",
+            "Key": "Narrator_Level_0_1",
             "Value": {
                 "english": "It was a regular day for Alex, he turned on his computer and entered his password. His password was simple, he never forgot it."
             }
         },
         {
-            "Key": "Narrator_Level_1_2",
+            "Key": "Narrator_Level_0_2",
             "Value": {
                 "english": "Alex was feeling slow today but he always remembered his password was simple."
             }
         },
         {
-           	"Key": "Narrator_Level_1_Complete",
+           	"Key": "Narrator_Level_0_Complete",
             "Value": {
                 "english": "Alex recalled his password and used it to login."
             }
         },
         {
-           	"Key": "Narrator_Level_2_DifficultySelect",
+           	"Key": "Narrator_Level_1_DifficultySelect",
             "Value": {
                 "english": "To begin his day, Alex liked to play some <select=easy|hard> games."
             }
         },
         {
-           	"Key": "Narrator_Level_2_DifficultySelectHard",
+           	"Key": "Narrator_Level_1_DifficultySelectHard",
             "Value": {
                 "english": "Excuse me... He liked to play some difficult games."
             }
         },
         {
-           	"Key": "Narrator_Level_2_1",
+           	"Key": "Narrator_Level_1_1",
             "Value": {
                 "english": "Alex enjoyed playing different games; Sometimes ones that featured unique mechanics or problems."
             }
         },
         {
-           	"Key": "Narrator_Level_2_2",
+           	"Key": "Narrator_Level_1_2",
             "Value": {
                 "english": "Alex knew that shifting his perspective would allow him to get a better picture of the problem at hand."
             }
         },
         {
-           	"Key": "Narrator_Level_2_Complete",
+           	"Key": "Narrator_Level_1_Complete",
             "Value": {
                 "english": "His perspective was clear and his goal was complete. On to the next challenge he thought!"
+            }
+        },
+        {
+           	"Key": "Narrator_Level_2_Complete",
+            "Value": {
+                "english": "Bridgeball complete"
             }
         },
         {
