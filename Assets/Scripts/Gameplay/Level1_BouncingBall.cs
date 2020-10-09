@@ -22,12 +22,12 @@ public class Level1_BouncingBall : BaseLevel
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
 
-        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_1" ) );
-        Utility.FunctionTimer.CreateTimer( 10.0f, () => { SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_2" ) ); }, "Narrator_Level_2_2" );
+        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_1" ) );
+        Utility.FunctionTimer.CreateTimer( 10.0f, () => { SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_2" ) ); }, "Narrator_Level_1_2" );
 
-        desktop.CreateWindow( "Bouncy Balls" );
+        var window = desktop.CreateWindow( "Bouncy Balls" ).GetComponent<Window>();
 
-        var newPlatform = Instantiate( platform, desktop.WindowCamera.transform );
+        var newPlatform = Instantiate( platform, window.windowCamera.gameObject.transform );
         newPlatform.transform.localPosition = new Vector3( 0.0f, -2.0f, 50.0f );
         objects.Add( newPlatform );
 
@@ -78,9 +78,9 @@ public class Level1_BouncingBall : BaseLevel
         if( complete[0] && complete[1] && !complete[2] )
         {
             complete[2] = true;
-            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
+            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_Complete" ) );
             Utility.FunctionTimer.StopTimer( "CreateBall" );
-            Utility.FunctionTimer.StopTimer( "Narrator_Level_2_2" );
+            Utility.FunctionTimer.StopTimer( "Narrator_Level_1_2" );
 
             Utility.FunctionTimer.CreateTimer( 3.0f, () =>
             {

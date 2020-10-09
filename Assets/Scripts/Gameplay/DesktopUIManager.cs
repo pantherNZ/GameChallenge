@@ -14,7 +14,6 @@ public class DesktopIcon
 
 public class DesktopUIManager : BaseLevel
 {
-    public Camera WindowCamera { get => windowCamera; private set { } }
     public Camera MainCamera { get; private set; }
     public Vector3 windowCameraStartPosition { get; private set; }
     public GameObject Taskbar { get => taskBar; private set { } }
@@ -36,7 +35,8 @@ public class DesktopUIManager : BaseLevel
 
     // Cameras
     [SerializeField] Camera blueScreenCamera = null;
-    [SerializeField] Camera windowCamera = null;
+    [SerializeField] Camera windowCameraPrefab = null;
+    [SerializeField] RenderTexture windowCamRTPrefab = null;
 
     // Selection box
     [SerializeField] GameObject selectionBoxPrefab = null;
@@ -86,7 +86,7 @@ public class DesktopUIManager : BaseLevel
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
 
         startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
-        windowCameraStartPosition = WindowCamera.transform.position.SetZ( 0.0f );
+        windowCameraStartPosition = new Vector3( -14.62f, 0.0f, -10.0f );
         MainCamera = Camera.main;
         MainCamera.GetComponent<AudioListener>().enabled = enabledAudio;
         contextMenu.GetComponent<BoxCollider2D>().enabled = false;
@@ -232,7 +232,7 @@ public class DesktopUIManager : BaseLevel
 
         var window = Instantiate( windowPrefab, transform ).GetComponent<Window>();
         window.transform.position = transform.position;
-        window.Initialise( title, this );
+        window.Initialise( title, this, Instantiate( windowCameraPrefab ), Instantiate( windowCamRTPrefab ) );
         windows.Add( new Pair<Window, string>( window, title ) );
         return window.gameObject;
     }
@@ -264,9 +264,9 @@ public class DesktopUIManager : BaseLevel
         return new Rect( rect.xMin, rect.yMin + rect.height - height, ( Mathf.Floor( rect.width / gridSize.x ) - 0.5f ) * gridSize.x, height );
     }
 
-    public GameObject CreateShortcut( DesktopIcon icon, Vector2Int index )
+    public GameObject CreateShortcut( DesktopIcon icon, Vector2Int index, System.Action<GameObject> onOpened = null )
     {
-        return CreateShortcut( icon, GetGridBounds().TopLeft() + new Vector2( index.x * gridSize.x, -index.y * gridSize.y ) );
+        return CreateShortcut( icon, GetGridBounds().TopLeft() + new Vector2( index.x * gridSize.x, -index.y * gridSize.y ), onOpened );
     }
 
     public GameObject CreateShortcut( DesktopIcon icon, Vector2 position, System.Action<GameObject> onOpened = null )
@@ -460,16 +460,17 @@ public class DesktopUIManager : BaseLevel
             timeDateText.text = newTime.ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );
         }
 
-        var window = windows.IsEmpty() ? null : windows.Front().First;
-
-        // Wiewport inside window
-        if( window != null && window.HasViewPort() )
+        foreach( var window in windows )
         {
-            Vector3[] corners = new Vector3[4];
-            window.GetCameraViewWorldCorners( corners );
-            var windowViewPosWorld = ( corners[3] + corners[0] ) / 2.0f;
-            var offset = windowViewPosWorld - transform.position;
-            windowCamera.transform.position = windowCameraStartPosition + offset;
+            // Wiewport inside window
+            if( window.First != null && window.First.HasViewPort() )
+            {
+                Vector3[] corners = new Vector3[4];
+                window.First.GetCameraViewWorldCorners( corners );
+                var windowViewPosWorld = ( corners[3] + corners[0] ) / 2.0f;
+                var offset = windowViewPosWorld - transform.position;
+                window.First.windowCamera.transform.position = windowCameraStartPosition + offset;
+            }
         }
 
         // Context menu on desktop

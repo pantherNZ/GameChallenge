@@ -4,20 +4,20 @@ using UnityEngine.EventSystems;
 
 public class Window : MonoBehaviour
 {
-    new Camera camera;
+    public Camera windowCamera;
     public GameObject image = null;
     [SerializeField] Text titleText = null;
     [SerializeField] Button closeButton = null;
+    RenderTexture renderTexture;
 
-    void Start()
-    {
-        camera = Camera.main;
-    }
-
-    public void Initialise( string title, DesktopUIManager desktop )
+    public void Initialise( string title, DesktopUIManager desktop, Camera camera, RenderTexture rt )
     {
         titleText.text = title;
+        windowCamera = camera;
+        renderTexture = rt;
+        windowCamera.targetTexture = rt;
         closeButton.onClick.AddListener( () => { desktop.DestroyWindow( this ); } );
+        image.GetComponent<RawImage>().texture = rt;
     }
 
     public string GetTitle()

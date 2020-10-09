@@ -7,11 +7,18 @@ using UnityEngine;
 
 public class Level6_Missile : BaseLevel
 {
-    GameObject window;
+    List<GameObject> windows = new List<GameObject>();
+    GameObject shortcut;
 
     public override void OnStartLevel()
     {
-        window = desktop.CreateWindow( "Missiles" );
+        windows.Add( desktop.CreateWindow( "Missiles" ) );
+        var icon = new DesktopIcon()
+        {
+            name = "Missiles",
+            icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" )
+        };
+        shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), ( x ) => windows.Add( desktop.CreateWindow( "Missiles" ) ) );
     }
 
     protected override void OnLevelUpdate()
