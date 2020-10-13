@@ -9,6 +9,7 @@ public class Window : MonoBehaviour
     [SerializeField] Text titleText = null;
     [SerializeField] Button closeButton = null;
     RenderTexture renderTexture;
+    DesktopUIManager desktopRef;
 
     public void Initialise( string title, DesktopUIManager desktop, Camera camera, RenderTexture rt )
     {
@@ -18,6 +19,8 @@ public class Window : MonoBehaviour
         windowCamera.targetTexture = rt;
         closeButton.onClick.AddListener( () => { desktop.DestroyWindow( this ); } );
         image.GetComponent<RawImage>().texture = rt;
+        camera.aspect = 1.46f;
+        desktopRef = desktop;
     }
 
     public string GetTitle()
@@ -25,11 +28,14 @@ public class Window : MonoBehaviour
         return titleText.text;
     }
 
-    public void GetCameraViewWorldCorners( Vector3[] corners )
+    public Rect GetCameraViewWorldRect()
     {
         Debug.Assert( HasViewPort() );
-        if( HasViewPort() )
-            ( image.transform as RectTransform ).GetWorldCorners( corners );
+        Vector3[] corners = new Vector3[4];
+        ( image.transform as RectTransform ).GetWorldCorners( corners );
+        return new Rect(
+            desktopRef.windowCameraStartPosition + corners[0],
+            new Vector2( corners[3].x - corners[0].x, corners[1].y - corners[0].y ) );
     }
 
     public bool HasViewPort()

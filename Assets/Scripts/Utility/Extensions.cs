@@ -12,6 +12,13 @@ public static partial class Extensions
         UnityEngine.Object.Destroy( gameObject );
     }
 
+    public static void DestroyAll( this List<GameObject> objects )
+    {
+        foreach( var x in objects )
+            UnityEngine.Object.Destroy( x );
+        objects.Clear();
+    }
+
     public static void DestroyObject( this MonoBehaviour component )
     {
         UnityEngine.Object.Destroy( component.gameObject );
@@ -31,10 +38,30 @@ public static partial class Extensions
             list.AddRange( Enumerable.Repeat( value, size - cur ) );
     }
 
+    public static Pair<U, V> FindPairFirst<U, V>( this List<Pair<U, V>> list, U item )
+    {
+        return list.Find( x => x.First.Equals( item ) );
+    }
+
+    public static Pair<U, V> FindPairSecond<U, V>( this List<Pair<U, V>> list, U item )
+    {
+        return list.Find( x => x.Second.Equals( item ) );
+    }
+
     public static void RemoveBySwap<T>( this List<T> list, int index )
     {
         list[index] = list[list.Count - 1];
         list.RemoveAt( list.Count - 1 );
+    }
+
+    public static void RemovePairFirst<U, V>( this List<Pair<U, V>> list, U item )
+    {
+        RemoveBySwap( list, x => x.First.Equals( item ) );
+    }
+
+    public static void RemovePairSecond<U, V>( this List<Pair<U, V>> list, U item )
+    {
+        RemoveBySwap( list, x => x.Second.Equals( item ) );
     }
 
     public static bool RemoveBySwap<T>( this List<T> list, Func<T, bool> predicate )

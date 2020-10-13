@@ -734,6 +734,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelIdx: 0
   nextLevel: {fileID: 0}
+  windowCameraStartPosition: {x: -20, y: 0, z: -10}
   levels:
   - {fileID: 522668005}
   - {fileID: 1897650524}
@@ -1055,7 +1056,7 @@ MonoBehaviour:
     type: 3}
   missilePrefab: {fileID: 3364911981123608486, guid: 70afa14818d43c54e9a8a8458cbedf7c,
     type: 3}
-  moveDist: 10
+  moveDist: 25
   moveSpeed: 10
 --- !u!1 &214368265
 GameObject:

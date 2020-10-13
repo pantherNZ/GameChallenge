@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,22 +12,22 @@ public class Level6_Missile : BaseLevel
     [SerializeField] GameObject missilePrefab = null;
     [SerializeField] float moveDist = 20.0f;
     [SerializeField] float moveSpeed = 10.0f;
-    List<GameObject> windows = new List<GameObject>();
+    List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher;
-    List<GameObject> missiles = new List<GameObject>();
+    List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
 
     public override void OnStartLevel()
     {
-        windows.Add( desktop.CreateWindow( "Missiles" ) );
+        windows.Add( desktop.CreateWindow( "Missiles" ).GetComponent<Window>() );
         var icon = new DesktopIcon()
         {
             name = "Missiles",
             icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" )
         };
-        shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), ( x ) => windows.Add( desktop.CreateWindow( "Missiles" ) ) );
+        shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), ( x ) => windows.Add( desktop.CreateWindow( "Missiles" ).GetComponent<Window>() ) );
 
-        missileLauncher = Instantiate( missileLauncherPrefab, windows.Back().GetComponent<Window>().windowCamera.gameObject.transform );
-        missileLauncher.transform.localPosition = new Vector3( -3.5f, 0.0f, 50.0f );
+        missileLauncher = Instantiate( missileLauncherPrefab );
+        missileLauncher.transform.position = windows.Back().windowCamera.gameObject.transform.position + new Vector3( -6.0f, 0.0f, 50.0f );
         missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
 
         Utility.FunctionTimer.CreateTimer( 3.0f, FireMissile, "FireMissile", true );
@@ -35,6 +36,31 @@ public class Level6_Missile : BaseLevel
     protected override void OnLevelUpdate()
     {
         base.OnLevelUpdate();
+
+        foreach( var window in windows )
+        {
+            var rect = window.GetCameraViewWorldRect();
+
+            foreach( var (missile, _) in missiles )
+                if( !rect.Contains( missile.transform.position ) )
+                    Explode( missile );
+        }
+    }
+
+    protected override void OnLevelFinished()
+    {
+        base.OnLevelFinished();
+
+        missileLauncher.Destroy();
+
+        foreach( var (missile, _) in missiles )
+            missile.Destroy();
+
+        foreach( var window in windows)
+            desktop.DestroyWindow( window );
+
+        windows.Clear();
+        missiles.Clear();
     }
 
     void FireMissile()
@@ -47,21 +73,29 @@ public class Level6_Missile : BaseLevel
             var spawnLocation = missileLauncher.GetComponentInChildren<Transform>();
             missile.transform.position = spawnLocation.position;
             missile.transform.rotation = spawnLocation.rotation;
-            StartCoroutine( MoveMissileRoutine( missile ) );
-            missiles.Add( missile );
+            missiles.Add( new Pair<GameObject, Coroutine>( missile, StartCoroutine( MoveMissileRoutine( missile ) ) ) );
         } );
     }
 
-    public System.Collections.IEnumerator MoveMissileRoutine( GameObject missile )
+    public IEnumerator MoveMissileRoutine( GameObject missile )
     {
-        yield return StartCoroutine( Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed ) );
+        yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
+        Explode( missile );
+    }
+
+    public void Explode( GameObject missile )
+    {
+        if( missile == null )
+            return;
+
         missile.GetComponent<Animator>().Play( "Explode" );
+        StopCoroutine( missiles.FindPairFirst( missile ).Second );
 
         Utility.FunctionTimer.CreateTimer( 1.0f, () =>
         {
             if( missile != null )
             {
-                missiles.Remove( missile );
+                missiles.RemovePairFirst( missile );
                 missile.Destroy();
             }
         } );

@@ -15,7 +15,7 @@ public class DesktopIcon
 public class DesktopUIManager : BaseLevel
 {
     public Camera MainCamera { get; private set; }
-    public Vector3 windowCameraStartPosition { get; private set; }
+    public Vector3 windowCameraStartPosition = new Vector3( -14.62f, 0.0f, -10.0f );
     public GameObject Taskbar { get => taskBar; private set { } }
 
     [SerializeField] List<BaseLevel> levels = new List<BaseLevel>();
@@ -86,7 +86,6 @@ public class DesktopUIManager : BaseLevel
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
 
         startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
-        windowCameraStartPosition = new Vector3( -14.62f, 0.0f, -10.0f );
         MainCamera = Camera.main;
         MainCamera.GetComponent<AudioListener>().enabled = enabledAudio;
         contextMenu.GetComponent<BoxCollider2D>().enabled = false;
@@ -234,7 +233,19 @@ public class DesktopUIManager : BaseLevel
         window.transform.position = transform.position;
         window.Initialise( title, this, Instantiate( windowCameraPrefab ), Instantiate( windowCamRTPrefab ) );
         windows.Add( new Pair<Window, string>( window, title ) );
+        UpdateWindowPosition( window );
         return window.gameObject;
+    }
+
+    void UpdateWindowPosition( Window window )
+    {
+        // Viewport inside window
+        if( window != null && window.HasViewPort() )
+        {
+            var windowViewPosWorld = window.GetCameraViewWorldRect().center.ToVector3( transform.position.z );
+            var offset = ( windowViewPosWorld - windowCameraStartPosition ) - transform.position;
+            window.windowCamera.transform.position = windowCameraStartPosition + offset;
+        }
     }
 
     public void DestroyWindow( string title )
@@ -460,18 +471,8 @@ public class DesktopUIManager : BaseLevel
             timeDateText.text = newTime.ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );
         }
 
-        foreach( var window in windows )
-        {
-            // Wiewport inside window
-            if( window.First != null && window.First.HasViewPort() )
-            {
-                Vector3[] corners = new Vector3[4];
-                window.First.GetCameraViewWorldCorners( corners );
-                var windowViewPosWorld = ( corners[3] + corners[0] ) / 2.0f;
-                var offset = windowViewPosWorld - transform.position;
-                window.First.windowCamera.transform.position = windowCameraStartPosition + offset;
-            }
-        }
+        foreach( var ( window, _ ) in windows )
+            UpdateWindowPosition( window );
 
         // Context menu on desktop
         if( Input.GetMouseButtonDown( 1 ) && contextMenuEnabled )

@@ -245,6 +245,12 @@ public class Pair<T, U>
         return ( 23 * First.GetHashCode() ) ^ ( 397 * Second.GetHashCode() );
     }
 
+    public void Deconstruct( out T first, out U second )
+    {
+        first = First;
+        second = Second;
+    }
+
     public T First;
     public U Second;
 }
