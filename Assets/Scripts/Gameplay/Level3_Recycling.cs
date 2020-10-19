@@ -50,11 +50,11 @@ public class Level3_Recycling : BaseLevel
             }
         }
 
-        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_1" ) );
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_3_1" );
 
         var timer = Utility.FunctionTimer.CreateTimer( desktop.IsEasyMode() ? rounds[roundNumber].timerEasySec : rounds[roundNumber].timerHardSec, () =>
         {
-            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_Failed" ) );
+            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_3_Failed" );
 
             for( int i = shortcuts.Count - 1; i < 0; --i )
                 desktop.RemoveShortcut( shortcuts[i] );
@@ -76,7 +76,7 @@ public class Level3_Recycling : BaseLevel
         {
             enabled = false;
             Utility.FunctionTimer.StopTimer( "Level_3" );
-            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_3_Complete" ) );
+            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_3_Complete" );
             Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
         }
     }

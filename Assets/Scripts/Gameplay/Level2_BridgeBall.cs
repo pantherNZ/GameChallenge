@@ -63,7 +63,7 @@ public class Level2_BridgeBall : BaseLevel
 
     private void CheckComplete()
     {
-        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_Complete" ) );
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_2_Complete" );
         Utility.FunctionTimer.StopTimer( "CreateBall" );
 
         Utility.FunctionTimer.CreateTimer( 3.0f, () =>

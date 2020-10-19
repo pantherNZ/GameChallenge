@@ -42,4 +42,9 @@ public class Window : MonoBehaviour
     {
         return image != null;
     }
+
+    private void Update()
+    {
+        windowCamera.orthographicSize = ( desktopRef.transform as RectTransform ).rect.width / ( image.transform as RectTransform ).rect.width;
+    }
 }

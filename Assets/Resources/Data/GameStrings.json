@@ -71,6 +71,18 @@
             "Value": {
                 "english": "Ah, clean and concise. Alex could now relax and focus on other tasks."
             }
+        },
+        {
+           	"Key": "Narrator_Level_6_1",
+            "Value": {
+                "english": "All Alex had to do was guide a missile"
+            }
+        },
+        {
+           	"Key": "Narrator_Level_6_Complete",
+            "Value": {
+                "english": "Luckily this missile flew accurately and straight, the same could not be said for the next one."
+            }
         }
     ]
 }

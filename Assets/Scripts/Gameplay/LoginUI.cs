@@ -52,12 +52,13 @@ public class LoginUI : BaseLevel
 
     public override void OnStartLevel()
     {
+        desktop.GetComponent<CanvasGroup>().SetVisibility( false );
         GetComponent<CanvasGroup>().SetVisibility( true );
-        Utility.FunctionTimer.CreateTimer( 1.0f, () => SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_1" ) ) );
-        Utility.FunctionTimer.CreateTimer( 20.0f, () => SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_2" ) ), "2nd_prompt" );
+        Utility.FunctionTimer.CreateTimer( 1.0f, () => SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_0_1" ) );
+        Utility.FunctionTimer.CreateTimer( 20.0f, () => SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_0_2" ), "2nd_prompt" );
         Utility.FunctionTimer.CreateTimer( 35.0f, () =>
         {
-            SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_3" ) );
+            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_0_Complete" );
             passworldInput.inputType = InputField.InputType.Standard;
             passworldInput.text = string.Empty;
             passworldInput.readOnly = true;

@@ -95,6 +95,7 @@ public class DesktopUIManager : BaseLevel
         for( int i = 0; i < levels.Count; ++i )
         {
             levels[i].levelIdx = i;
+            levels[i].desktop = this;
             if( i < levels.Count - 1 )
                 levels[i].nextLevel = levels[i + 1];
         }
@@ -107,7 +108,7 @@ public class DesktopUIManager : BaseLevel
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( 2.0f, () => 
         {
-            var str = DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelect" );
+            var str = DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelect" );
             SubtitlesManager.Instance.AddSubtitle( str, 0, 0, ( selection ) =>
             {
                 if( selection == "hard" )
@@ -115,7 +116,7 @@ public class DesktopUIManager : BaseLevel
                     easyDifficulty = false;
 
                     if( !difficultyTimer.active )
-                        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
+                        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelectHard" ) );
                     Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
                 }
             } );
@@ -124,7 +125,7 @@ public class DesktopUIManager : BaseLevel
         difficultyTimer = Utility.FunctionTimer.CreateTimer( 5.0f, () =>
         {
             if( !easyDifficulty )
-                SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_2_DifficultySelectHard" ) );
+                SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelectHard" ) );
             Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
         } );
     }
@@ -420,23 +421,26 @@ public class DesktopUIManager : BaseLevel
             EventSystem.current.RaycastAll( pointerData, results );
             var pointerTarget = results.IsEmpty() ? null : results.Front().gameObject;
 
-            if( startMenu.IsVisible() )
+            if( pointerTarget != null )
             {
-                while( pointerTarget != null && pointerTarget.transform.parent != null && pointerTarget != startMenu.gameObject && pointerTarget != startMenuButton.gameObject )
-                    pointerTarget = pointerTarget.transform.parent.gameObject;
+                if( startMenu.IsVisible() )
+                {
+                    while( pointerTarget != null && pointerTarget.transform.parent != null && pointerTarget != startMenu.gameObject && pointerTarget != startMenuButton.gameObject )
+                        pointerTarget = pointerTarget.transform.parent.gameObject;
 
-                if( results.IsEmpty() || ( pointerTarget != startMenu.gameObject && pointerTarget != startMenuButton.gameObject ) )
-                    startMenu.ToggleVisibility();
-            }
+                    if( results.IsEmpty() || ( pointerTarget != startMenu.gameObject && pointerTarget != startMenuButton.gameObject ) )
+                        startMenu.ToggleVisibility();
+                }
 
-            // Start selection box
-            if( Input.GetMouseButtonDown( 0 ) && ( pointerTarget == null || pointerTarget == background ) )
-                selectionStartPos = Input.mousePosition;
+                // Start selection box
+                if( Input.GetMouseButtonDown( 0 ) && ( pointerTarget == null || pointerTarget == background ) )
+                    selectionStartPos = Input.mousePosition;
 
-            if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( contextMenu.transform ) )
-            {
-                contextMenu.GetComponent<CanvasGroup>().SetVisibility( false );
-                contextMenu.GetComponent<BoxCollider2D>().enabled = false;
+                if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( contextMenu.transform ) )
+                {
+                    contextMenu.GetComponent<CanvasGroup>().SetVisibility( false );
+                    contextMenu.GetComponent<BoxCollider2D>().enabled = false;
+                }
             }
         }
 

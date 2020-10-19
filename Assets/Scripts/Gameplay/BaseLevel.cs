@@ -2,7 +2,7 @@
 
 abstract public class BaseLevel : MonoBehaviour
 {
-    protected DesktopUIManager desktop;
+    [HideInInspector] public DesktopUIManager desktop;
     bool levelStarted;
     bool levelActive;
 
@@ -14,7 +14,7 @@ abstract public class BaseLevel : MonoBehaviour
 
     private void Start()
     {
-        desktop = GetComponent<DesktopUIManager>();
+
     }
 
     public void StartLevel()

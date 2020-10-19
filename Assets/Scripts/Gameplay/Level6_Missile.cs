@@ -31,6 +31,8 @@ public class Level6_Missile : BaseLevel
         missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
 
         Utility.FunctionTimer.CreateTimer( 3.0f, FireMissile, "FireMissile", true );
+
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_1" );
     }
 
     protected override void OnLevelUpdate()
@@ -43,7 +45,7 @@ public class Level6_Missile : BaseLevel
 
             foreach( var (missile, _) in missiles )
                 if( !rect.Contains( missile.transform.position ) )
-                    Explode( missile );
+                    Explode( missile, false );
         }
     }
 
@@ -61,6 +63,8 @@ public class Level6_Missile : BaseLevel
 
         windows.Clear();
         missiles.Clear();
+
+        Utility.FunctionTimer.CreateTimer( 1.0f, StartNextLevel );
     }
 
     void FireMissile()
@@ -80,10 +84,10 @@ public class Level6_Missile : BaseLevel
     public IEnumerator MoveMissileRoutine( GameObject missile )
     {
         yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
-        Explode( missile );
+        Explode( missile, true );
     }
 
-    public void Explode( GameObject missile )
+    public void Explode( GameObject missile, bool reached_end )
     {
         if( missile == null )
             return;
@@ -99,5 +103,16 @@ public class Level6_Missile : BaseLevel
                 missile.Destroy();
             }
         } );
+
+        if( reached_end )
+        {
+            Utility.FunctionTimer.StopTimer( "FireMissile" );
+
+            Utility.FunctionTimer.CreateTimer( 1.0f, () =>
+            {
+                LevelFinished();
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_Complete" );
+            } );
+        }
     }
 }
