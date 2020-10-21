@@ -19,7 +19,6 @@ public class Window : MonoBehaviour
         windowCamera.targetTexture = rt;
         closeButton.onClick.AddListener( () => { desktop.DestroyWindow( this ); } );
         image.GetComponent<RawImage>().texture = rt;
-        camera.aspect = 1.46f;
         desktopRef = desktop;
     }
 
@@ -45,6 +44,12 @@ public class Window : MonoBehaviour
 
     private void Update()
     {
-        windowCamera.orthographicSize = ( desktopRef.transform as RectTransform ).rect.width / ( image.transform as RectTransform ).rect.width;
+        var worldRect = GetCameraViewWorldRect();
+        windowCamera.orthographicSize = worldRect.height / 2.0f;// ( desktopRef.transform as RectTransform ).rect.width / ( image.transform as RectTransform ).rect.width;
+        windowCamera.aspect = ( image.transform as RectTransform ).rect.width / ( image.transform as RectTransform ).rect.height;
+
+        var windowViewPosWorld = worldRect.center.ToVector3( desktopRef.transform.position.z );
+        var offset = ( windowViewPosWorld - desktopRef.windowCameraStartPosition ) - desktopRef.transform.position;
+        windowCamera.transform.position = desktopRef.windowCameraStartPosition + offset;
     }
 }

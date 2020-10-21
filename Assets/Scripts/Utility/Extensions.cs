@@ -300,4 +300,28 @@ public static partial class Extensions
     {
         return new Vector2( rect.xMax, rect.yMin );
     }
+
+    static public Rect ToRect( this Bounds bound )
+    {
+        return new Rect( bound.center - bound.extents, bound.size );
+    }
+
+    static public bool Contains( this Rect rect, Rect other )
+    {
+        return rect.Contains( other.TopLeft() )
+             && rect.Contains( other.TopRight() )
+             && rect.Contains( other.BottomLeft() )
+             && rect.Contains( other.BottomRight() );
+    }
+
+    static public bool Contains( this Rect rect, Bounds other )
+    {
+        var otherRect = other.ToRect();
+        var tl = otherRect.TopLeft();
+        var test = rect.Contains( tl );
+        return rect.Contains( otherRect.TopLeft() )
+             && rect.Contains( otherRect.TopRight() )
+             && rect.Contains( otherRect.BottomLeft() )
+             && rect.Contains( otherRect.BottomRight() );
+    }
 }

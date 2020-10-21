@@ -12,27 +12,34 @@ public class Level6_Missile : BaseLevel
     [SerializeField] GameObject missilePrefab = null;
     [SerializeField] float moveDist = 20.0f;
     [SerializeField] float moveSpeed = 10.0f;
+    [SerializeField] float missileStartPos = -6.0f;
     List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher;
     List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
 
     public override void OnStartLevel()
     {
-        windows.Add( desktop.CreateWindow( "Missiles" ).GetComponent<Window>() );
         var icon = new DesktopIcon()
         {
             name = "Missiles",
             icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" )
         };
-        shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), ( x ) => windows.Add( desktop.CreateWindow( "Missiles" ).GetComponent<Window>() ) );
 
-        missileLauncher = Instantiate( missileLauncherPrefab );
-        missileLauncher.transform.position = windows.Back().windowCamera.gameObject.transform.position + new Vector3( -6.0f, 0.0f, 50.0f );
+        shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), CreateWindow );
+        CreateWindow( shortcut );
+
+         missileLauncher = Instantiate( missileLauncherPrefab );
+        missileLauncher.transform.position = windows.Back().windowCamera.gameObject.transform.position + new Vector3( missileStartPos, 0.0f, 50.0f );
         missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
 
         Utility.FunctionTimer.CreateTimer( 3.0f, FireMissile, "FireMissile", true );
 
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_1" );
+    }
+
+    void CreateWindow( GameObject shortcut )
+    {
+        windows.Add( desktop.CreateWindow( "Missiles", false, new Vector2( -2.5f, 0.0f ) ).GetComponent<Window>() );
     }
 
     protected override void OnLevelUpdate()
@@ -44,7 +51,7 @@ public class Level6_Missile : BaseLevel
             var rect = window.GetCameraViewWorldRect();
 
             foreach( var (missile, _) in missiles )
-                if( !rect.Contains( missile.transform.position ) )
+                if( !rect.Contains( missile.GetComponent<Collider2D>().bounds ) )
                     Explode( missile, false );
         }
     }
@@ -78,6 +85,7 @@ public class Level6_Missile : BaseLevel
             missile.transform.position = spawnLocation.position;
             missile.transform.rotation = spawnLocation.rotation;
             missiles.Add( new Pair<GameObject, Coroutine>( missile, StartCoroutine( MoveMissileRoutine( missile ) ) ) );
+            Physics2D.SyncTransforms();
         } );
     }
 

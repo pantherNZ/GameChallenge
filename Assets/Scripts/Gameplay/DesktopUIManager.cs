@@ -210,43 +210,31 @@ public class DesktopUIManager : BaseLevel
         } );
     }
 
-    public GameObject CreateWindow( string title, bool destroyExisting = false )
+    public GameObject CreateWindow( string title, bool destroyExisting = false, Vector2 offset = new Vector2() )
     {
-        return CreateWindowInternal( title, windowBase, destroyExisting );
+        return CreateWindowInternal( title, windowBase, destroyExisting, offset );
     }
 
     public void CreateOptionsWindow()
     {
-        CreateWindowInternal( "Options", optionsWindow, true );
+        CreateWindowInternal( "Options", optionsWindow, true, new Vector2() );
     }
 
     public void CreateHelpWindow()
     {
-        CreateWindowInternal( "Help", helpWindow, true );
+        CreateWindowInternal( "Help", helpWindow, true, new Vector2() );
     }
 
-    private GameObject CreateWindowInternal( string title, GameObject windowPrefab, bool destroyExisting )
+    private GameObject CreateWindowInternal( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset )
     {
         if( destroyExisting )
             DestroyWindow( title );
 
         var window = Instantiate( windowPrefab, transform ).GetComponent<Window>();
-        window.transform.position = transform.position;
+        window.transform.position = transform.position + offset.ToVector3();
         window.Initialise( title, this, Instantiate( windowCameraPrefab ), Instantiate( windowCamRTPrefab ) );
         windows.Add( new Pair<Window, string>( window, title ) );
-        UpdateWindowPosition( window );
         return window.gameObject;
-    }
-
-    void UpdateWindowPosition( Window window )
-    {
-        // Viewport inside window
-        if( window != null && window.HasViewPort() )
-        {
-            var windowViewPosWorld = window.GetCameraViewWorldRect().center.ToVector3( transform.position.z );
-            var offset = ( windowViewPosWorld - windowCameraStartPosition ) - transform.position;
-            window.windowCamera.transform.position = windowCameraStartPosition + offset;
-        }
     }
 
     public void DestroyWindow( string title )
@@ -474,9 +462,6 @@ public class DesktopUIManager : BaseLevel
             currentTime = newTime;
             timeDateText.text = newTime.ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );
         }
-
-        foreach( var ( window, _ ) in windows )
-            UpdateWindowPosition( window );
 
         // Context menu on desktop
         if( Input.GetMouseButtonDown( 1 ) && contextMenuEnabled )
