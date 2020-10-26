@@ -15,7 +15,7 @@ public static partial class Extensions
     public static void DestroyAll( this List<GameObject> objects )
     {
         foreach( var x in objects )
-            UnityEngine.Object.Destroy( x );
+            x?.Destroy();
         objects.Clear();
     }
 

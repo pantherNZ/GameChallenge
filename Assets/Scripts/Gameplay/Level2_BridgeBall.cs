@@ -68,11 +68,8 @@ public class Level2_BridgeBall : BaseLevel
 
         Utility.FunctionTimer.CreateTimer( 3.0f, () =>
         {
-            foreach( var obj in objects )
-                obj?.Destroy();
-
             levelObj.Destroy();
-            objects.Clear();
+            objects.DestroyAll();
 
             Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
         } );

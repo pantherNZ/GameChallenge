@@ -82,10 +82,7 @@ public class Level1_BouncingBall : BaseLevel
 
             Utility.FunctionTimer.CreateTimer( 3.0f, () =>
             {
-                foreach( var obj in objects )
-                    obj.Destroy();
-                objects.Clear();
-
+                objects.DestroyAll();
                 desktop.DestroyWindow( "Bouncy Balls" );
 
                 Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );

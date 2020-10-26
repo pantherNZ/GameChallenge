@@ -74,6 +74,27 @@ public static partial class Utility
         mono.StartCoroutine( InterpolatePosition( mono.transform, targetPosition, durationSec ) );
     }
 
+    public static IEnumerator InterpolateBezier( Transform transform, BezierCurve bezier, float durationSec )
+    {
+        float interp = 0.0f;
+        var startPos = transform.position;
+        var startRot = transform.rotation;
+        bezier.SetDirty();
+
+        while( interp < 1.0f )
+        {
+            interp += Time.deltaTime / durationSec;
+            transform.position = startPos + bezier.GetPointAt( interp, out var direction ) - bezier.transform.position;
+            transform.rotation = Quaternion.LookRotation( Vector3.forward, direction );
+            yield return null;
+        }
+    }
+
+    public static void InterpolateBezier( this MonoBehaviour mono, BezierCurve bezier, float durationSec )
+    {
+        mono.StartCoroutine( InterpolateBezier( mono.transform, bezier, durationSec ) );
+    }
+
     public static IEnumerator Shake( Transform transform, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
     {
         var elapsed = 0.0f;

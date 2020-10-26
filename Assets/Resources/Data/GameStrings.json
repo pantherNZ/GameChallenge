@@ -83,6 +83,18 @@
             "Value": {
                 "english": "Luckily this missile flew accurately and straight, the same could not be said for the next one."
             }
+        },
+        {
+           	"Key": "Narrator_Level_7_1",
+            "Value": {
+                "english": "Falling balls or something"
+            }
+        },
+        {
+           	"Key": "Narrator_Level_7_Complete",
+            "Value": {
+                "english": "Balls were found"
+            }
         }
     ]
 }

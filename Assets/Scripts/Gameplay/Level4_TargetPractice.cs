@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Level4_TargetPractice : BaseLevel
@@ -55,12 +53,8 @@ public class Level4_TargetPractice : BaseLevel
             return;
         }
 
-        foreach( var target in targets )
-            target?.Destroy();
-        foreach( var bullet in bullets )
-            bullet?.Destroy();
-        bullets.Clear();
-        targets.Clear();
+        bullets.DestroyAll();
+        targets.DestroyAll();
         countdownSprite?.Destroy();
         gun?.Destroy();
         crosshair?.Destroy();

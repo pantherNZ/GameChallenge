@@ -10,6 +10,7 @@ public class Level6_Missile : BaseLevel
 {
     [SerializeField] GameObject missileLauncherPrefab = null;
     [SerializeField] GameObject missilePrefab = null;
+    [SerializeField] GameObject missileBezierPrefab = null;
     [SerializeField] float moveDist = 20.0f;
     [SerializeField] float moveSpeed = 10.0f;
     [SerializeField] float missileStartPos = -6.0f;
@@ -28,7 +29,7 @@ public class Level6_Missile : BaseLevel
         shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), CreateWindow );
         CreateWindow( shortcut );
 
-         missileLauncher = Instantiate( missileLauncherPrefab );
+        missileLauncher = Instantiate( missileLauncherPrefab );
         missileLauncher.transform.position = windows.Back().windowCamera.gameObject.transform.position + new Vector3( missileStartPos, 0.0f, 50.0f );
         missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
 
@@ -91,7 +92,8 @@ public class Level6_Missile : BaseLevel
 
     public IEnumerator MoveMissileRoutine( GameObject missile )
     {
-        yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
+       // yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
+        yield return Utility.InterpolateBezier( missile.transform, missileBezierPrefab.GetComponent<BezierCurve>(), moveDist / moveSpeed );
         Explode( missile, true );
     }
 
