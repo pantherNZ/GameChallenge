@@ -1,100 +1,119 @@
 {
-    "Items": [
-        {
-            "Key": "Narrator_Level_0_1",
-            "Value": {
-                "english": "It was a regular day for Alex, he turned on his computer and entered his password. His password was simple, he never forgot it."
-            }
-        },
-        {
-            "Key": "Narrator_Level_0_2",
-            "Value": {
-                "english": "Alex was feeling slow today but he always remembered his password was simple."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_0_Complete",
-            "Value": {
-                "english": "Alex recalled his password and used it to login."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_1_DifficultySelect",
-            "Value": {
-                "english": "To begin his day, Alex liked to play some <select=easy|hard> games."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_1_DifficultySelectHard",
-            "Value": {
-                "english": "Excuse me... He liked to play some difficult games."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_1_1",
-            "Value": {
-                "english": "Alex enjoyed playing different games; Sometimes ones that featured unique mechanics or problems."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_1_2",
-            "Value": {
-                "english": "Alex knew that shifting his perspective would allow him to get a better picture of the problem at hand."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_1_Complete",
-            "Value": {
-                "english": "His perspective was clear and his goal was complete. On to the next challenge he thought!"
-            }
-        },
-        {
-           	"Key": "Narrator_Level_2_Complete",
-            "Value": {
-                "english": "Bridgeball complete"
-            }
-        },
-        {
-           	"Key": "Narrator_Level_3_1",
-            "Value": {
-                "english": "Alex needed to urgently clean up his mess! <timer=Level_3>"
-            }
-        },
-        {
-           	"Key": "Narrator_Level_3_Failed",
-            "Value": {
-                "english": "A messy desktop leads to a messy life.."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_3_Complete",
-            "Value": {
-                "english": "Ah, clean and concise. Alex could now relax and focus on other tasks."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_6_1",
-            "Value": {
-                "english": "All Alex had to do was guide a missile"
-            }
-        },
-        {
-           	"Key": "Narrator_Level_6_Complete",
-            "Value": {
-                "english": "Luckily this missile flew accurately and straight, the same could not be said for the next one."
-            }
-        },
-        {
-           	"Key": "Narrator_Level_7_1",
-            "Value": {
-                "english": "Falling balls or something"
-            }
-        },
-        {
-           	"Key": "Narrator_Level_7_Complete",
-            "Value": {
-                "english": "Balls were found"
-            }
-        }
-    ]
+  "Items": [
+    {
+      "Key": "Narrator_Level_0_1",
+      "Value": {
+        "english": "It was a regular day for Alex, he turned on his computer and entered his password. His password was simple, he never forgot it."
+      }
+    },
+    {
+      "Key": "Narrator_Level_0_2",
+      "Value": {
+        "english": "Alex was feeling slow today but he always remembered his password was simple."
+      }
+    },
+    {
+      "Key": "Narrator_Level_0_Complete",
+      "Value": {
+        "english": "Alex recalled his password and used it to login."
+      }
+    },
+    {
+      "Key": "Narrator_Level_1_DifficultySelect",
+      "Value": {
+        "english": "To begin his day, Alex liked to play some <select=easy|hard> games."
+      }
+    },
+    {
+      "Key": "Narrator_Level_1_DifficultySelectHard",
+      "Value": {
+        "english": "Excuse me... He liked to play some difficult games."
+      }
+    },
+    {
+      "Key": "Narrator_Level_1_1",
+      "Value": {
+        "english": "Alex enjoyed playing different games; Sometimes ones that featured unique mechanics or problems."
+      }
+    },
+    {
+      "Key": "Narrator_Level_1_2",
+      "Value": {
+        "english": "Alex knew that shifting his perspective would allow him to get a better picture of the problem at hand."
+      }
+    },
+    {
+      "Key": "Narrator_Level_1_Complete",
+      "Value": {
+        "english": "His perspective was clear and his goal was complete. On to the next challenge he thought!"
+      }
+    },
+    {
+
+      "Key": "Narrator_Level_2_1",
+      "Value": {
+        "english": "Bridgeball complete"
+      }
+    },
+    {
+      "Key": "Narrator_Level_2_Complete",
+      "Value": {
+        "english": "Bridgeball complete"
+      }
+    },
+    {
+      "Key": "Narrator_Level_3_1",
+      "Value": {
+        "english": "Alex needed to urgently clean up his mess! <timer=Level_3>"
+      }
+    },
+    {
+      "Key": "Narrator_Level_3_Failed",
+      "Value": {
+        "english": "A messy desktop leads to a messy life.."
+      }
+    },
+    {
+      "Key": "Narrator_Level_3_Complete",
+      "Value": {
+        "english": "Ah, clean and concise. Alex could now relax and focus on other tasks."
+      }
+    },
+    {
+      "Key": "Narrator_Level_6_1",
+      "Value": {
+        "english": "All Alex had to do was guide a missile"
+      }
+    },
+    {
+      "Key": "Narrator_Level_6_Complete",
+      "Value": {
+        "english": "Luckily this missile flew accurately and straight, the same could not be said for the next one."
+      }
+    },
+    {
+      "Key": "Narrator_Level_7_1",
+      "Value": {
+        "english": "Falling balls or something"
+      }
+    },
+    {
+      "Key": "Narrator_Level_7_Complete",
+      "Value": {
+        "english": "Balls were found"
+      }
+    },
+    {
+      "Key": "Narrator_Level_8_1",
+      "Value": {
+        "english": "Find the smallest square"
+      }
+    },
+    {
+      "Key": "Narrator_Level_8_Complete",
+      "Value": {
+        "english": "Noice mate"
+      }
+    }
+  ]
 }

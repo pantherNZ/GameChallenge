@@ -20,6 +20,7 @@ public class Level2_BridgeBall : BaseLevel
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_2_1" );
 
         levelObj = Instantiate( levelPrefab, new Vector3( 0.0f, 0.0f, 5.0f ), Quaternion.identity );
 
