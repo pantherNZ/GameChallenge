@@ -14,6 +14,7 @@ public class Level6_Missile : BaseLevel
     [SerializeField] float moveDist = 20.0f;
     [SerializeField] float moveSpeed = 10.0f;
     [SerializeField] float missileStartPos = -6.0f;
+    [SerializeField] float windowStartPos = -3.0f;
     List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher;
     List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
@@ -40,7 +41,7 @@ public class Level6_Missile : BaseLevel
 
     void CreateWindow( GameObject shortcut )
     {
-        windows.Add( desktop.CreateWindow( "Missiles", false, new Vector2( -2.5f, 0.0f ) ).GetComponent<Window>() );
+        windows.Add( desktop.CreateWindow( "Missiles", false, new Vector2( windowStartPos, 0.0f ) ).GetComponent<Window>() );
     }
 
     protected override void OnLevelUpdate()
@@ -92,8 +93,8 @@ public class Level6_Missile : BaseLevel
 
     public IEnumerator MoveMissileRoutine( GameObject missile )
     {
-       // yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
-        yield return Utility.InterpolateBezier( missile.transform, missileBezierPrefab.GetComponent<BezierCurve>(), moveDist / moveSpeed );
+        //yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
+        yield return Utility.InterpolateAlongPath( missile.transform, missileBezierPrefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed );
         Explode( missile, true );
     }
 

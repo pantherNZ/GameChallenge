@@ -88,5 +88,13 @@ public static partial class Utility
         return length;
     }
 
-    public static void IterateBezier
+    //public static void IterateBezier( List<Vector3> controlPoints, float distanceBetween, int numSteps, System.Action<Vector3> predicate )
+    //{
+    //
+    //}
+    //
+    //public static Vector3 GetBezierPoint( List<Vector3> controlPoints, float distance )
+    //{
+    //
+    //}
 }

@@ -752,7 +752,7 @@ MonoBehaviour:
   - {fileID: 203328306}
   - {fileID: 203328308}
   - {fileID: 203328307}
-  startingLevelId: 10
+  startingLevelId: 8
   loginUI: {fileID: 1897650524}
   windowBase: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -1072,8 +1072,9 @@ MonoBehaviour:
   missileBezierPrefab: {fileID: 1040798677768606696, guid: e7dd05c2997d3d54f8f6376c8ebeb664,
     type: 3}
   moveDist: 10
-  moveSpeed: 2
-  missileStartPos: -10
+  moveSpeed: 2.5
+  missileStartPos: -12
+  windowStartPos: -3.5
 --- !u!114 &203328306
 MonoBehaviour:
   m_ObjectHideFlags: 0

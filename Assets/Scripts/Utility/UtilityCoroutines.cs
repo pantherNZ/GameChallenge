@@ -74,25 +74,23 @@ public static partial class Utility
         mono.StartCoroutine( InterpolatePosition( mono.transform, targetPosition, durationSec ) );
     }
 
-    public static IEnumerator InterpolateBezier( Transform transform, BezierCurve bezier, float durationSec )
+    public static IEnumerator InterpolateAlongPath( Transform transform, PathCreation.PathCreator path, float durationSec )
     {
         float interp = 0.0f;
         var startPos = transform.position;
-        var startRot = transform.rotation;
-        bezier.SetDirty();
 
-        while( interp < 1.0f )
+        while( interp < 1.0f && transform != null )
         {
             interp += Time.deltaTime / durationSec;
-            transform.position = startPos + bezier.GetPointAt( interp, out var direction ) - bezier.transform.position;
-            transform.rotation = Quaternion.LookRotation( Vector3.forward, direction );
+            transform.position = startPos + path.path.GetPointAtTime( interp, PathCreation.EndOfPathInstruction.Stop ) - path.path.GetPoint( 0 );
+            transform.rotation = Quaternion.LookRotation( Vector3.forward, path.path.GetDirection( interp, PathCreation.EndOfPathInstruction.Stop ) );
             yield return null;
         }
     }
 
-    public static void InterpolateBezier( this MonoBehaviour mono, BezierCurve bezier, float durationSec )
+    public static void InterpolateAlongPath( this MonoBehaviour mono, PathCreation.PathCreator path, float durationSec )
     {
-        mono.StartCoroutine( InterpolateBezier( mono.transform, bezier, durationSec ) );
+        mono.StartCoroutine( InterpolateAlongPath( mono.transform, path, durationSec ) );
     }
 
     public static IEnumerator Shake( Transform transform, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
