@@ -96,7 +96,6 @@ public class Level7_FallingBalls : BaseLevel
         if( targetBalls.IsEmpty() )
         {
             SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_7_Complete" );
-
             Utility.FunctionTimer.CreateTimer( 1.0f, StartNextLevel );
         }
     }

@@ -11,13 +11,18 @@ public class Level6_Missile : BaseLevel
     [SerializeField] GameObject missileLauncherPrefab = null;
     [SerializeField] GameObject missilePrefab = null;
     [SerializeField] GameObject missileBezierPrefab = null;
+    [SerializeField] GameObject missileBezier2Prefab = null;
+    [SerializeField] GameObject missileBezier3Prefab = null;
     [SerializeField] float moveDist = 20.0f;
-    [SerializeField] float moveSpeed = 10.0f;
+    [SerializeField] float moveSpeed = 30.0f;
+    [SerializeField] float moveSpeed2 = 10.0f;
     [SerializeField] float missileStartPos = -6.0f;
-    [SerializeField] float windowStartPos = -3.0f;
+    [SerializeField] Vector2 windowStartPos = new Vector2( -3.0f, 0.0f );
     List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher;
     List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
+    int levelCounter = 0;
+    bool fireLeft, firstMissileSuccess;
 
     public override void OnStartLevel()
     {
@@ -35,26 +40,30 @@ public class Level6_Missile : BaseLevel
         missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
 
         Utility.FunctionTimer.CreateTimer( 3.0f, FireMissile, "FireMissile", true );
-
-        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_1" );
+        levelCounter = 2;
+        SetupLevel();
     }
 
     void CreateWindow( GameObject shortcut )
     {
-        windows.Add( desktop.CreateWindow( "Missiles", false, new Vector2( windowStartPos, 0.0f ) ).GetComponent<Window>() );
+        windows.Add( desktop.CreateWindow( "Missiles", false, windowStartPos ).GetComponent<Window>() );
+        windowStartPos += new Vector2( 0.3f, windowStartPos.y > -2.0f ? -0.3f : 0.0f );
     }
 
     protected override void OnLevelUpdate()
     {
         base.OnLevelUpdate();
 
-        foreach( var window in windows )
+        foreach( var (missile, _) in missiles )
         {
-            var rect = window.GetCameraViewWorldRect();
+            var found = windows.Any( window =>
+            {
+                var rect = window.GetCameraViewWorldRect();
+                return rect.Contains( missile.GetComponent<Collider2D>().bounds );
+            } );
 
-            foreach( var (missile, _) in missiles )
-                if( !rect.Contains( missile.GetComponent<Collider2D>().bounds ) )
-                    Explode( missile, false );
+            if( !found )
+                Explode( missile, false );
         }
     }
 
@@ -73,12 +82,15 @@ public class Level6_Missile : BaseLevel
         windows.Clear();
         missiles.Clear();
 
+        Utility.FunctionTimer.StopTimer( "FireMissile" );
+        Utility.FunctionTimer.StopTimer( "FireMissile2" );
         Utility.FunctionTimer.CreateTimer( 1.0f, StartNextLevel );
     }
 
     void FireMissile()
     {
         missileLauncher.GetComponent<Animator>().Play( "Fire" );
+        firstMissileSuccess = false;
 
         Utility.FunctionTimer.CreateTimer( 0.5f, () =>
         {
@@ -89,12 +101,32 @@ public class Level6_Missile : BaseLevel
             missiles.Add( new Pair<GameObject, Coroutine>( missile, StartCoroutine( MoveMissileRoutine( missile ) ) ) );
             Physics2D.SyncTransforms();
         } );
+
+        if( levelCounter == 2 && !fireLeft )
+            Utility.FunctionTimer.CreateTimer( 1.0f, FireMissile, "FireMissile2" );
+        fireLeft = !fireLeft;
     }
 
     public IEnumerator MoveMissileRoutine( GameObject missile )
     {
-        //yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
-        yield return Utility.InterpolateAlongPath( missile.transform, missileBezierPrefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed );
+        switch( levelCounter )
+        {
+            case 0:
+                yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
+                break;
+            case 1:
+                yield return Utility.InterpolateAlongPath( missile.transform, missileBezierPrefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed2 );
+                break;
+            case 2:
+            {
+                if( fireLeft )
+                    yield return Utility.InterpolateAlongPath( missile.transform, missileBezier2Prefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed2 );
+                else
+                    yield return Utility.InterpolateAlongPath( missile.transform, missileBezier3Prefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed2 );
+                break;
+            }
+        }
+
         Explode( missile, true );
     }
 
@@ -117,13 +149,46 @@ public class Level6_Missile : BaseLevel
 
         if( reached_end )
         {
-            Utility.FunctionTimer.StopTimer( "FireMissile" );
+            if( levelCounter == 2 )
+            {
+                if( !firstMissileSuccess )
+                {
+                    firstMissileSuccess = true;
+                    return;
+                }
+            }
 
             Utility.FunctionTimer.CreateTimer( 1.0f, () =>
             {
+                ++levelCounter;
+                SetupLevel();
+            } );
+        }
+        else
+        {
+            firstMissileSuccess = false;
+        }
+    }
+
+    void SetupLevel()
+    {
+        switch( levelCounter )
+        {
+            case 0:
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_1" );
+                break;
+            case 1:
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_2" );
+                break;
+            case 2:
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_3" );
+                break;
+            case 3:
+            {
                 LevelFinished();
                 SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_Complete" );
-            } );
+                break;
+            }
         }
     }
 }

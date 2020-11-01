@@ -30,6 +30,9 @@ abstract public class BaseLevel : MonoBehaviour
 
     public void StartNextLevel()
     {
+        if( levelActive )
+            LevelFinished();
+
         nextLevel?.StartLevel();
     }
 
