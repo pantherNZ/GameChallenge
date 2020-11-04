@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{C9C5ACED-AF37-B251-9AC8-2374AADD4A08}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -70,6 +69,7 @@
     <Compile Include="Assets\Scripts\Gameplay\BaseLevel.cs" />
     <Compile Include="Assets\Scripts\Gameplay\DesktopUIManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GameComplete.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Level10_PassCode.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level1_BouncingBall.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level2_BridgeBall.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level3_Recycling.cs" />
@@ -78,9 +78,11 @@
     <Compile Include="Assets\Scripts\Gameplay\Level6_Missile.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level7_FallingBalls.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level8_SmallestSquare.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Level9_UpsideDown.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingWidget.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\PassCodeUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\SubtitlesManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Window.cs" />
     <Compile Include="Assets\Scripts\Utility\Bezier.cs" />

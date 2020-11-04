@@ -23,9 +23,12 @@ public class Level6_Missile : BaseLevel
     List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
     int levelCounter = 0;
     bool fireLeft, firstMissileSuccess;
+    int maxWindows;
 
     public override void OnStartLevel()
     {
+        maxWindows = desktop.IsEasyMode() ? 4 : 2;
+
         var icon = new DesktopIcon()
         {
             name = "Missiles",
@@ -46,6 +49,11 @@ public class Level6_Missile : BaseLevel
 
     void CreateWindow( GameObject shortcut )
     {
+        windows.RemoveAll( x => x == null );
+
+        if( windows.Count >= maxWindows )
+            return;
+
         windows.Add( desktop.CreateWindow( "Missiles", false, windowStartPos ).GetComponent<Window>() );
         windowStartPos += new Vector2( 0.3f, windowStartPos.y > -2.0f ? -0.3f : 0.0f );
     }
@@ -103,7 +111,7 @@ public class Level6_Missile : BaseLevel
         } );
 
         if( levelCounter == 2 && !fireLeft )
-            Utility.FunctionTimer.CreateTimer( 1.0f, FireMissile, "FireMissile2" );
+            Utility.FunctionTimer.CreateTimer( 0.75f, FireMissile, "FireMissile2" );
         fireLeft = !fireLeft;
     }
 

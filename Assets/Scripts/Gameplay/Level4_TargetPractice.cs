@@ -10,7 +10,7 @@ public class Level4_TargetPractice : BaseLevel
     [SerializeField] float targetSpawnRateBaseSec = 1.0f;
     [SerializeField] float targetSpawnRateVarianceSec = 1.0f;
     [SerializeField] int targetsMax = 30;
-    [SerializeField] float targetSpeed = 0.0f;
+    //[SerializeField] float targetSpeed = 0.0f;
     [SerializeField] float targetDuration = 4.0f;
     [SerializeField] float targetFadeDuration = 2.0f;
     [SerializeField] int maxFails = 3;

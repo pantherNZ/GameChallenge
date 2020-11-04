@@ -43,6 +43,7 @@ public class Draggable : MonoBehaviour
             var targetPos = Input.mousePosition + offset;
             transform.anchoredPosition = targetPos;
             targetPos.z = 100.0f;
+            transform.SetAsLastSibling();
         }
     }
 }

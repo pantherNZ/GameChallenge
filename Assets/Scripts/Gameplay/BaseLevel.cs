@@ -60,3 +60,28 @@ abstract public class BaseLevel : MonoBehaviour
     virtual protected void OnLevelUpdate() { }
     virtual protected void OnLevelFinished() { }
 }
+
+/* Template
+public class Level9_SOMETHING : BaseLevel
+{
+    // Static data
+
+    // Dynamic data
+
+    // Functions
+    public override void OnStartLevel()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void OnLevelUpdate()
+    {
+        
+    }
+
+    protected override void OnLevelFinished()
+    {
+       
+    }
+}
+*/

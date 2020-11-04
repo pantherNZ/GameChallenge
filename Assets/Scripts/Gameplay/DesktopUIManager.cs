@@ -17,6 +17,7 @@ public class DesktopUIManager : BaseLevel
     public Camera MainCamera { get; private set; }
     public Vector3 windowCameraStartPosition = new Vector3( -14.62f, 0.0f, -10.0f );
     public GameObject Taskbar { get => taskBar; private set { } }
+    public RectTransform DesktopCanvas;
 
     [SerializeField] List<BaseLevel> levels = new List<BaseLevel>();
     [SerializeField] int startingLevelId = 0;
@@ -230,7 +231,7 @@ public class DesktopUIManager : BaseLevel
         if( destroyExisting )
             DestroyWindow( title );
 
-        var window = Instantiate( windowPrefab, transform ).GetComponent<Window>();
+        var window = Instantiate( windowPrefab, DesktopCanvas ).GetComponent<Window>();
         window.transform.position = transform.position + offset.ToVector3();
         window.Initialise( title, this, Instantiate( windowCameraPrefab ), Instantiate( windowCamRTPrefab ) );
         windows.Add( new Pair<Window, string>( window, title ) );
@@ -274,7 +275,7 @@ public class DesktopUIManager : BaseLevel
         if( icon == null )
             return null;
 
-        var newShortcut = Instantiate( shortcut, transform );
+        var newShortcut = Instantiate( shortcut, DesktopCanvas );
         ( newShortcut.transform as RectTransform ).localPosition = position - new Vector2( 0.0f, gridSize.y / 2.0f );
         ( newShortcut.transform as RectTransform ).pivot = new Vector2( 0.5f, 0.5f );
         newShortcut.GetComponentInChildren<Text>().text = icon.name;
@@ -445,7 +446,7 @@ public class DesktopUIManager : BaseLevel
         {
             if( selectionBox == null )
             {
-                selectionBox = Instantiate( selectionBoxPrefab, transform );
+                selectionBox = Instantiate( selectionBoxPrefab, DesktopCanvas );
                 FixChildOrdering();
             }
 

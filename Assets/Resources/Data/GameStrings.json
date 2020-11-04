@@ -126,6 +126,54 @@
       "Value": {
         "english": "Noice mate"
       }
+    },
+    {
+      "Key": "Narrator_Level_9_1",
+      "Value": {
+        "english": "Alex wondered what was happening. His intuition told him to rotate his screen"
+      }
+    },
+    {
+      "Key": "Narrator_Level_9_Complete",
+      "Value": {
+        "english": "With his orientation corrected, Alex could now focus on progressing his knowledge."
+      }
+    },
+    {
+      "Key": "Narrator_Level_10_1",
+      "Value": {
+        "english": "Alex had a real challenge on his hands this time. He had to consider a huge number of possibilities."
+      }
+    },
+    {
+      "Key": "Narrator_Level_10_2",
+      "Value": {
+        "english": "Alex always went for the most logical solution."
+      }
+    },
+    {
+      "Key": "Narrator_Level_10_3",
+      "Value": {
+        "english": "One combination of numbers really stood out though which he promply used to gain access."
+      }
+    },
+    {
+      "Key": "Narrator_Level_10_4",
+      "Value": {
+        "english": "Alex had a real challenge on his hands this time. He had two consider a huge number of possibilities."
+      }
+    },
+    {
+      "Key": "Narrator_Level_10_5",
+      "Value": {
+        "english": "Alex always went four the most logical solution."
+      }
+    },
+    {
+      "Key": "Narrator_Level_10_6",
+      "Value": {
+        "english": "One combination of numbers really stood out though which he promply used two gain access."
+      }
     }
   ]
 }
