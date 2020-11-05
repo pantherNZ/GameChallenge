@@ -82,7 +82,6 @@
     <Compile Include="Assets\Scripts\Gameplay\LoadingUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoadingWidget.cs" />
     <Compile Include="Assets\Scripts\Gameplay\LoginUI.cs" />
-    <Compile Include="Assets\Scripts\Gameplay\PassCodeUI.cs" />
     <Compile Include="Assets\Scripts\Gameplay\SubtitlesManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Window.cs" />
     <Compile Include="Assets\Scripts\Utility\Bezier.cs" />

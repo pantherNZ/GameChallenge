@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class Level10_PassCode : BaseLevel
 {
@@ -20,7 +21,7 @@ public class Level10_PassCode : BaseLevel
     public override void OnStartLevel()
     {
         PlaySubtitle();
-        Utility.FunctionTimer.CreateTimer( 5.0f, PlaySubtitle, "PlaySubtitle", true );
+        Utility.FunctionTimer.CreateTimer( 10.0f, PlaySubtitle, "PlaySubtitle", true );
         canvas.SetVisibility( true );
     }
 
@@ -48,14 +49,23 @@ public class Level10_PassCode : BaseLevel
     {
         if( value == 10 )
         {
-
+            var codes = new string[] { "4122", "1224", "1224", "2412" };
+            if( codes.Contains( passCodeText.text.Replace( " ", string.Empty ) ) )
+            {
+                canvas.SetVisibility( false );
+                Utility.FunctionTimer.CreateTimer( 1.0f, LevelFinished );
+            }
+            else
+            {
+                this.ShakeTarget( passCodeUI.transform, 0.3f, 5.0f, 3.0f, 40.0f, 2.0f );
+            }
         }
         else if( value == 11 )
         {
             if( passCodeText.text.Length > 0 )
                 passCodeText.text = passCodeText.text.Remove( passCodeText.text.Length - 3 );
         }
-        else
+        else if( passCodeText.text.Length < 12 )
         {
             passCodeText.text += value.ToString() + "  ";
         }

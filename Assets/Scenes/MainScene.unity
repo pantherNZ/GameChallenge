@@ -7296,42 +7296,42 @@ PrefabInstance:
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.5906372
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -2.582016
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: -175.18126
+      value: 194
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -251.048
+      value: 249
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.4046246
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.3541962
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.526
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.652
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
@@ -7803,6 +7803,26 @@ PrefabInstance:
       propertyPath: m_Colors.m_SelectedColor.b
       value: 0.2830189
       objectReference: {fileID: 0}
+    - target: {fileID: 6597277493078120915, guid: 29a3cdb4915b86e4386fb33e4600bfef,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2133047566}
+    - target: {fileID: 6597277493078120915, guid: 29a3cdb4915b86e4386fb33e4600bfef,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[1].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EndDrag
+      objectReference: {fileID: 0}
+    - target: {fileID: 6597277493078120915, guid: 29a3cdb4915b86e4386fb33e4600bfef,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2133047566}
+    - target: {fileID: 6597277493078120915, guid: 29a3cdb4915b86e4386fb33e4600bfef,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartDrag
+      objectReference: {fileID: 0}
     - target: {fileID: 7093556421342048776, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -8116,6 +8136,46 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2133047565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133047563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2133047562}
+          m_MethodName: SetAsLastSibling
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &2133047566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133047563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d1ba2177d642848b802b126d578185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7279638648318536309
 PrefabInstance:
   m_ObjectHideFlags: 0
