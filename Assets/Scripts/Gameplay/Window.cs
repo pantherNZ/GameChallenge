@@ -4,8 +4,8 @@ using UnityEngine.EventSystems;
 
 public class Window : MonoBehaviour
 {
-    public Camera windowCamera;
-    public GameObject image = null;
+    [HideInInspector] public Camera windowCamera;
+    [HideInInspector] public GameObject image = null;
     [SerializeField] Text titleText = null;
     [SerializeField] Button closeButton = null;
     RenderTexture renderTexture;
@@ -16,10 +16,22 @@ public class Window : MonoBehaviour
         titleText.text = title;
         windowCamera = camera;
         renderTexture = rt;
-        windowCamera.targetTexture = rt;
+
+        if( windowCamera )
+            windowCamera.targetTexture = rt;
+
+        if( HasViewPort() )
+            image.GetComponent<RawImage>().texture = rt;
+
         closeButton.onClick.AddListener( () => { desktop.DestroyWindow( this ); } );
-        image.GetComponent<RawImage>().texture = rt;
         desktopRef = desktop;
+    }
+
+    private void OnDestroy()
+    {
+        if( windowCamera != null )
+            windowCamera.gameObject.Destroy();
+        renderTexture?.Release();
     }
 
     public string GetTitle()
@@ -44,6 +56,9 @@ public class Window : MonoBehaviour
 
     private void Update()
     {
+        if( windowCamera == null )
+            return;
+
         var worldRect = GetCameraViewWorldRect();
         windowCamera.orthographicSize = worldRect.height / 2.0f;// ( desktopRef.transform as RectTransform ).rect.width / ( image.transform as RectTransform ).rect.width;
         windowCamera.aspect = ( image.transform as RectTransform ).rect.width / ( image.transform as RectTransform ).rect.height;

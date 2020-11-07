@@ -74,4 +74,9 @@ public class Level8_SmallestSquare : BaseLevel
             }
         }
     }
+
+    public override string GetSpoilerText()
+    {
+        return DataManager.Instance.GetGameString( "Spoiler_Level8" );
+    }
 }

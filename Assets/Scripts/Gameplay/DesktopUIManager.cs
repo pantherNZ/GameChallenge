@@ -24,10 +24,12 @@ public class DesktopUIManager : BaseLevel
 
     // UI stuff
     [SerializeField] LoginUI loginUI = null;
-    [SerializeField] GameObject windowBase = null;
+    [SerializeField] GameObject windowBasePrefab = null;
     [SerializeField] GameObject optionsWindow = null;
     [SerializeField] GameObject helpWindow = null;
-    [SerializeField] GameObject shortcut = null;
+    [SerializeField] Text helpWindowSpoilerText = null;
+    [SerializeField] Button helpWindowSpoilerButton = null;
+    [SerializeField] GameObject shortcutPrefab = null;
     [SerializeField] CanvasGroup startMenu = null;
     [SerializeField] GameObject taskBar = null;
     [SerializeField] Button startMenuButton = null;
@@ -78,6 +80,7 @@ public class DesktopUIManager : BaseLevel
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     [SerializeField] bool easyDifficulty = true;
     int lives = 3;
+    int currentLevel;
     Utility.FunctionTimer difficultyTimer;
     System.DateTime currentTime;
 
@@ -107,7 +110,7 @@ public class DesktopUIManager : BaseLevel
     public override void OnStartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
-        Utility.FunctionTimer.CreateTimer( 2.0f, () => 
+        Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
             var str = DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelect" );
             SubtitlesManager.Instance.AddSubtitle( str, 0, 0, ( selection ) =>
@@ -179,7 +182,7 @@ public class DesktopUIManager : BaseLevel
             window.GetComponent<Window>().image.GetComponent<RawImage>().texture = errorTexture;
             ( window.transform as RectTransform ).sizeDelta = new Vector2( errorTexture.width, errorTexture.height );
 
-            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime, () => this.FadeToBlack( levelFailFadeOutTime ) ); 
+            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime, () => this.FadeToBlack( levelFailFadeOutTime ) );
             Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime, () =>
             {
                 this.FadeFromBlack( levelFailFadeInTime );
@@ -213,17 +216,21 @@ public class DesktopUIManager : BaseLevel
 
     public GameObject CreateWindow( string title, bool destroyExisting = false, Vector2 offset = new Vector2() )
     {
-        return CreateWindowInternal( title, windowBase, destroyExisting, offset );
+        return CreateWindowInternal( title, windowBasePrefab, destroyExisting, offset );
     }
 
     public void CreateOptionsWindow()
     {
-        CreateWindowInternal( "Options", optionsWindow, true, new Vector2() );
+        ( optionsWindow.transform as RectTransform ).anchoredPosition = Input.mousePosition;
+        optionsWindow.GetComponent<CanvasGroup>().SetVisibility( true );
+        SetContextMenuVisibility( false );
     }
 
     public void CreateHelpWindow()
     {
-        CreateWindowInternal( "Help", helpWindow, true, new Vector2() );
+        ( helpWindow.transform as RectTransform ).anchoredPosition = Input.mousePosition;
+        helpWindow.GetComponent<CanvasGroup>().SetVisibility( true );
+        SetContextMenuVisibility( false );
     }
 
     private GameObject CreateWindowInternal( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset )
@@ -232,9 +239,11 @@ public class DesktopUIManager : BaseLevel
             DestroyWindow( title );
 
         var window = Instantiate( windowPrefab, DesktopCanvas ).GetComponent<Window>();
-        window.transform.position = transform.position + offset.ToVector3();
-        window.Initialise( title, this, Instantiate( windowCameraPrefab ), Instantiate( windowCamRTPrefab ) );
+        ( window.transform as RectTransform ).anchoredPosition = offset.ToVector3();
+        var createCam = window.HasViewPort();
+        window.Initialise( title, this, createCam ? Instantiate( windowCameraPrefab ) : null, createCam ? Instantiate( windowCamRTPrefab ) : null );
         windows.Add( new Pair<Window, string>( window, title ) );
+        taskBar.transform.SetAsLastSibling();
         return window.gameObject;
     }
 
@@ -275,7 +284,7 @@ public class DesktopUIManager : BaseLevel
         if( icon == null )
             return null;
 
-        var newShortcut = Instantiate( shortcut, DesktopCanvas );
+        var newShortcut = Instantiate( shortcutPrefab, DesktopCanvas );
         ( newShortcut.transform as RectTransform ).localPosition = position - new Vector2( 0.0f, gridSize.y / 2.0f );
         ( newShortcut.transform as RectTransform ).pivot = new Vector2( 0.5f, 0.5f );
         newShortcut.GetComponentInChildren<Text>().text = icon.name;
@@ -338,7 +347,7 @@ public class DesktopUIManager : BaseLevel
 
         if( shortcuts[idx].physics != null )
             return null;
-          
+
         var physics = Utility.CreateWorldObjectFromScreenSpaceRect( ( shortcut.transform as RectTransform ).GetWorldRect() );
         physics.transform.position = physics.transform.position + physicsRootOffset;
         physics.AddComponent<Quad>();
@@ -426,10 +435,7 @@ public class DesktopUIManager : BaseLevel
                     selectionStartPos = Input.mousePosition;
 
                 if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( contextMenu.transform ) )
-                {
-                    contextMenu.GetComponent<CanvasGroup>().SetVisibility( false );
-                    contextMenu.GetComponent<BoxCollider2D>().enabled = false;
-                }
+                    SetContextMenuVisibility( false );
             }
         }
 
@@ -467,8 +473,7 @@ public class DesktopUIManager : BaseLevel
         // Context menu on desktop
         if( Input.GetMouseButtonDown( 1 ) && contextMenuEnabled )
         {
-            contextMenu.GetComponent<CanvasGroup>().SetVisibility( true );
-            contextMenu.GetComponent<BoxCollider2D>().enabled = true;
+            SetContextMenuVisibility( true );
             ( contextMenu.transform as RectTransform ).anchoredPosition = Input.mousePosition;
             ( contextMenu.transform as RectTransform ).pivot = new Vector2( 0.0f, Input.mousePosition.y <= 160.0f ? 0.0f : 1.0f );
         }
@@ -480,6 +485,12 @@ public class DesktopUIManager : BaseLevel
         //for( int i = shortcuts.Count - 1; i >= 0; --i )
         //    if( shortcuts[i] == null )
         //        shortcuts.RemoveBySwap( i );
+    }
+
+    public void SetContextMenuVisibility( bool visible )
+    {
+        contextMenu.GetComponent<CanvasGroup>().SetVisibility( visible );
+        contextMenu.GetComponent<BoxCollider2D>().enabled = visible;
     }
 
     private void LateUpdate()
@@ -510,5 +521,19 @@ public class DesktopUIManager : BaseLevel
     public GameObject GetBackground()
     {
         return background;
+    }
+
+    public void RevealSpoiler()
+    {
+        helpWindowSpoilerButton.interactable = false;
+        helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( true );
+    }
+
+    public void LevelStarted( int level )
+    {
+        currentLevel = level;
+        helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( false );
+        helpWindowSpoilerText.text = levels[currentLevel].GetSpoilerText();
+        helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
     }
 }

@@ -33,7 +33,7 @@ public class Level10_PassCode : BaseLevel
     protected override void OnLevelFinished()
     {
         passCodeUI.Destroy();
-        Utility.FunctionTimer.StopTimer( "PlaySubtitle" );
+        StartNextLevel();
     }
 
     void PlaySubtitle()
@@ -53,6 +53,7 @@ public class Level10_PassCode : BaseLevel
             if( codes.Contains( passCodeText.text.Replace( " ", string.Empty ) ) )
             {
                 canvas.SetVisibility( false );
+                Utility.FunctionTimer.StopTimer( "PlaySubtitle" );
                 Utility.FunctionTimer.CreateTimer( 1.0f, LevelFinished );
             }
             else
@@ -69,5 +70,10 @@ public class Level10_PassCode : BaseLevel
         {
             passCodeText.text += value.ToString() + "  ";
         }
+    }
+
+    public override string GetSpoilerText()
+    {
+        return DataManager.Instance.GetGameString( "Spoiler_Level10" );
     }
 }

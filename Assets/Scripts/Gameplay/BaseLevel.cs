@@ -25,6 +25,7 @@ abstract public class BaseLevel : MonoBehaviour
         SubtitlesManager.Instance.ClearSubtitles();
         levelStarted = true;
         levelActive = true;
+        desktop.LevelStarted( levelIdx );
         OnStartLevel();
     }
 
@@ -59,6 +60,7 @@ abstract public class BaseLevel : MonoBehaviour
     abstract public void OnStartLevel();
     virtual protected void OnLevelUpdate() { }
     virtual protected void OnLevelFinished() { }
+    virtual public string GetSpoilerText() { return string.Empty; }
 }
 
 /* Template
@@ -82,6 +84,11 @@ public class Level9_SOMETHING : BaseLevel
     protected override void OnLevelFinished()
     {
        
+    }
+
+    public override string GetSpoilerText()
+    {
+        return "";
     }
 }
 */
