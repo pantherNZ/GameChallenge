@@ -536,4 +536,14 @@ public class DesktopUIManager : BaseLevel
         helpWindowSpoilerText.text = levels[currentLevel].GetSpoilerText();
         helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
     }
+
+    public void ContextMenuEntryPointerDown( Image image )
+    {
+        image.color = new Color( 105.0f / 255.0f, 140.0f / 255.0f, 1.0f, 105.0f / 255.0f );
+    }
+
+    public void ContextMenuEntryPointerUp( Image image )
+    {
+        image.color = new Color();
+    }
 }

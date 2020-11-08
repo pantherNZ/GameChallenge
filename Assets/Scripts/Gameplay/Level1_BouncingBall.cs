@@ -79,6 +79,7 @@ public class Level1_BouncingBall : BaseLevel
             SubtitlesManager.Instance.AddSubtitleGameString("Narrator_Level_1_Complete" );
             Utility.FunctionTimer.StopTimer( "CreateBall" );
             Utility.FunctionTimer.StopTimer( "Narrator_Level_1_2" );
+            Utility.FunctionTimer.StopTimer( "Narrator_Level_1_1" );
 
             Utility.FunctionTimer.CreateTimer( 3.0f, () =>
             {
