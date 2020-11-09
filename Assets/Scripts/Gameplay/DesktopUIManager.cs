@@ -221,14 +221,14 @@ public class DesktopUIManager : BaseLevel
 
     public void CreateOptionsWindow()
     {
-        ( optionsWindow.transform as RectTransform ).anchoredPosition = Input.mousePosition;
+        ( optionsWindow.transform as RectTransform ).anchoredPosition = GetMousePosScreen();
         optionsWindow.GetComponent<CanvasGroup>().SetVisibility( true );
         SetContextMenuVisibility( false );
     }
 
     public void CreateHelpWindow()
     {
-        ( helpWindow.transform as RectTransform ).anchoredPosition = Input.mousePosition;
+        ( helpWindow.transform as RectTransform ).anchoredPosition = GetMousePosScreen();
         helpWindow.GetComponent<CanvasGroup>().SetVisibility( true );
         SetContextMenuVisibility( false );
     }
@@ -432,7 +432,7 @@ public class DesktopUIManager : BaseLevel
 
                 // Start selection box
                 if( Input.GetMouseButtonDown( 0 ) && ( pointerTarget == null || pointerTarget == background ) )
-                    selectionStartPos = Input.mousePosition;
+                    selectionStartPos = GetMousePosScreen();
 
                 if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( contextMenu.transform ) )
                     SetContextMenuVisibility( false );
@@ -448,7 +448,7 @@ public class DesktopUIManager : BaseLevel
         }
 
         // Selection box positioning
-        if( selectionStartPos != null && Input.mousePosition != selectionStartPos && desktopSelectionEnabled )
+        if( selectionStartPos != null && GetMousePosScreen() != selectionStartPos && desktopSelectionEnabled )
         {
             if( selectionBox == null )
             {
@@ -456,8 +456,8 @@ public class DesktopUIManager : BaseLevel
                 FixChildOrdering();
             }
 
-            var difference = Input.mousePosition - selectionStartPos.Value;
-            ( selectionBox.transform as RectTransform ).anchoredPosition = ( Input.mousePosition + selectionStartPos.Value ) / 2.0f;
+            var difference = GetMousePosScreen() - selectionStartPos.Value;
+            ( selectionBox.transform as RectTransform ).anchoredPosition = ( GetMousePosScreen() + selectionStartPos.Value ) / 2.0f;
             ( selectionBox.transform as RectTransform ).sizeDelta = new Vector2( Mathf.Abs( difference.x ), Mathf.Abs( difference.y ) );
         }
 
@@ -474,8 +474,8 @@ public class DesktopUIManager : BaseLevel
         if( Input.GetMouseButtonDown( 1 ) && contextMenuEnabled )
         {
             SetContextMenuVisibility( true );
-            ( contextMenu.transform as RectTransform ).anchoredPosition = Input.mousePosition;
-            ( contextMenu.transform as RectTransform ).pivot = new Vector2( 0.0f, Input.mousePosition.y <= 160.0f ? 0.0f : 1.0f );
+            ( contextMenu.transform as RectTransform ).anchoredPosition = GetMousePosScreen(); 
+            ( contextMenu.transform as RectTransform ).pivot = new Vector2( 0.0f, GetMousePosScreen().y <= 160.0f ? 0.0f : 1.0f );
         }
 
         if( blueScreenCamera.gameObject.activeSelf )
@@ -485,6 +485,12 @@ public class DesktopUIManager : BaseLevel
         //for( int i = shortcuts.Count - 1; i >= 0; --i )
         //    if( shortcuts[i] == null )
         //        shortcuts.RemoveBySwap( i );
+    }
+
+    public Vector3 GetMousePosScreen()
+    {
+        var centre = new Vector3( MainCamera.pixelWidth, MainCamera.pixelHeight, 0.0f ) / 2.0f;
+        return ( Input.mousePosition - centre ).RotateZ( DesktopCanvas.rotation.eulerAngles.z ) + centre;
     }
 
     public void SetContextMenuVisibility( bool visible )

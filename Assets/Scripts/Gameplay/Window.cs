@@ -31,7 +31,8 @@ public class Window : MonoBehaviour
     {
         if( windowCamera != null )
             windowCamera.gameObject.Destroy();
-        renderTexture?.Release();
+        if( renderTexture != null )
+            renderTexture.Release();
     }
 
     public string GetTitle()
