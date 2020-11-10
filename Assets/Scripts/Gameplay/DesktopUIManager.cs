@@ -32,7 +32,7 @@ public class DesktopUIManager : BaseLevel
     [SerializeField] GameObject shortcutPrefab = null;
     [SerializeField] CanvasGroup startMenu = null;
     [SerializeField] GameObject taskBar = null;
-    [SerializeField] Button startMenuButton = null;
+    [SerializeField] GameObject startMenuButton = null;
     [SerializeField] Text timeDateText = null;
     [SerializeField] GameObject background = null;
 
@@ -89,7 +89,6 @@ public class DesktopUIManager : BaseLevel
         blueScreenCamera.gameObject.SetActive( false );
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
 
-        startMenuButton.onClick.AddListener( () => { startMenu.ToggleVisibility(); } );
         MainCamera = Camera.main;
         MainCamera.GetComponent<AudioListener>().enabled = enabledAudio;
         contextMenu.GetComponent<BoxCollider2D>().enabled = false;
@@ -543,13 +542,13 @@ public class DesktopUIManager : BaseLevel
         helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
     }
 
-    public void ContextMenuEntryPointerDown( Image image )
+    public void ShowDateTimeUI()
     {
-        image.color = new Color( 105.0f / 255.0f, 140.0f / 255.0f, 1.0f, 105.0f / 255.0f );
+
     }
 
-    public void ContextMenuEntryPointerUp( Image image )
+    public void ToggleStartMenuVisibility()
     {
-        image.color = new Color();
+        startMenu.ToggleVisibility();
     }
 }
