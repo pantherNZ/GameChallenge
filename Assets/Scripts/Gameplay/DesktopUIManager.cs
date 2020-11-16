@@ -56,7 +56,9 @@ public class DesktopUIManager : BaseLevel
 
     public class Shortcut
     {
-        public GameObject shortcut;
+        private GameObject _shortcut;
+        public GameObject shortcut { get => _shortcut; set { _shortcut = value; grid = _shortcut.GetComponent<LockToGrid>(); } }
+        public LockToGrid grid;
         public GameObject physics;
         public System.Action<GameObject> onOpened;
     }
@@ -83,6 +85,12 @@ public class DesktopUIManager : BaseLevel
     int currentLevel;
     Utility.FunctionTimer difficultyTimer;
     System.DateTime currentTime;
+    Vector2 lastScreenSize;
+
+    void Awake()
+    {
+        lastScreenSize = new Vector2( Screen.width, Screen.height );
+    }
 
     private void Start()
     {
@@ -302,6 +310,7 @@ public class DesktopUIManager : BaseLevel
         grid.rootPos = bounds.TopLeft();
         grid.minPos = bounds.min;
         grid.maxPos = bounds.max;
+        grid.maxPos.y -= gridSize.y / 2.0f;
 
         if( !shortcuts.IsEmpty() )
         {
@@ -481,9 +490,25 @@ public class DesktopUIManager : BaseLevel
             if( Input.anyKeyDown )
                 RestartGame();
 
-        //for( int i = shortcuts.Count - 1; i >= 0; --i )
-        //    if( shortcuts[i] == null )
-        //        shortcuts.RemoveBySwap( i );
+        for( int i = shortcuts.Count - 1; i >= 0; --i )
+            if( shortcuts[i] == null )
+                shortcuts.RemoveBySwap( i );
+
+        Vector2 screenSize = new Vector2( Screen.width, Screen.height );
+
+        if( lastScreenSize != screenSize )
+        {
+            lastScreenSize = screenSize;
+            {
+                foreach( var shortcut in shortcuts )
+                {
+                    var bounds = GetGridBounds();
+                    shortcut.grid.rootPos = bounds.TopLeft();
+                    shortcut.grid.minPos = bounds.min;
+                    shortcut.grid.maxPos = bounds.max;
+                }
+            }
+        }
     }
 
     public Vector3 GetMousePosScreen()
