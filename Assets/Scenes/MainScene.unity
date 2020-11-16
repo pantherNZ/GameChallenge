@@ -1228,6 +1228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0c564e19b9a1b44af2a1bd8b69c6f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: 
+  spoilerTextGameString: 
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1263,6 +1266,9 @@ MonoBehaviour:
   startMenuButton: {fileID: 1649992832}
   timeDateText: {fileID: 2034746898}
   background: {fileID: 1820640188}
+  startMenuEntryPrefab: {fileID: 6533389754703270436, guid: 324ce89c621998949897f14905ee0f59,
+    type: 3}
+  startMenuList: {fileID: 941210628}
   blueScreenCamera: {fileID: 514073134}
   windowCameraPrefab: {fileID: 5734987130728897988, guid: 83db0c328cd5f4d4fae9be64bb01fec5,
     type: 3}
@@ -1304,6 +1310,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d690ef4e0b1a6674f85727d1b8e21ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Bouncing Ball
+  spoilerTextGameString: Spoiler_Level1
   desktop: {fileID: 203328297}
   levelIdx: 3
   nextLevel: {fileID: 203328301}
@@ -1328,6 +1337,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e5aa4e95b7165044bc65db11fe7c929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 2800000, guid: 67c21731390a81a43adc0096f7c16e45, type: 3}
+  startMenuEntryText: Recycling
+  spoilerTextGameString: Spoiler_Level3
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1355,6 +1367,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d15dd3ba99e583c4fbaa77cef2969f9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Bridge Ball
+  spoilerTextGameString: Spoiler_Level2
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1379,6 +1394,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56d00567c84f744c9fa0b76cccafcdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 2800000, guid: e16b713e55896ed428871e6dbd2f4d13, type: 3}
+  startMenuEntryText: Target Practice
+  spoilerTextGameString: Spoiler_Level4
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1405,6 +1423,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb29e83a32b3e014b91ca0c212f256dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Earthquake
+  spoilerTextGameString: Spoiler_Level5
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1557,6 +1578,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7fc7c5bdb69e44f900c3f82787d3dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Missiles
+  spoilerTextGameString: Spoiler_Level6
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1587,6 +1611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b6e3c30a244f7438cf7ed30e821ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Chaos
+  spoilerTextGameString: Spoiler_Level7
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1608,6 +1635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd48f01d7efc0554f930cb8800ecf3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: 
+  spoilerTextGameString: 
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1624,6 +1654,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d128f10470735b84e9355349975c9ce3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Careful Pick
+  spoilerTextGameString: Spoiler_Level8
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1642,6 +1675,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebad81daf8052a64aa9828d4bf8ac36e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Flip
+  spoilerTextGameString: Spoiler_Level9
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1658,6 +1694,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5dd1cad23aafdf4b9601b6de3b7adb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: Security
+  spoilerTextGameString: Spoiler_Level10
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2423,6 +2462,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ad8e94c6f43b54e96b38eb424793a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: 
+  spoilerTextGameString: 
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -3744,8 +3786,9 @@ GameObject:
   - component: {fileID: 941210629}
   - component: {fileID: 941210631}
   - component: {fileID: 941210630}
+  - component: {fileID: 941210632}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: StartMenuList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3806,6 +3849,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941210628}
   m_CullTransparentMesh: 0
+--- !u!114 &941210632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941210628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 2
+    m_Right: 2
+    m_Top: 2
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 1
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
 --- !u!1 &979809857
 GameObject:
   m_ObjectHideFlags: 0
@@ -4038,7 +4106,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 43, y: -266}
+  m_AnchoredPosition: {x: 43, y: -266.00003}
   m_SizeDelta: {x: -518.2, y: -613.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1009632337
@@ -7136,6 +7204,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 000f3ea35bc218f428e42475803827f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startMenuEntryIcon: {fileID: 0}
+  startMenuEntryText: 
+  spoilerTextGameString: 
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}

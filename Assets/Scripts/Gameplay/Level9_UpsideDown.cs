@@ -23,9 +23,4 @@ public class Level9_UpsideDown : BaseLevel
         desktop.DesktopCanvas.localRotation = Quaternion.identity;
         subtitlesCanvas.localRotation = Quaternion.identity;
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level9" );
-    }
 }

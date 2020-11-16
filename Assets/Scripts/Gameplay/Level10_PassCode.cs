@@ -71,9 +71,4 @@ public class Level10_PassCode : BaseLevel
             passCodeText.text += value.ToString() + "  ";
         }
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level10" );
-    }
 }

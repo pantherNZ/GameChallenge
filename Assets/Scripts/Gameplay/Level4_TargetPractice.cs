@@ -168,9 +168,4 @@ public class Level4_TargetPractice : BaseLevel
         fails++;
         CheckLevelComplete();
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level4" );
-    }
 }

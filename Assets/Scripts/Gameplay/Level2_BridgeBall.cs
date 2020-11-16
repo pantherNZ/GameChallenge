@@ -75,9 +75,4 @@ public class Level2_BridgeBall : BaseLevel
             Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
         } );
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level2" );
-    }
 }

@@ -90,9 +90,4 @@ public class Level1_BouncingBall : BaseLevel
             } );
         }
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level1" );
-    }
 }

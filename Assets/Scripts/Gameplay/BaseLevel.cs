@@ -2,6 +2,10 @@
 
 abstract public class BaseLevel : MonoBehaviour
 {
+    public Texture2D startMenuEntryIcon;
+    public string startMenuEntryText;
+    public string spoilerTextGameString;
+
     [HideInInspector] public DesktopUIManager desktop;
     bool levelStarted;
     bool levelActive;
@@ -60,7 +64,6 @@ abstract public class BaseLevel : MonoBehaviour
     abstract public void OnStartLevel();
     virtual protected void OnLevelUpdate() { }
     virtual protected void OnLevelFinished() { }
-    virtual public string GetSpoilerText() { return string.Empty; }
 }
 
 /* Template
@@ -84,11 +87,6 @@ public class Level9_SOMETHING : BaseLevel
     protected override void OnLevelFinished()
     {
        
-    }
-
-    public override string GetSpoilerText()
-    {
-        return "";
     }
 }
 */

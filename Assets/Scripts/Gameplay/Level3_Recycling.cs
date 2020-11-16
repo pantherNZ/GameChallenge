@@ -80,9 +80,4 @@ public class Level3_Recycling : BaseLevel
             Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
         }
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level3" );
-    }
 }

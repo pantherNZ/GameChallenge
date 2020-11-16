@@ -35,6 +35,8 @@ public class DesktopUIManager : BaseLevel
     [SerializeField] GameObject startMenuButton = null;
     [SerializeField] Text timeDateText = null;
     [SerializeField] GameObject background = null;
+    [SerializeField] GameObject startMenuEntryPrefab = null;
+    [SerializeField] GameObject startMenuList = null;
 
     // Cameras
     [SerializeField] Camera blueScreenCamera = null;
@@ -563,8 +565,22 @@ public class DesktopUIManager : BaseLevel
     {
         currentLevel = level;
         helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( false );
-        helpWindowSpoilerText.text = levels[currentLevel].GetSpoilerText();
+        helpWindowSpoilerText.text = DataManager.Instance.GetGameString( levels[currentLevel].spoilerTextGameString );
         helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
+
+        startMenuList.transform.DetachChildren();
+
+        for( int i = 0; i <= currentLevel; ++i )
+        {
+            var icon = levels[i].startMenuEntryIcon;
+
+            if( icon == null )
+                continue;
+
+            var entry = Instantiate( startMenuEntryPrefab, startMenuList.transform );
+            entry.GetComponentInChildren<Text>().text = levels[i].startMenuEntryText;
+            entry.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon, new Rect( 0.0f, 0.0f, icon.width, icon.height ), new Vector2( 0.5f, 0.5f ) );
+        }
     }
 
     public void ShowDateTimeUI()

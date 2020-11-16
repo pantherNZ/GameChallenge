@@ -112,9 +112,4 @@ public class Level7_FallingBalls : BaseLevel
         targetBalls.DestroyAll();
         targets.Clear();
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level7" );
-    }
 }

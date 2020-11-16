@@ -143,9 +143,4 @@ public class Level5_Earthquake : BaseLevel
             }
         }
     }
-
-    public override string GetSpoilerText()
-    {
-        return DataManager.Instance.GetGameString( "Spoiler_Level5" );
-    }
 }
