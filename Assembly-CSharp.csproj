@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{C9C5ACED-AF37-B251-9AC8-2374AADD4A08}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -70,6 +71,7 @@
     <Compile Include="Assets\Scripts\Gameplay\DesktopUIManager.cs" />
     <Compile Include="Assets\Scripts\Gameplay\GameComplete.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level10_PassCode.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Level11_ButtonMash.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level1_BouncingBall.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level2_BridgeBall.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Level3_Recycling.cs" />
@@ -93,12 +95,15 @@
     <Compile Include="Assets\Scripts\Utility\Quad.cs" />
     <Compile Include="Assets\Scripts\Utility\SecureHash.cs" />
     <Compile Include="Assets\Scripts\Utility\SimplexNoise.cs" />
+    <Compile Include="Assets\Scripts\Utility\UIProgressBar.cs" />
+    <Compile Include="Assets\Scripts\Utility\UIScroller.cs" />
     <Compile Include="Assets\Scripts\Utility\Utility.cs" />
     <Compile Include="Assets\Scripts\Utility\UtilityComponent.cs" />
     <Compile Include="Assets\Scripts\Utility\UtilityComponentEditor.cs" />
     <Compile Include="Assets\Scripts\Utility\UtilityCoroutines.cs" />
     <Compile Include="Assets\Scripts\Utility\xxHash.cs" />
     <None Include="Assets\Resources\Shaders\DarknessShader.shader" />
+    <None Include="GameStrings.json" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Projects/GameChallenge.git/trunk/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

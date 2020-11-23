@@ -176,6 +176,12 @@
       }
     },
     {
+      "Key": "Level11_Mash_Text",
+      "Value": {
+        "english": "Data Transferred: {0} / {1}"
+      }
+    },
+    {
       "Key": "Spoiler_Level1",
       "Value": {
         "english": "The window gives a good view of the problem at hand, if only there was a way you could move it to get an even better view."
@@ -231,6 +237,12 @@
     },
     {
       "Key": "Spoiler_Level10",
+      "Value": {
+        "english": ""
+      }
+    },
+    {
+      "Key": "Spoiler_Level11",
       "Value": {
         "english": ""
       }

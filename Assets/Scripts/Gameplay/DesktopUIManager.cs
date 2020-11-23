@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Linq;
+using System.IO;
 
 [System.Serializable]
 public class DesktopIcon
@@ -12,7 +13,7 @@ public class DesktopIcon
     public Texture2D icon;
 }
 
-public class DesktopUIManager : BaseLevel
+public class DesktopUIManager : BaseLevel, Game.ISavableObject
 {
     public Camera MainCamera { get; private set; }
     public Vector3 windowCameraStartPosition = new Vector3( -14.62f, 0.0f, -10.0f );
@@ -113,7 +114,21 @@ public class DesktopUIManager : BaseLevel
                 levels[i].nextLevel = levels[i + 1];
         }
 
+        Game.SaveGameSystem.AddSaveableObject( this );
+        Game.SaveGameSystem.folderName = string.Empty;
+        Game.SaveGameSystem.LoadGame( "UGC" );
+
         Utility.FunctionTimer.CreateTimer( 0.001f, GetLevel( startingLevelId ).StartLevel );
+    }
+
+    public void Serialise( BinaryWriter writer )
+    {
+        writer.Write( Mathf.Max( startingLevelId, currentLevel ) );
+    }
+
+    public void Deserialise( BinaryReader reader )
+    {
+        startingLevelId = reader.ReadInt32();
     }
 
     public override void OnStartLevel()
@@ -564,13 +579,14 @@ public class DesktopUIManager : BaseLevel
     public void LevelStarted( int level )
     {
         currentLevel = level;
+        Game.SaveGameSystem.SaveGame( "UGC" );
         helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( false );
         helpWindowSpoilerText.text = DataManager.Instance.GetGameString( levels[currentLevel].spoilerTextGameString );
         helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
 
         startMenuList.transform.DetachChildren();
 
-        for( int i = 0; i <= currentLevel; ++i )
+        for( int i = 0; i <= Mathf.Max( startingLevelId, currentLevel ); ++i )
         {
             var icon = levels[i].startMenuEntryIcon;
 

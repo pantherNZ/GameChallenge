@@ -166,22 +166,22 @@ public class DataManager : MonoBehaviour
     {
         if( !strings.ContainsKey( key ) )
         {
-            Debug.LogError( "Game string for stat not found, stat: " + key );
+            Debug.LogError( "Game string for not found, key: " + key );
             return "";
         }
 
         return strings[key].Get( language );
     }
 
-    public string GetGameStringFormatted( string key, int arg )
+    public string GetGameStringFormatted( string key, object[] args )
     {
         if( !strings.ContainsKey( key ) )
         {
-            Debug.LogError( "Game string for stat not found, stat: " + key );
+            Debug.LogError( "Game string not found, key: " + key );
             return "";
         }
 
-        return string.Format( new GameStringFormatter(), strings[key].Get( language ), arg );
+        return string.Format( new GameStringFormatter(), strings[key].Get( language ), args );
     }
 
     public void LoadData()
@@ -253,6 +253,8 @@ public class GameStringFormatter : IFormatProvider, ICustomFormatter
 
         if( String.IsNullOrEmpty( format ) )
             return arg.ToString();
+
+        if( format.StartsWith)
 
         switch( format.ToLower()[0] )
         {

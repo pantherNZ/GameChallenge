@@ -8,8 +8,8 @@ namespace Game
 {
     public static class SaveGameSystem
     {
-        const string folderName = "/SavedGames/";
-        const string fileExtension = ".dat";
+        public static string folderName = "/SavedGames/";
+        public static string fileExtension = ".dat";
 
         static string ConvertSaveNameToPath( string name )
         {
