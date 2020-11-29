@@ -22,6 +22,7 @@ public class Level10_PassCode : BaseLevel
     {
         PlaySubtitle();
         Utility.FunctionTimer.CreateTimer( 10.0f, PlaySubtitle, "PlaySubtitle", true );
+        ( passCodeUI.transform as RectTransform ).anchoredPosition = desktop.DesktopCanvas.anchoredPosition;
         canvas.SetVisibility( true );
     }
 

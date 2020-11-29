@@ -78,6 +78,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] float restartGameFadeOutTime = 5.0f;
     [SerializeField] float restartGameFadeInTime = 2.0f;
     [SerializeField] bool enabledAudio = true;
+    [SerializeField] bool enabledSaveLoad = true;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -114,9 +115,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                 levels[i].nextLevel = levels[i + 1];
         }
 
-        Game.SaveGameSystem.AddSaveableObject( this );
-        Game.SaveGameSystem.folderName = string.Empty;
-        Game.SaveGameSystem.LoadGame( "UGC" );
+        if( enabledSaveLoad )
+        {
+            Game.SaveGameSystem.AddSaveableObject( this );
+            Game.SaveGameSystem.folderName = string.Empty;
+            Game.SaveGameSystem.LoadGame( "UGC" );
+        }
 
         Utility.FunctionTimer.CreateTimer( 0.001f, GetLevel( startingLevelId ).StartLevel );
     }
@@ -579,11 +583,14 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void LevelStarted( int level )
     {
         currentLevel = level;
-        Game.SaveGameSystem.SaveGame( "UGC" );
+        if( enabledSaveLoad )
+            Game.SaveGameSystem.SaveGame( "UGC" );
         helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( false );
-        helpWindowSpoilerText.text = DataManager.Instance.GetGameString( levels[currentLevel].spoilerTextGameString );
-        helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
 
+        if( levels[currentLevel].spoilerTextGameString.Length > 0 )
+            helpWindowSpoilerText.text = DataManager.Instance.GetGameString( levels[currentLevel].spoilerTextGameString );
+
+        helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
         startMenuList.transform.DetachChildren();
 
         for( int i = 0; i <= Mathf.Max( startingLevelId, currentLevel ); ++i )

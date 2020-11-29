@@ -254,15 +254,13 @@ public class GameStringFormatter : IFormatProvider, ICustomFormatter
         if( String.IsNullOrEmpty( format ) )
             return arg.ToString();
 
-        if( format.StartsWith)
-
         switch( format.ToLower()[0] )
         {
             case '/':       return ( ( int )arg / int.Parse( format.Substring( 1 ) ) ).ToString();
             case '*':       return ( ( int )arg * int.Parse( format.Substring( 1 ) ) ).ToString();
             case '+':       return ( ( int )arg + int.Parse( format.Substring( 1 ) ) ).ToString();
             case '-':       return ( ( int )arg - int.Parse( format.Substring( 1 ) ) ).ToString();
-            default:        throw new FormatException( String.Format( "The '{0}' format specifier is not supported.", format ) );
+            default:        return String.Format( format, arg );
         }
     }
 }
