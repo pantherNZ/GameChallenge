@@ -493,7 +493,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         // Time update on taskbar
         var newTime = System.DateTime.Now;
 
-        if( newTime != currentTime )
+        if( newTime.Minute != currentTime.Minute )
         {
             currentTime = newTime;
             timeDateText.text = newTime.ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );

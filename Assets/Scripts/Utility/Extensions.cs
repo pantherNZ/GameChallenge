@@ -202,6 +202,10 @@ public static partial class Extensions
     public static Vector4 SetY( this Vector4 vec, float y ) { vec.y = y; return vec; }
     public static Vector4 SetZ( this Vector4 vec, float z ) { vec.z = z; return vec; }
     public static Vector4 SetW( this Vector4 vec, float w ) { vec.w = w; return vec; }
+    public static Color SetR( this Color col, float r ) { col.r = r; return col; }
+    public static Color SetG( this Color col, float g ) { col.g = g; return col; }
+    public static Color SetB( this Color col, float b ) { col.b = b; return col; }
+    public static Color SetA( this Color col, float a ) { col.a = a; return col; }
 
     public static Vector2 ToVector2( this Vector3 vec ) { return new Vector2( vec.x, vec.y ); }
     public static Vector2 ToVector2( this Vector4 vec ) { return new Vector2( vec.x, vec.y ); }
@@ -316,12 +320,6 @@ public static partial class Extensions
 
     static public bool Contains( this Rect rect, Bounds other )
     {
-        var otherRect = other.ToRect();
-        var tl = otherRect.TopLeft();
-        var test = rect.Contains( tl );
-        return rect.Contains( otherRect.TopLeft() )
-             && rect.Contains( otherRect.TopRight() )
-             && rect.Contains( otherRect.BottomLeft() )
-             && rect.Contains( otherRect.BottomRight() );
+        return rect.Contains( other.ToRect() );
     }
 }

@@ -13,12 +13,22 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] int maxKeysEasy = 256;
     [SerializeField] int maxKeysHard = 512;
     [SerializeField] List<Toggle> buttons = new List<Toggle>();
+
+    [Serializable]
+    public class Connections
+    {
+        public List<Toggle> connections = new List<Toggle>();
+    }
+
+    [SerializeField] List<Connections> buttonConnections = new List<Connections>();
     [SerializeField] int maxTimeSec = 300;
     [SerializeField] Text timerText = null;
+    [SerializeField] List<Color> stageColours;
 
     // Dynamic data
     SubLevelStage subLevelStage = SubLevelStage.Buttons;
     int timeLeftSec;
+    bool insideCheckboxCallback = false;
 
     enum SubLevelStage
     {
@@ -37,6 +47,13 @@ public class Level12_Bomb : BaseLevel
         window.GetComponent<CanvasGroup>().SetVisibility( false );
         timeLeftSec = maxTimeSec;
         timerText.text = TimeSpan.FromSeconds( timeLeftSec ).ToString( @"mm\:ss" );
+
+        stageColours = new List<Color>()
+        {
+            Color.red,
+            Color.green,
+            Color.blue,
+        };
     }
 
     public override void OnStartLevel()
@@ -56,23 +73,31 @@ public class Level12_Bomb : BaseLevel
                 if( buttons.All( ( x ) => x.isOn ) )
                 {
                     StartCoroutine( RunTimer() );
-                    subLevelStage = SubLevelStage.Buttons2;
+                    IncrementStage();
 
-                    Utility.FunctionTimer.CreateTimer( 0.5f, () =>
-                    {
+                    //Utility.FunctionTimer.CreateTimer( 0.5f, () =>
+                    //{
+                        insideCheckboxCallback = true;
                         foreach( var x in buttons )
                             x.isOn = false;
-                    } );
+                        insideCheckboxCallback = false;
+                   // } );
 
-                    buttons[0].onValueChanged.AddListener( ( x ) =>
+                    for( int i = 0; i < buttonConnections.Count; ++i )
                     {
-                        if( x )
+                        int index = i;
+                        buttons[index].onValueChanged.AddListener( ( x ) =>
                         {
-                            buttons[0].isOn = false;
-                            buttons[1].isOn = true;
-                            buttons[2].isOn = true;
-                        }
-                    } );
+                            if( !insideCheckboxCallback )
+                            {
+                                insideCheckboxCallback = true;
+                                buttons[index].isOn = !x;
+                                foreach( var connection in buttonConnections[index].connections )
+                                    connection.isOn = !connection.isOn;
+                                insideCheckboxCallback = false;
+                            }
+                        } );
+                    }             
                 }
 
                 break;
@@ -100,6 +125,20 @@ public class Level12_Bomb : BaseLevel
             case SubLevelStage.Icons:
                 break;
         }
+    }
+
+    private void IncrementStage()
+    {
+        subLevelStage++;
+        foreach( var button in buttons )
+            button.colors = new ColorBlock()
+            {
+                normalColor = stageColours[( int )subLevelStage],
+                highlightedColor = stageColours[( int )subLevelStage],
+                selectedColor = stageColours[( int )subLevelStage],
+                pressedColor = stageColours[( int )subLevelStage].SetA( stageColours[( int )subLevelStage].a - 0.1f ),
+                colorMultiplier = 1.0f,
+           };
     }
 
     private IEnumerator RunTimer()
