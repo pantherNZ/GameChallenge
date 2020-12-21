@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Linq;
 using System.IO;
+using System;
 
 [System.Serializable]
 public class DesktopIcon
@@ -38,6 +39,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] GameObject background = null;
     [SerializeField] GameObject startMenuEntryPrefab = null;
     [SerializeField] GameObject startMenuList = null;
+    [SerializeField] UITimeSetter dateTimeAdjuster = null;
 
     // Cameras
     [SerializeField] Camera blueScreenCamera = null;
@@ -88,7 +90,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     int lives = 3;
     int currentLevel;
     Utility.FunctionTimer difficultyTimer;
-    System.DateTime currentTime;
+    DateTime currentTime;
     Vector2 lastScreenSize;
 
     void Awake()
@@ -98,6 +100,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     private void Start()
     {
+        currentTime = DateTime.Now;
         blueScreenCamera.gameObject.SetActive( false );
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
 
@@ -123,6 +126,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         }
 
         Utility.FunctionTimer.CreateTimer( 0.001f, GetLevel( startingLevelId ).StartLevel );
+
+        dateTimeAdjuster.GetComponent<UITimeSetter>().OnTimeChangedEvent += ( _, oldT, newT ) =>
+        {
+            timeDateText.text = DateTime.Today.Add( newT ).ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );
+        };
     }
 
     public void Serialise( BinaryWriter writer )
@@ -465,6 +473,9 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
                 if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( contextMenu.transform ) )
                     SetContextMenuVisibility( false );
+
+                if( Input.GetMouseButtonDown( 0 ) && !pointerTarget.transform.IsChildOf( dateTimeAdjuster.transform ) && pointerTarget != timeDateText.transform.parent && !pointerTarget.transform.IsChildOf( timeDateText.transform.parent ) )
+                    dateTimeAdjuster.GetComponent<CanvasGroup>().SetVisibility( false );
             }
         }
 
@@ -493,10 +504,13 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         // Time update on taskbar
         var newTime = System.DateTime.Now;
 
-        if( newTime.Minute != currentTime.Minute )
+        if( newTime.Second != currentTime.Second )
         {
-            currentTime = newTime;
             timeDateText.text = newTime.ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );
+            var oldTime = currentTime.TimeOfDay;
+            currentTime = newTime;
+            var modifiedTime = dateTimeAdjuster.Time;
+            dateTimeAdjuster.Time = currentTime.TimeOfDay + ( modifiedTime - oldTime );
         }
 
         // Context menu on desktop
@@ -606,13 +620,23 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         }
     }
 
-    public void ShowDateTimeUI()
+    public void ToggleDateTimeUI()
     {
-
+        dateTimeAdjuster.GetComponent<CanvasGroup>().ToggleVisibility();
     }
 
     public void ToggleStartMenuVisibility()
     {
         startMenu.ToggleVisibility();
+    }
+
+    public void StartMenuButtonEnter( Image image )
+    {
+        image.color = new Color( 0.29f, 0.64f, 1.0f );
+    }
+
+    public void StartMenuButtonExit( Image image )
+    {
+        image.color = Color.white;
     }
 }

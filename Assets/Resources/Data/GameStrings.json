@@ -136,7 +136,7 @@
     {
       "Key": "Narrator_Level_9_Complete",
       "Value": {
-        "english": "With his orientation corrected, Alex could now focus on progressing his knowledge."
+        "english": "With his orientation corrected, Alex could now focus on other challenges."
       }
     },
     {
@@ -173,6 +173,24 @@
       "Key": "Narrator_Level_10_6",
       "Value": {
         "english": "One combination of numbers really stood out though which he promply used two gain access."
+      }
+    },
+    {
+      "Key": "Narrator_Level_12_1",
+      "Value": {
+        "english": "Uh oh, this didn't look good for Alex."
+      }
+    },
+    {
+      "Key": "Narrator_Level_12_2",
+      "Value": {
+        "english": "There must be a set of connections that would work"
+      }
+    },
+    {
+      "Key": "Narrator_Level_12_3",
+      "Value": {
+        "english": "Something about the time didn't feel right."
       }
     },
     {
@@ -232,13 +250,13 @@
     {
       "Key": "Spoiler_Level9",
       "Value": {
-        "english": ""
+        "english": "Only changing the time would help fix Alex's perspective."
       }
     },
     {
       "Key": "Spoiler_Level10",
       "Value": {
-        "english": ""
+        "english": "Sometimes the narrator has more information than you might realise."
       }
     },
     {
