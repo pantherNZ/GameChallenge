@@ -178,19 +178,31 @@
     {
       "Key": "Narrator_Level_12_1",
       "Value": {
-        "english": "Uh oh, this didn't look good for Alex."
+        "english": "After the problems Alex had faced before, he was confident he would be able to solve this one easily."
       }
     },
     {
       "Key": "Narrator_Level_12_2",
       "Value": {
-        "english": "There must be a set of connections that would work"
+        "english": "Uh oh, Alex never handled himself well under pressure."
       }
     },
     {
       "Key": "Narrator_Level_12_3",
       "Value": {
+        "english": "Alex wondered how he could hack this thing to stop it."
+      }
+    },
+    {
+      "Key": "Narrator_Level_12_4",
+      "Value": {
         "english": "Something about the time didn't feel right."
+      }
+    },
+    {
+      "Key": "Narrator_Start_Update",
+      "Value": {
+        "english": "A system update... Alex never liked system updates; He would do everthing he could to avoid them."
       }
     },
     {

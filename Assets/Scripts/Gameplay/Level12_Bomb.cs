@@ -13,6 +13,7 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] int maxKeysEasy = 256;
     [SerializeField] int maxKeysHard = 512;
     [SerializeField] List<Toggle> buttons = new List<Toggle>();
+    [SerializeField] CanvasGroup hackingCanvas = null;
 
     [Serializable]
     public class Connections
@@ -21,39 +22,52 @@ public class Level12_Bomb : BaseLevel
     }
 
     [SerializeField] List<Connections> buttonConnections = new List<Connections>();
-    [SerializeField] int maxTimeSec = 300;
-    [SerializeField] Text timerText = null;
-    [SerializeField] List<Color> stageColours;
+    [SerializeField] InputField passwordInput = null;
+    [SerializeField] List<Color> stageColours = new List<Color>();
+
+    [SerializeField] float progressSpeedStart = 1.0f;
+    float progressSpeed = 1.0f;
+
+    [SerializeField] float lightSequenceThresholdEasy = 0.85f;
+    [SerializeField] float lightSequenceThresholdHard = 0.95f;
 
     // Dynamic data
     SubLevelStage subLevelStage = SubLevelStage.Buttons;
-    int timeLeftSec;
+    //int timeLeftSec;
     bool insideCheckboxCallback = false;
+    bool progressDirection = true;
+    List<int> lightSequence;
+    int lightIndex = 0;
 
     enum SubLevelStage
     {
         Buttons,
         Buttons2,
         ButtonMash,
-        Icons,
+        ProgressBars,
+        ProgressBars2,
+        Passcode,
+        Finished,
     }
 
-    int counter = 0;
+    int counter = 255;
+    //int counter = 0;
     UIProgressBar progressBar;
 
     // Functions
     private void Start()
     {
         window.GetComponent<CanvasGroup>().SetVisibility( false );
-        timeLeftSec = maxTimeSec;
-        timerText.text = TimeSpan.FromSeconds( timeLeftSec ).ToString( @"mm\:ss" );
+        //timeLeftSec = maxTimeSec;
+        //timerText.text = TimeSpan.FromSeconds( timeLeftSec ).ToString( @"mm\:ss" );
+        hackingCanvas.SetVisibility( false );
 
-        stageColours = new List<Color>()
-        {
-            Color.red,
-            Color.green,
-            Color.blue,
-        };
+        lightSequence = new List<int>();
+
+        for( int i = 0; i < buttons.Count; ++i )
+            lightSequence.Add( i );
+
+        progressSpeed = progressSpeedStart;
     }
 
     public override void OnStartLevel()
@@ -62,6 +76,7 @@ public class Level12_Bomb : BaseLevel
         ( window.transform as RectTransform ).anchoredPosition = desktop.DesktopCanvas.anchoredPosition;
         progressBar = window.GetComponentInChildren<UIProgressBar>();
         UpdateText();
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_1" );
     }
 
     protected override void OnLevelUpdate()
@@ -72,7 +87,7 @@ public class Level12_Bomb : BaseLevel
             {
                 if( buttons.All( ( x ) => x.isOn ) )
                 {
-                    StartCoroutine( RunTimer() );
+                    SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_2" );
                     IncrementStage();
 
                     //Utility.FunctionTimer.CreateTimer( 0.5f, () =>
@@ -106,7 +121,11 @@ public class Level12_Bomb : BaseLevel
             {
                 if( buttons.All( ( x ) => x.isOn ) )
                 {
-                    
+                    hackingCanvas.SetVisibility( true );
+                    IncrementStage();
+                    SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_3" );
+                    foreach( var button in buttons )
+                        button.enabled = false;
                 }
 
                 break;
@@ -117,12 +136,96 @@ public class Level12_Bomb : BaseLevel
                 {
                     counter++;
                     UpdateText();
+
+                    if( counter >= ( desktop.IsEasyMode() ? maxKeysEasy : maxKeysHard ) )
+                    {
+                        hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( false );
+                        IncrementStage();
+                        progressBar.Progress = 0.0f;
+                        foreach( var button in buttons )
+                        {
+                            SetButtonColour( button, Color.white );
+                            button.enabled = true;
+                            button.onValueChanged.RemoveAllListeners();
+                            button.isOn = false;
+                            button.onValueChanged.AddListener( ( x ) =>
+                            {
+                                if( x )
+                                {
+                                    if( button.colors.normalColor == Color.white )
+                                    {
+                                        foreach( var b in buttons )
+                                        {
+                                            b.isOn = false;
+                                            SetButtonColour( b, Color.white );
+                                        }
+                                        progressSpeed = progressSpeedStart;
+  
+                                    }
+                                    else
+                                        progressSpeed += 0.08f;
+                                }
+                            } );
+                        }
+                    }
+                }
+
+                break;
+            }
+            case SubLevelStage.ProgressBars:
+            case SubLevelStage.ProgressBars2:
+            {
+                if( buttons.All( ( x ) => x.isOn ) )
+                {
+                    IncrementStage();
+
+                    foreach( var b in buttons )
+                    {
+                        b.isOn = false;
+                        SetButtonColour( b, Color.white );
+                    }
+                    progressSpeed = progressSpeedStart;
+
+                    if( subLevelStage == SubLevelStage.ProgressBars2 )
+                    {
+                        lightSequence = lightSequence.RandomShuffle();
+                    }
+                    else
+                    {
+                        hackingCanvas.SetVisibility( false );
+                        passwordInput.interactable = true;
+                        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_4" );
+                    }
+                }
+                else
+                {
+                    var oldPogress = progressBar.Progress;
+                    progressBar.Progress = Mathf.Clamp01( progressBar.Progress + Time.deltaTime * ( progressDirection ? 1.0f : -1.0f ) * progressSpeed );
+
+                    // switch directions
+                    if( ( progressBar.Progress >= 1.0f && progressDirection ) || ( progressBar.Progress <= 0.0f && !progressDirection ) )
+                    {
+                        progressDirection = !progressDirection;
+                        if( progressDirection )
+                        {
+                            do
+                            {
+                                lightIndex = ( lightIndex + 1 ) % lightSequence.Count;
+                            } while( buttons[lightSequence[lightIndex]].isOn );
+                        }
+                    }
+
+                    var threshold = desktop.IsEasyMode() ? lightSequenceThresholdEasy : lightSequenceThresholdHard;
+                    if( oldPogress < threshold && progressBar.Progress >= threshold )
+                        SetButtonColour( buttons[lightSequence[lightIndex]], stageColours[( int )subLevelStage] );
+                    else if( oldPogress >= threshold && progressBar.Progress < threshold && !buttons[lightSequence[lightIndex]].isOn )
+                        SetButtonColour( buttons[lightSequence[lightIndex]], Color.white );
                 }
 
                 break;
             }
                 
-            case SubLevelStage.Icons:
+            case SubLevelStage.Passcode:
                 break;
         }
     }
@@ -130,25 +233,34 @@ public class Level12_Bomb : BaseLevel
     private void IncrementStage()
     {
         subLevelStage++;
+
+        if( subLevelStage == SubLevelStage.Finished )
+        {
+            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Finish" );
+            Utility.FunctionTimer.CreateTimer( 3.0f, desktop.FinishGame );
+            return;
+        }
+
+        if( ( int )subLevelStage >= stageColours.Count )
+        {
+            Debug.LogError( "No colour found for stage: " + subLevelStage.ToString() );
+            return;
+        }
+
         foreach( var button in buttons )
-            button.colors = new ColorBlock()
-            {
-                normalColor = stageColours[( int )subLevelStage],
-                highlightedColor = stageColours[( int )subLevelStage],
-                selectedColor = stageColours[( int )subLevelStage],
-                pressedColor = stageColours[( int )subLevelStage].SetA( stageColours[( int )subLevelStage].a - 0.1f ),
-                colorMultiplier = 1.0f,
-           };
+            SetButtonColour( button, stageColours[( int )subLevelStage] );
     }
 
-    private IEnumerator RunTimer()
+    void SetButtonColour( Toggle button, Color colour )
     {
-        while( timeLeftSec > 0 )
+        button.colors = new ColorBlock()
         {
-            timeLeftSec--;
-            timerText.text = TimeSpan.FromSeconds( timeLeftSec ).ToString( @"mm\:ss" );
-            yield return new WaitForSeconds( 1.0f );
-        }
+            normalColor = colour,
+            highlightedColor = colour,
+            selectedColor = colour,
+            pressedColor = colour.SetA( colour.a - 0.1f ),
+            colorMultiplier = 1.0f,
+        };
     }
 
     private void UpdateText()

@@ -40,11 +40,13 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] GameObject startMenuEntryPrefab = null;
     [SerializeField] GameObject startMenuList = null;
     [SerializeField] UITimeSetter dateTimeAdjuster = null;
+    [SerializeField] CanvasGroup updateTimerCanvas = null;
 
     // Cameras
     [SerializeField] Camera blueScreenCamera = null;
     [SerializeField] Camera windowCameraPrefab = null;
     [SerializeField] RenderTexture windowCamRTPrefab = null;
+    [SerializeField] Camera gameCompleteCamera = null;
 
     // Selection box
     [SerializeField] GameObject selectionBoxPrefab = null;
@@ -81,6 +83,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] float restartGameFadeInTime = 2.0f;
     [SerializeField] bool enabledAudio = true;
     [SerializeField] bool enabledSaveLoad = true;
+    [SerializeField] int timeUntilUpdateSec = 500;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -92,6 +95,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     Utility.FunctionTimer difficultyTimer;
     DateTime currentTime;
     Vector2 lastScreenSize;
+    int updateTimeLeftSec;
+    UIProgressBar updateProgressBar;
 
     void Awake()
     {
@@ -107,6 +112,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         MainCamera = Camera.main;
         MainCamera.GetComponent<AudioListener>().enabled = enabledAudio;
         contextMenu.GetComponent<BoxCollider2D>().enabled = false;
+
+        updateTimerCanvas.SetVisibility( false );
+        updateTimeLeftSec = timeUntilUpdateSec;
+        updateProgressBar = updateTimerCanvas.GetComponentInChildren<UIProgressBar>();
 
         CreateShortcut( new DesktopIcon() { name = "Recycle Bin", icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" ) }, new Vector2Int() );
 
@@ -234,6 +243,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void GameOver()
     {
         blueScreenCamera.gameObject.SetActive( true );
+        MainCamera.gameObject.SetActive( false );
+    }
+
+    public void FinishGame()
+    {
+        gameCompleteCamera.gameObject.SetActive( true );
         MainCamera.gameObject.SetActive( false );
     }
 
@@ -544,6 +559,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                 }
             }
         }
+
+        updateProgressBar.Progress = ( timeUntilUpdateSec - updateTimeLeftSec ) / ( float )timeUntilUpdateSec;
     }
 
     public Vector3 GetMousePosScreen()
@@ -638,5 +655,17 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void StartMenuButtonExit( Image image )
     {
         image.color = Color.white;
+    }
+
+    public IEnumerator RunTimer()
+    {
+        updateTimerCanvas.SetVisibility( true );
+
+        while( updateTimeLeftSec > 0 )
+        {
+            updateTimeLeftSec--;
+            updateTimerCanvas.GetComponentInChildren<Text>().text = TimeSpan.FromSeconds( updateTimeLeftSec ).ToString( @"mm\:ss" ); 
+            yield return new WaitForSeconds( 1.0f );
+        }
     }
 }

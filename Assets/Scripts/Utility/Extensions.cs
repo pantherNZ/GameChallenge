@@ -181,6 +181,19 @@ public static partial class Extensions
         return list[UnityEngine.Random.Range( 0, list.Count )];
     }
 
+    public static List<T> RandomShuffle<T>( this List<T> list )
+    {
+        for( int i = 0; i < list.Count; i++ )
+        {
+            T temp = list[i];
+            int randomIndex = UnityEngine.Random.Range( i, list.Count );
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+
+        return list;
+    }
+
 #if UNITY_EDITOR
     public static string GetDataPathAbsolute( this TextAsset textAsset )
     {

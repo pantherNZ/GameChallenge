@@ -96,7 +96,13 @@ public class Level5_Earthquake : BaseLevel
         darkness.Destroy();
         desktop.contextMenuEnabled = true;
 
-        Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+        Utility.FunctionTimer.CreateTimer( 3.0f, () =>
+        {
+            StartCoroutine( desktop.RunTimer() );
+            SubtitlesManager.Instance.AddSubtitleGameString( "" );
+        } );
+
+        Utility.FunctionTimer.CreateTimer( 5.0f, StartNextLevel );
     }
 
     protected override void OnLevelUpdate()
