@@ -184,17 +184,11 @@
     {
       "Key": "Narrator_Level_12_2",
       "Value": {
-        "english": "Uh oh, Alex never handled himself well under pressure."
+        "english": "Alex wondered if he could hack it open."
       }
     },
     {
       "Key": "Narrator_Level_12_3",
-      "Value": {
-        "english": "Alex wondered how he could hack this thing to stop it."
-      }
-    },
-    {
-      "Key": "Narrator_Level_12_4",
       "Value": {
         "english": "Something about the time didn't feel right."
       }
@@ -202,7 +196,7 @@
     {
       "Key": "Narrator_Start_Update",
       "Value": {
-        "english": "A system update... Alex never liked system updates; He would do everthing he could to avoid them."
+        "english": "A system update... Alex never liked system updates."
       }
     },
     {

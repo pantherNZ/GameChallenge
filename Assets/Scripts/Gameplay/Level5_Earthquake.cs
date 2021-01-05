@@ -99,7 +99,7 @@ public class Level5_Earthquake : BaseLevel
         Utility.FunctionTimer.CreateTimer( 3.0f, () =>
         {
             StartCoroutine( desktop.RunTimer() );
-            SubtitlesManager.Instance.AddSubtitleGameString( "" );
+            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Start_Update" );
         } );
 
         Utility.FunctionTimer.CreateTimer( 5.0f, StartNextLevel );

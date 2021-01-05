@@ -43,6 +43,7 @@ public class Level12_Bomb : BaseLevel
     {
         Buttons,
         Buttons2,
+        Buttons3,
         ButtonMash,
         ProgressBars,
         ProgressBars2,
@@ -87,16 +88,36 @@ public class Level12_Bomb : BaseLevel
             {
                 if( buttons.All( ( x ) => x.isOn ) )
                 {
-                    SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_2" );
                     IncrementStage();
 
-                    //Utility.FunctionTimer.CreateTimer( 0.5f, () =>
-                    //{
-                        insideCheckboxCallback = true;
-                        foreach( var x in buttons )
-                            x.isOn = false;
-                        insideCheckboxCallback = false;
-                   // } );
+                    for( int i = 0; i < buttonConnections.Count; ++i )
+                    {
+                        int index = i;
+                        buttons[index].onValueChanged.AddListener( ( x ) =>
+                        {
+                            if( !x )
+                                return;
+
+                            if( lightSequence[lightIndex] != index )
+                            {
+                                foreach( var b in buttons )
+                                    b.isOn = false;
+                                lightIndex = 0;
+                            }
+                            else
+                                lightIndex++;
+                        } );
+                    }
+                }
+
+                break;
+            }
+            case SubLevelStage.Buttons2:
+            {
+                if( buttons.All( ( x ) => x.isOn ) )
+                {
+                    hackingCanvas.SetVisibility( true );
+                    IncrementStage();
 
                     for( int i = 0; i < buttonConnections.Count; ++i )
                     {
@@ -112,18 +133,18 @@ public class Level12_Bomb : BaseLevel
                                 insideCheckboxCallback = false;
                             }
                         } );
-                    }             
+                    }
                 }
 
                 break;
             }
-            case SubLevelStage.Buttons2:
+            case SubLevelStage.Buttons3:
             {
                 if( buttons.All( ( x ) => x.isOn ) )
                 {
                     hackingCanvas.SetVisibility( true );
                     IncrementStage();
-                    SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_3" );
+                    SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_2" );
                     foreach( var button in buttons )
                         button.enabled = false;
                 }
@@ -142,12 +163,13 @@ public class Level12_Bomb : BaseLevel
                         hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( false );
                         IncrementStage();
                         progressBar.Progress = 0.0f;
+
+                        for( int i = 0; i < buttons.Count; ++i )
+                            lightSequence[i] = i;
+
                         foreach( var button in buttons )
                         {
                             SetButtonColour( button, Color.white );
-                            button.enabled = true;
-                            button.onValueChanged.RemoveAllListeners();
-                            button.isOn = false;
                             button.onValueChanged.AddListener( ( x ) =>
                             {
                                 if( x )
@@ -179,22 +201,22 @@ public class Level12_Bomb : BaseLevel
                 {
                     IncrementStage();
 
-                    foreach( var b in buttons )
+                    if( subLevelStage == SubLevelStage.ProgressBars )
                     {
-                        b.isOn = false;
-                        SetButtonColour( b, Color.white );
-                    }
-                    progressSpeed = progressSpeedStart;
+                        foreach( var b in buttons )
+                        {
+                            b.isOn = false;
+                            SetButtonColour( b, Color.white );
+                        }
 
-                    if( subLevelStage == SubLevelStage.ProgressBars2 )
-                    {
-                        lightSequence = lightSequence.RandomShuffle();
+                        hackingCanvas.SetVisibility( false );
+                        passwordInput.interactable = true;
+                        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_3" );
                     }
                     else
                     {
-                        hackingCanvas.SetVisibility( false );
-                        passwordInput.interactable = true;
-                        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_4" );
+                        foreach( var b in buttons )
+                            b.enabled = false;
                     }
                 }
                 else
@@ -241,17 +263,22 @@ public class Level12_Bomb : BaseLevel
             return;
         }
 
-        if( ( int )subLevelStage >= stageColours.Count )
+        foreach( var button in buttons )
         {
-            Debug.LogError( "No colour found for stage: " + subLevelStage.ToString() );
-            return;
+            SetButtonColour( button, ( int )subLevelStage >= stageColours.Count ? Color.white : stageColours[( int )subLevelStage] );
+            insideCheckboxCallback = true;
+            button.onValueChanged.RemoveAllListeners();
+            button.isOn = false;
+            button.enabled = true;
+            insideCheckboxCallback = false;
         }
 
-        foreach( var button in buttons )
-            SetButtonColour( button, stageColours[( int )subLevelStage] );
+        lightSequence = lightSequence.RandomShuffle();
+        progressSpeed = progressSpeedStart;
+        lightIndex = 0;
     }
 
-    void SetButtonColour( Toggle button, Color colour )
+    private void SetButtonColour( Toggle button, Color colour )
     {
         button.colors = new ColorBlock()
         {
