@@ -94,6 +94,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     int currentLevel;
     Utility.FunctionTimer difficultyTimer;
     DateTime currentTime;
+    public DateTime CurrentTime { get => currentTime; private set { } }
     Vector2 lastScreenSize;
     int updateTimeLeftSec;
     UIProgressBar updateProgressBar;
@@ -517,7 +518,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         }
 
         // Time update on taskbar
-        var newTime = System.DateTime.Now;
+        var newTime = DateTime.Now;
 
         if( newTime.Second != currentTime.Second )
         {
@@ -561,6 +562,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         }
 
         updateProgressBar.Progress = ( timeUntilUpdateSec - updateTimeLeftSec ) / ( float )timeUntilUpdateSec;
+    }
+
+    public TimeSpan GetVirtualTime()
+    {
+        return dateTimeAdjuster.Time;
     }
 
     public Vector3 GetMousePosScreen()

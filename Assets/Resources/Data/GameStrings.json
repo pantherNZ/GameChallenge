@@ -176,21 +176,27 @@
       }
     },
     {
-      "Key": "Narrator_Level_12_1",
+      "Key": "Narrator_Level_12_Start",
       "Value": {
         "english": "After the problems Alex had faced before, he was confident he would be able to solve this one easily."
       }
     },
     {
-      "Key": "Narrator_Level_12_2",
+      "Key": "Narrator_Level_12_Hack",
       "Value": {
         "english": "Alex wondered if he could hack it open."
       }
     },
     {
-      "Key": "Narrator_Level_12_3",
+      "Key": "Narrator_Level_12_Time1",
       "Value": {
         "english": "Something about the time didn't feel right."
+      }
+    },
+    {
+      "Key": "Narrator_Level_12_MoveWindow",
+      "Value": {
+        "english": "Alex knew progress could be moved to solve the problem."
       }
     },
     {

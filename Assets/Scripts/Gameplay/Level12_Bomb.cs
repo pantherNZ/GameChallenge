@@ -55,6 +55,7 @@ public class Level12_Bomb : BaseLevel
         ButtonMash,
         ProgressBars,
         ProgressBars2,
+        TimeMatch,
         Passcode,
         Finished,
     }
@@ -85,7 +86,7 @@ public class Level12_Bomb : BaseLevel
         progressBar = window.GetComponentInChildren<UIProgressBar>();
         IncrementStage();
         UpdateText();
-        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_1" );
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Start" );
     }
 
     private void ModifyButtonState( Action action )
@@ -166,6 +167,14 @@ public class Level12_Bomb : BaseLevel
 
                 break;
             }
+
+            case SubLevelStage.TimeMatch:
+            {
+                if( Mathf.Abs( ( float )( desktop.GetVirtualTime().TotalSeconds - DateTime.Now.TimeOfDay.TotalSeconds ) ) < 1.0f )
+                    IncrementStage();
+
+                break;
+            }
                 
             case SubLevelStage.Passcode:
                 break;
@@ -178,8 +187,10 @@ public class Level12_Bomb : BaseLevel
 
         if( subLevelStage == SubLevelStage.Finished )
         {
-            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Finish" );
+            //SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Finish" );
             Utility.FunctionTimer.CreateTimer( 3.0f, desktop.FinishGame );
+            window.GetComponent<CanvasGroup>().SetVisibility( false );
+            hackingCanvas.SetVisibility( false );
             return;
         }
 
@@ -205,6 +216,7 @@ public class Level12_Bomb : BaseLevel
         progressBar.Progress = 0.0f;
         lightIndex = 0;
 
+        window.GetComponentInChildren<Draggable>().enabled = false;
         SetupNewStage();
     }
 
@@ -272,7 +284,7 @@ public class Level12_Bomb : BaseLevel
             {
                 hackingCanvas.SetVisibility( true );
                 hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( true );
-                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_2" );
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Hack" );
                 foreach( var button in buttons )
                     button.enabled = false;
             }
@@ -280,11 +292,15 @@ public class Level12_Bomb : BaseLevel
 
             case SubLevelStage.ProgressBars:
             {
-                hackingCanvas.SetVisibility( true );
-                hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( false );
-
                 for( int i = 0; i < buttons.Count; ++i )
                     lightSequence[i] = i;
+
+                goto case SubLevelStage.ProgressBars2;
+            }
+            case SubLevelStage.ProgressBars2:
+            {
+                hackingCanvas.SetVisibility( true );
+                hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( false );
 
                 foreach( var button in buttons )
                 {
@@ -317,15 +333,37 @@ public class Level12_Bomb : BaseLevel
             }
             break;
 
-            case SubLevelStage.ProgressBars2:
+            case SubLevelStage.TimeMatch:
             {
-                passwordInput.interactable = true;
-                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_3" );
+                if( Mathf.Abs( ( float )( desktop.GetVirtualTime().TotalSeconds - DateTime.Now.TimeOfDay.TotalSeconds ) ) < 1.0f )
+                    IncrementStage();
+                else
+                    SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Time1" );
             }
             break;
 
             case SubLevelStage.Passcode:
             {
+                passwordInput.interactable = true;
+                var passwordBtn = passwordInput.GetComponentInChildren<Button>();
+                passwordBtn.interactable = true;
+                passwordBtn.onClick.AddListener( () =>
+                {
+                    if( passwordInput.text == "Alex" )
+                    {
+                        IncrementStage();
+                    }
+                    else
+                    {
+                        passwordInput.text = string.Empty;
+                        // Play fail audio
+                    }
+                } );
+
+                hackingCanvas.SetVisibility( true );
+                hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( false );
+                window.GetComponentInChildren<Draggable>().enabled = true;
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_MoveWindow" );
                 foreach( var b in buttons )
                     b.enabled = false;
             }
