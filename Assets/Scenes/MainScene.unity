@@ -1505,8 +1505,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -5.133301, y: 11.681667}
-  m_SizeDelta: {x: -404.81018, y: 30.14}
+  m_AnchoredPosition: {x: -5.133301, y: 12.589996}
+  m_SizeDelta: {x: -404.81, y: 32.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &153656036
 MonoBehaviour:
@@ -2330,6 +2330,20 @@ MonoBehaviour:
   - {fileID: 1297915663}
   - {fileID: 48762913}
   hackingCanvas: {fileID: 25339457803417355}
+  mainImage: {fileID: 89076514}
+  progressImage: {fileID: 25339457803417353}
+  stage1UI:
+  - {fileID: 6460059290704040764, guid: f6f333939e99f234781cd2b8278e6cc7, type: 3}
+  - {fileID: -215640629934891304, guid: f6f333939e99f234781cd2b8278e6cc7, type: 3}
+  - {fileID: 1526234616134381953, guid: 65f3c000139fca145b652528ffb16d90, type: 3}
+  stage2UI:
+  - {fileID: -2539236727817329273, guid: 64cebc9d5aac5714c883e3345e201926, type: 3}
+  - {fileID: -5634396703437069574, guid: 64cebc9d5aac5714c883e3345e201926, type: 3}
+  - {fileID: -9091539399625358973, guid: fce6a5a107710ec4290d4db9111ea586, type: 3}
+  stage3UI:
+  - {fileID: 9209935454706814235, guid: cf1b29a08f0ab5845a74116b9b4386d2, type: 3}
+  - {fileID: 2460911298213897348, guid: cf1b29a08f0ab5845a74116b9b4386d2, type: 3}
+  - {fileID: -3609754129978504188, guid: 82a98a00ed83ad14abf15d27466d13f5, type: 3}
   buttonConnections:
   - connections:
     - {fileID: 40471631}
@@ -2349,12 +2363,13 @@ MonoBehaviour:
     - {fileID: 175983400}
   passwordInput: {fileID: 426168388}
   stageColours:
-  - {r: 0.28060976, g: 1, b: 0.1462264, a: 1}
-  - {r: 0, g: 0.5766783, b: 1, a: 1}
-  - {r: 0.92370224, g: 1, b: 0, a: 1}
-  - {r: 1, g: 0.5583234, b: 0, a: 1}
-  - {r: 1, g: 0, b: 0.037427902, a: 1}
-  - {r: 0.8726983, g: 0, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.9210926, g: 1, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0.85711694, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0.4272871, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  stageTextures: 010000000200000003000000010000000200000003000000
   progressSpeedStart: 1
   lightSequenceThresholdEasy: 0.85
   lightSequenceThresholdHard: 0.95
@@ -3506,8 +3521,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.19000244, y: -129.01}
-  m_SizeDelta: {x: -380.08, y: 25.62}
+  m_AnchoredPosition: {x: -0.19000244, y: -129.33}
+  m_SizeDelta: {x: -380.08, y: 33.833}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &493834164
 MonoBehaviour:

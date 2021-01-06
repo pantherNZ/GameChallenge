@@ -14,6 +14,11 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] int maxKeysHard = 512;
     [SerializeField] List<Toggle> buttons = new List<Toggle>();
     [SerializeField] CanvasGroup hackingCanvas = null;
+    [SerializeField] Image mainImage = null;
+    [SerializeField] Image progressImage = null;
+    [SerializeField] Sprite[] stage1UI = new Sprite[3];
+    [SerializeField] Sprite[] stage2UI = new Sprite[3];
+    [SerializeField] Sprite[] stage3UI = new Sprite[3];
 
     [Serializable]
     public class Connections
@@ -24,6 +29,7 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] List<Connections> buttonConnections = new List<Connections>();
     [SerializeField] InputField passwordInput = null;
     [SerializeField] List<Color> stageColours = new List<Color>();
+    [SerializeField] List<int> stageTextures = new List<int>();
 
     [SerializeField] float progressSpeedStart = 1.0f;
     float progressSpeed = 1.0f;
@@ -32,15 +38,17 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] float lightSequenceThresholdHard = 0.95f;
 
     // Dynamic data
-    SubLevelStage subLevelStage = SubLevelStage.Buttons;
+    SubLevelStage subLevelStage = SubLevelStage.Intro;
     //int timeLeftSec;
     bool insideCheckboxCallback = false;
     bool progressDirection = true;
     List<int> lightSequence;
     int lightIndex = 0;
+    Color originalCheckboxColour;
 
     enum SubLevelStage
     {
+        Intro,
         Buttons,
         Buttons2,
         Buttons3,
@@ -51,8 +59,7 @@ public class Level12_Bomb : BaseLevel
         Finished,
     }
 
-    int counter = 255;
-    //int counter = 0;
+    int counter = 0;
     UIProgressBar progressBar;
 
     // Functions
@@ -68,7 +75,7 @@ public class Level12_Bomb : BaseLevel
         for( int i = 0; i < buttons.Count; ++i )
             lightSequence.Add( i );
 
-        progressSpeed = progressSpeedStart;
+        originalCheckboxColour = buttons[0].targetGraphic.color;
     }
 
     public override void OnStartLevel()
@@ -76,78 +83,33 @@ public class Level12_Bomb : BaseLevel
         window.GetComponent<CanvasGroup>().SetVisibility( true );
         ( window.transform as RectTransform ).anchoredPosition = desktop.DesktopCanvas.anchoredPosition;
         progressBar = window.GetComponentInChildren<UIProgressBar>();
+        IncrementStage();
         UpdateText();
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_1" );
     }
 
+    private void ModifyButtonState( Action action )
+    {
+        insideCheckboxCallback = true;
+        action();
+        insideCheckboxCallback = false;
+    }
+
     protected override void OnLevelUpdate()
     {
+        if( Input.GetKeyDown( KeyCode.Space ) )
+            IncrementStage();
+
         switch( subLevelStage )
         {
             case SubLevelStage.Buttons:
-            {
-                if( buttons.All( ( x ) => x.isOn ) )
-                {
-                    IncrementStage();
-
-                    for( int i = 0; i < buttonConnections.Count; ++i )
-                    {
-                        int index = i;
-                        buttons[index].onValueChanged.AddListener( ( x ) =>
-                        {
-                            if( !x )
-                                return;
-
-                            if( lightSequence[lightIndex] != index )
-                            {
-                                foreach( var b in buttons )
-                                    b.isOn = false;
-                                lightIndex = 0;
-                            }
-                            else
-                                lightIndex++;
-                        } );
-                    }
-                }
-
-                break;
-            }
+                // Fall through
             case SubLevelStage.Buttons2:
-            {
-                if( buttons.All( ( x ) => x.isOn ) )
-                {
-                    hackingCanvas.SetVisibility( true );
-                    IncrementStage();
-
-                    for( int i = 0; i < buttonConnections.Count; ++i )
-                    {
-                        int index = i;
-                        buttons[index].onValueChanged.AddListener( ( x ) =>
-                        {
-                            if( !insideCheckboxCallback )
-                            {
-                                insideCheckboxCallback = true;
-                                buttons[index].isOn = !x;
-                                foreach( var connection in buttonConnections[index].connections )
-                                    connection.isOn = !connection.isOn;
-                                insideCheckboxCallback = false;
-                            }
-                        } );
-                    }
-                }
-
-                break;
-            }
+                // Fall through
             case SubLevelStage.Buttons3:
             {
                 if( buttons.All( ( x ) => x.isOn ) )
-                {
-                    hackingCanvas.SetVisibility( true );
                     IncrementStage();
-                    SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_2" );
-                    foreach( var button in buttons )
-                        button.enabled = false;
-                }
 
                 break;
             }
@@ -158,38 +120,14 @@ public class Level12_Bomb : BaseLevel
                     counter++;
                     UpdateText();
 
-                    if( counter >= ( desktop.IsEasyMode() ? maxKeysEasy : maxKeysHard ) )
-                    {
-                        hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( false );
+                    var max = desktop.IsEasyMode() ? maxKeysEasy : maxKeysHard;
+                    var threshold = max / 6;
+
+                    if( ( counter % threshold ) == 0 )
+                        buttons[lightSequence[counter / threshold - 1]].isOn = true;
+
+                    if( counter >= max )
                         IncrementStage();
-                        progressBar.Progress = 0.0f;
-
-                        for( int i = 0; i < buttons.Count; ++i )
-                            lightSequence[i] = i;
-
-                        foreach( var button in buttons )
-                        {
-                            SetButtonColour( button, Color.white );
-                            button.onValueChanged.AddListener( ( x ) =>
-                            {
-                                if( x )
-                                {
-                                    if( button.colors.normalColor == Color.white )
-                                    {
-                                        foreach( var b in buttons )
-                                        {
-                                            b.isOn = false;
-                                            SetButtonColour( b, Color.white );
-                                        }
-                                        progressSpeed = progressSpeedStart;
-  
-                                    }
-                                    else
-                                        progressSpeed += 0.08f;
-                                }
-                            } );
-                        }
-                    }
                 }
 
                 break;
@@ -200,24 +138,6 @@ public class Level12_Bomb : BaseLevel
                 if( buttons.All( ( x ) => x.isOn ) )
                 {
                     IncrementStage();
-
-                    if( subLevelStage == SubLevelStage.ProgressBars )
-                    {
-                        foreach( var b in buttons )
-                        {
-                            b.isOn = false;
-                            SetButtonColour( b, Color.white );
-                        }
-
-                        hackingCanvas.SetVisibility( false );
-                        passwordInput.interactable = true;
-                        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_3" );
-                    }
-                    else
-                    {
-                        foreach( var b in buttons )
-                            b.enabled = false;
-                    }
                 }
                 else
                 {
@@ -239,9 +159,9 @@ public class Level12_Bomb : BaseLevel
 
                     var threshold = desktop.IsEasyMode() ? lightSequenceThresholdEasy : lightSequenceThresholdHard;
                     if( oldPogress < threshold && progressBar.Progress >= threshold )
-                        SetButtonColour( buttons[lightSequence[lightIndex]], stageColours[( int )subLevelStage] );
+                        buttons[lightSequence[lightIndex]].targetGraphic.color = stageColours[( int )subLevelStage];
                     else if( oldPogress >= threshold && progressBar.Progress < threshold && !buttons[lightSequence[lightIndex]].isOn )
-                        SetButtonColour( buttons[lightSequence[lightIndex]], Color.white );
+                        buttons[lightSequence[lightIndex]].targetGraphic.color = originalCheckboxColour;
                 }
 
                 break;
@@ -263,31 +183,154 @@ public class Level12_Bomb : BaseLevel
             return;
         }
 
+        hackingCanvas.SetVisibility( false );
+        var stageUI = stageTextures[( int )subLevelStage] == 1 ? stage1UI : stageTextures[( int )subLevelStage] == 2 ? stage2UI : stage3UI;
+        mainImage.sprite = stageUI[0];
+        mainImage.color = stageColours[( int )subLevelStage];
+        progressImage.sprite = stageUI[1];
+        progressImage.color = stageColours[( int )subLevelStage];
+
         foreach( var button in buttons )
         {
-            SetButtonColour( button, ( int )subLevelStage >= stageColours.Count ? Color.white : stageColours[( int )subLevelStage] );
-            insideCheckboxCallback = true;
-            button.onValueChanged.RemoveAllListeners();
-            button.isOn = false;
+            button.graphic.GetComponent<Image>().sprite = stageUI[2];
+            button.graphic.color = stageColours[( int )subLevelStage];
+            ModifyButtonState( () => button.isOn = false );
+            button.onValueChanged.RemoveAllListeners();        
             button.enabled = true;
-            insideCheckboxCallback = false;
+            button.targetGraphic.color = originalCheckboxColour;
         }
 
         lightSequence = lightSequence.RandomShuffle();
         progressSpeed = progressSpeedStart;
+        progressBar.Progress = 0.0f;
         lightIndex = 0;
+
+        SetupNewStage();
     }
 
-    private void SetButtonColour( Toggle button, Color colour )
+    private void SetupNewStage()
     {
-        button.colors = new ColorBlock()
+        switch( subLevelStage )
         {
-            normalColor = colour,
-            highlightedColor = colour,
-            selectedColor = colour,
-            pressedColor = colour.SetA( colour.a - 0.1f ),
-            colorMultiplier = 1.0f,
-        };
+            case SubLevelStage.Buttons:
+                break;
+
+            case SubLevelStage.Buttons2:
+            {
+                for( int i = 0; i < buttonConnections.Count; ++i )
+                {
+                    int index = i;
+                    buttons[index].onValueChanged.AddListener( ( x ) =>
+                    {
+                        if( insideCheckboxCallback )
+                            return;
+
+                        if( !x )
+                        {
+                            ModifyButtonState( () => buttons[index].isOn = true );
+                            return;
+                        }
+
+                        if( lightSequence[lightIndex] != index )
+                        {
+                            ModifyButtonState( () =>
+                            {
+                                foreach( var b in buttons )
+                                    b.isOn = false;
+                            } );
+                            lightIndex = 0;
+                        }
+                        else
+                            lightIndex++;
+                    } );
+                }
+            }
+            break;
+
+            case SubLevelStage.Buttons3:
+            {
+                for( int i = 0; i < buttonConnections.Count; ++i )
+                {
+                    int index = i;
+                    buttons[index].onValueChanged.AddListener( ( x ) =>
+                    {
+                        if( insideCheckboxCallback )
+                            return;
+
+                        ModifyButtonState( () =>
+                        {
+                            buttons[index].isOn = !x;
+                            foreach( var connection in buttonConnections[index].connections )
+                                connection.isOn = !connection.isOn;
+                        } );
+                    } );
+                }
+            }
+            break;
+
+            case SubLevelStage.ButtonMash:
+            {
+                hackingCanvas.SetVisibility( true );
+                hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( true );
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_2" );
+                foreach( var button in buttons )
+                    button.enabled = false;
+            }
+            break;
+
+            case SubLevelStage.ProgressBars:
+            {
+                hackingCanvas.SetVisibility( true );
+                hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( false );
+
+                for( int i = 0; i < buttons.Count; ++i )
+                    lightSequence[i] = i;
+
+                foreach( var button in buttons )
+                {
+                    button.targetGraphic.color = originalCheckboxColour;
+                    button.onValueChanged.AddListener( ( x ) =>
+                    {
+                        if( insideCheckboxCallback )
+                            return;
+
+                        if( x )
+                        {
+                            if( button.targetGraphic.color == originalCheckboxColour )
+                            {
+                                ModifyButtonState( () =>
+                                {
+                                    foreach( var b in buttons )
+                                    {
+                                        b.isOn = false;
+                                        b.targetGraphic.color = originalCheckboxColour;
+                                    }
+                                } );
+                                progressSpeed = progressSpeedStart;
+
+                            }
+                            else
+                                progressSpeed += 0.08f;
+                        }
+                    } );
+                }
+            }
+            break;
+
+            case SubLevelStage.ProgressBars2:
+            {
+                passwordInput.interactable = true;
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_3" );
+            }
+            break;
+
+            case SubLevelStage.Passcode:
+            {
+                foreach( var b in buttons )
+                    b.enabled = false;
+            }
+            break;
+        }
     }
 
     private void UpdateText()
