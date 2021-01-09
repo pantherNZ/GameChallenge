@@ -1801,11 +1801,10 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: 
   spoilerTextGameString: 
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
-  windowCameraStartPosition: {x: -20, y: 0, z: -10}
-  DesktopCanvas: {fileID: 610674837}
   levels:
   - {fileID: 522668005}
   - {fileID: 1897650524}
@@ -1823,7 +1822,8 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 14
+  startingLevelId: 0
+  DesktopCanvas: {fileID: 610674837}
   loginUI: {fileID: 1897650524}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -1854,15 +1854,18 @@ MonoBehaviour:
   contextMenu: {fileID: 1391013267}
   contextMenuEnabled: 1
   gridSize: {x: 75, y: 75}
+  windowCameraStartPosition: {x: -20, y: 0, z: -10}
   lifeLostDisplayTime: 3
   levelFailFadeOutTime: 2
   levelFailFadeInTime: 2
   restartGameFadeOutTime: 5
   restartGameFadeInTime: 2
-  enabledAudio: 0
+  enabledAudio: 1
   enabledSaveLoad: 0
   timeUntilUpdateSec: 500
   easyDifficulty: 1
+  difficultySelectionAudio: {fileID: 8300000, guid: 5b7e35a2a44d13d41860c525af1c2785,
+    type: 3}
 --- !u!225 &203328298
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1890,6 +1893,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Bouncing Ball
   spoilerTextGameString: Spoiler_Level1
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 203328297}
   levelIdx: 3
   nextLevel: {fileID: 203328301}
@@ -1902,6 +1906,8 @@ MonoBehaviour:
   ballVelocity: 180
   ballFrequency: 2
   platformHeight: -1.5
+  bounceAudio: {fileID: 8300000, guid: 156ead322f9712f4eb06bdafca8e3b8b, type: 3}
+  inGoalAudio: {fileID: 8300000, guid: 5b7e35a2a44d13d41860c525af1c2785, type: 3}
 --- !u!114 &203328300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1917,6 +1923,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 2800000, guid: 67c21731390a81a43adc0096f7c16e45, type: 3}
   startMenuEntryText: Recycling
   spoilerTextGameString: Spoiler_Level3
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1947,6 +1954,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Bridge Ball
   spoilerTextGameString: Spoiler_Level2
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -1974,6 +1982,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 2800000, guid: e16b713e55896ed428871e6dbd2f4d13, type: 3}
   startMenuEntryText: Target Practice
   spoilerTextGameString: Spoiler_Level4
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2003,6 +2012,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Earthquake
   spoilerTextGameString: Spoiler_Level5
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2158,6 +2168,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Missiles
   spoilerTextGameString: Spoiler_Level6
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2191,6 +2202,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Chaos
   spoilerTextGameString: Spoiler_Level7
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2215,6 +2227,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: 
   spoilerTextGameString: 
+  levelCompleteAudio: {fileID: 0}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2234,6 +2247,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Careful Pick
   spoilerTextGameString: Spoiler_Level8
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2255,6 +2269,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Flip
   spoilerTextGameString: Spoiler_Level9
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2275,6 +2290,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Security
   spoilerTextGameString: Spoiler_Level10
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2296,6 +2312,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Hacking
   spoilerTextGameString: Spoiler_Level11
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -2315,6 +2332,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Bomb
   spoilerTextGameString: 
+  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -3271,7 +3289,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -79.69998, y: 70.7}
+  m_AnchoredPosition: {x: -79.69995, y: 70.7}
   m_SizeDelta: {x: 154.5, y: 73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &474935103
@@ -3545,7 +3563,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 6a4f84d0f3ae0ab41aad8daef2fecbb4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3856,6 +3874,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: 
   spoilerTextGameString: 
+  levelCompleteAudio: {fileID: 8300000, guid: 94afa8e1aba6d8346b78428ceb02c3be, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -6608,7 +6627,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: c217900f0764c6342bfc4e7d40efd948, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9417,7 +9436,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Only he could be the answer
+  m_Text: Only he himself could be the answer
 --- !u!222 &1595512658
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10633,6 +10652,7 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: 
   spoilerTextGameString: 
+  levelCompleteAudio: {fileID: 8300000, guid: 045545750d4f1c7429430f3b64048616, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
@@ -10641,6 +10661,8 @@ MonoBehaviour:
   loginDisplay: {fileID: 1127619246}
   incorrectPasswordDisplay: {fileID: 1841373566}
   incorrectPasswordButton: {fileID: 68581673}
+  incorrectPasswordAudio: {fileID: 8300000, guid: 55f6074681bb57e4ea322b76ed1a9864,
+    type: 3}
 --- !u!225 &1897650525
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -13383,7 +13405,7 @@ PrefabInstance:
     - target: {fileID: 7321268696417315507, guid: 8212756b264631d4590e23d0c5706c93,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8088437432361642798, guid: 8212756b264631d4590e23d0c5706c93,
         type: 3}

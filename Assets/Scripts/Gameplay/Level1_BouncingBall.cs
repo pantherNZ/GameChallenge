@@ -13,6 +13,9 @@ public class Level1_BouncingBall : BaseLevel
     [SerializeField] float ballFrequency = 2.0f;
     [SerializeField] float platformHeight = -1.5f;
 
+    [SerializeField] AudioClip bounceAudio = null;
+    [SerializeField] AudioClip inGoalAudio = null;
+
     List<GameObject> objects = new List<GameObject>();
     bool alternate;
     bool[] complete = new bool[3];
@@ -21,7 +24,7 @@ public class Level1_BouncingBall : BaseLevel
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
 
-        SubtitlesManager.Instance.QueueSubtitleGameString( 10.0f, "Narrator_Level_1_1" );
+        SubtitlesManager.Instance.QueueSubtitleGameString( 5.0f, "Narrator_Level_1_1" );
 
         var window = desktop.CreateWindow( "Bouncy Balls" ).GetComponent<Window>();
 
@@ -51,10 +54,11 @@ public class Level1_BouncingBall : BaseLevel
 
         // Don't create ball for side that is already complete
         if( ( !alternate && complete[0] ) || ( alternate && complete[1] ) )
-            return;
+            alternate = !alternate;
 
         var newBall = Instantiate( ballPrefab, desktop.windowCameraStartPosition + ballPosition.SetX( alternate ? ballPosition.x : -ballPosition.x ), Quaternion.identity );
         newBall.GetComponent<Rigidbody2D>().AddForce( new Vector2( alternate ? -ballVelocity : ballVelocity, 0.0f ) );
+        newBall.GetComponent<EventDispatcher>().OnCollisionEnter2DEvent += ( x ) => desktop.PlayAudio( bounceAudio );
         objects.Add( newBall );
     }
 
@@ -73,6 +77,9 @@ public class Level1_BouncingBall : BaseLevel
 
     private void CheckComplete()
     {
+        if( complete[0] ^ complete[1] )
+            desktop.PlayAudio( inGoalAudio );
+
         if( complete[0] && complete[1] && !complete[2] )
         {
             complete[2] = true;
@@ -86,7 +93,7 @@ public class Level1_BouncingBall : BaseLevel
                 objects.DestroyAll();
                 desktop.DestroyWindow( "Bouncy Balls" );
 
-                Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
+                Utility.FunctionTimer.CreateTimer( 4.0f, StartNextLevel );
             } );
         }
     }

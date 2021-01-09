@@ -8,6 +8,7 @@ public class LoginUI : BaseLevel
     [SerializeField] CanvasGroup loginDisplay = null;
     [SerializeField] CanvasGroup incorrectPasswordDisplay = null;
     [SerializeField] Button incorrectPasswordButton = null;
+    [SerializeField] AudioClip incorrectPasswordAudio = null;
     readonly string password = "simple";
 
     private void Start()
@@ -19,6 +20,7 @@ public class LoginUI : BaseLevel
             if( passworldInput.text.Length > 0 && passworldInput.text == password )
             {
                 GetComponent<CanvasGroup>().ToggleVisibility();
+                LevelFinished();
                 StartNextLevel();
                 Utility.FunctionTimer.StopTimer( "2nd_prompt" );
                 Utility.FunctionTimer.StopTimer( "3nd_prompt" );
@@ -30,6 +32,7 @@ public class LoginUI : BaseLevel
                 loginDisplay.ToggleVisibility();
                 incorrectPasswordDisplay.ToggleVisibility();
                 passworldInput.text = string.Empty;
+                desktop.PlayAudio( incorrectPasswordAudio );
             }
         } );
 
@@ -71,7 +74,7 @@ public class LoginUI : BaseLevel
                 passworldInput.text = password.Substring( 0, index + 1 );
                 index++;
 
-                if( index + 1 >= password.Length )
+                if( index >= password.Length )
                 {
                     Utility.FunctionTimer.StopTimer( "input_password" );
                     Utility.FunctionTimer.StopTimer( "input_password_loop" );

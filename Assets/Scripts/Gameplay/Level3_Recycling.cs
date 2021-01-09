@@ -77,7 +77,7 @@ public class Level3_Recycling : BaseLevel
             enabled = false;
             Utility.FunctionTimer.StopTimer( "Level_3" );
             SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_3_Complete" );
-            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+            LevelFinished( 3.0f );
         }
     }
 }

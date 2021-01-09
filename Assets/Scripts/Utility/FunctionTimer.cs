@@ -63,11 +63,11 @@ public static partial class Utility
 
                     if( timer.timeLeft <= 0.0f )
                     {
-                        // Timer complete, trigger Action
-                        timer.action();
-
                         if( timer.loop )
                             timer.timeLeft += timer.duration;
+
+                        // Timer complete, trigger Action
+                        timer.action();
                     }
                 }
             }

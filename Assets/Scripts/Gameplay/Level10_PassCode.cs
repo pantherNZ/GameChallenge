@@ -55,7 +55,7 @@ public class Level10_PassCode : BaseLevel
             {
                 canvas.SetVisibility( false );
                 Utility.FunctionTimer.StopTimer( "PlaySubtitle" );
-                Utility.FunctionTimer.CreateTimer( 1.0f, LevelFinished );
+                Utility.FunctionTimer.CreateTimer( 1.0f, () => LevelFinished() );
             }
             else
             {

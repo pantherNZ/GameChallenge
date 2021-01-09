@@ -5,6 +5,7 @@ abstract public class BaseLevel : MonoBehaviour
     public Texture2D startMenuEntryIcon;
     public string startMenuEntryText;
     public string spoilerTextGameString;
+    [SerializeField] AudioClip levelCompleteAudio = null;
 
     [HideInInspector] public DesktopUIManager desktop;
     bool levelStarted;
@@ -41,13 +42,21 @@ abstract public class BaseLevel : MonoBehaviour
         nextLevel?.StartLevel();
     }
 
-    public void LevelFinished()
+    public void LevelFinished( float startNextLevelDelay = 0.0f, bool playCompleteAudio = true )
     {
         if( !levelStarted || !levelActive )
             return;
 
+        if( levelCompleteAudio != null && playCompleteAudio )
+            desktop.PlayAudio( levelCompleteAudio );
+
+        desktop.LevelFinished( levelIdx );
+
         levelActive = false;
         OnLevelFinished();
+
+        if( startNextLevelDelay > 0.0f )
+            Utility.FunctionTimer.CreateTimer( startNextLevelDelay, () => StartNextLevel() );
     }
 
     public bool HasStarted()

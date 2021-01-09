@@ -17,14 +17,15 @@ public class DesktopIcon
 public class DesktopUIManager : BaseLevel, Game.ISavableObject
 {
     public Camera MainCamera { get; private set; }
-    public Vector3 windowCameraStartPosition = new Vector3( -14.62f, 0.0f, -10.0f );
     public GameObject Taskbar { get => taskBar; private set { } }
-    public RectTransform DesktopCanvas;
 
+    [Header( "Levels" )]
     [SerializeField] List<BaseLevel> levels = new List<BaseLevel>();
     [SerializeField] int startingLevelId = 0;
 
     // UI stuff
+    [Header( "UI" )]
+    public RectTransform DesktopCanvas;
     [SerializeField] LoginUI loginUI = null;
     [SerializeField] GameObject windowBasePrefab = null;
     [SerializeField] GameObject optionsWindow = null;
@@ -67,7 +68,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         public GameObject shortcut { get => _shortcut; set { _shortcut = value; grid = _shortcut.GetComponent<LockToGrid>(); } }
         public LockToGrid grid;
         public GameObject physics;
-        public System.Action<GameObject> onOpened;
+        public Action<GameObject> onOpened;
     }
 
     [HideInInspector] public List<Shortcut> shortcuts = new List<Shortcut>();
@@ -76,6 +77,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     List<Texture2D> errorTextures = new List<Texture2D>();
 
     // Misc
+    [Header( "Settings" )]
+    public Vector3 windowCameraStartPosition = new Vector3( -14.62f, 0.0f, -10.0f );
     [SerializeField] float lifeLostDisplayTime = 3.0f;
     [SerializeField] float levelFailFadeOutTime = 2.0f;
     [SerializeField] float levelFailFadeInTime = 2.0f;
@@ -84,12 +87,17 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] bool enabledAudio = true;
     [SerializeField] bool enabledSaveLoad = true;
     [SerializeField] int timeUntilUpdateSec = 500;
+    [SerializeField] bool easyDifficulty = true;
+
+    // Audio
+    new AudioSource audio;
+    [Header("Audio")]
+    [SerializeField] AudioClip difficultySelectionAudio = null;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
 
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
-    [SerializeField] bool easyDifficulty = true;
     int lives = 3;
     int currentLevel;
     Utility.FunctionTimer difficultyTimer;
@@ -106,6 +114,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     private void Start()
     {
+        audio = GetComponent<AudioSource>();
         currentTime = DateTime.Now;
         blueScreenCamera.gameObject.SetActive( false );
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
@@ -161,6 +170,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             var str = DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelect" );
             SubtitlesManager.Instance.AddSubtitle( str, 0, 0, ( selection ) =>
             {
+                PlayAudio( difficultySelectionAudio );
+
                 if( selection == "hard" )
                 {
                     easyDifficulty = false;
@@ -641,6 +652,17 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             entry.GetComponentInChildren<Text>().text = levels[i].startMenuEntryText;
             entry.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon, new Rect( 0.0f, 0.0f, icon.width, icon.height ), new Vector2( 0.5f, 0.5f ) );
         }
+    }
+
+    public void LevelFinished( int level )
+    {
+
+    }
+
+    public void PlayAudio( AudioClip clip )
+    { 
+        if( clip )
+            audio.PlayOneShot( clip );
     }
 
     public void ToggleDateTimeUI()

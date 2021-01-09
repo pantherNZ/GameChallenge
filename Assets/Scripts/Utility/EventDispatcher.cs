@@ -9,6 +9,11 @@ public class EventDispatcher : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public Action<Collider> OnTriggerExitEvent;
     public Action<Collider2D> OnTriggerExit2DEvent;
 
+    public Action<Collision2D> OnCollisionEnter2DEvent;
+    public Action<Collision> OnCollisionEnterEvent;
+    public Action<Collision2D> OnCollisionExit2DEvent;
+    public Action<Collision> OnCollisionExitEvent;
+
     public Action<PointerEventData> OnPointerEnterEvent;
     public Action<PointerEventData> OnPointerExitEvent;
     public Action<PointerEventData> OnPointerDownEvent;
@@ -35,6 +40,26 @@ public class EventDispatcher : MonoBehaviour, IPointerEnterHandler, IPointerExit
     private void OnTriggerExit( Collider collision )
     {
         OnTriggerExitEvent?.Invoke( collision );
+    }
+
+    private void OnCollisionEnter2D( Collision2D collision )
+    {
+        OnCollisionEnter2DEvent?.Invoke( collision );
+    }
+
+    private void OnCollisionExit2D( Collision2D collision )
+    {
+        OnCollisionExit2DEvent?.Invoke( collision );
+    }
+
+    private void OnCollisionEnter( Collision collision )
+    {
+        OnCollisionEnterEvent?.Invoke( collision );
+    }
+
+    private void OnCollisionExit( Collision collision )
+    {
+        OnCollisionExitEvent?.Invoke( collision );
     }
 
     void IPointerEnterHandler.OnPointerEnter( PointerEventData eventData )

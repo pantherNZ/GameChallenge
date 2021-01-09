@@ -143,9 +143,11 @@ public class SubtitlesManager : MonoBehaviour
                         texts[index].color = colour;
                 };
 
-                events[0].OnPointerEnterEvent += ( x ) => { updateColour( 0, Color.blue ); };
+                var selectionColour = new Color( 0.47f, 0.57f, 1.0f );
+
+                events[0].OnPointerEnterEvent += ( x ) => { updateColour( 0, selectionColour ); };
                 events[0].OnPointerExitEvent += ( x ) => { updateColour( 0, Color.white ); };
-                events[1].OnPointerEnterEvent += ( x ) => { updateColour( 1, Color.blue ); };
+                events[1].OnPointerEnterEvent += ( x ) => { updateColour( 1, selectionColour ); };
                 events[1].OnPointerExitEvent += ( x ) => { updateColour( 1, Color.white ); };
 
                 Action< int > selectionEvent = ( int index ) =>
@@ -153,7 +155,7 @@ public class SubtitlesManager : MonoBehaviour
                     if( !selection.complete )
                     {
                         selection.obj.transform.GetChild( 1 - index ).gameObject.Destroy();
-                        updateColour( index, Color.blue );
+                        updateColour( index, selectionColour );
                         selection.complete = true;
                         onSelectionEvent?.Invoke( text.text );
                     }

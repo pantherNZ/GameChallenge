@@ -46,7 +46,8 @@ public class Level4_TargetPractice : BaseLevel
         // Success
         else if( targetsCount >= targetsMax && targets.IsEmpty() )
         {
-            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+            LevelFinished( 3.0f );
+            return;
         }
         else
         {
@@ -62,7 +63,7 @@ public class Level4_TargetPractice : BaseLevel
         Utility.FunctionTimer.StopTimer( "CountDown" );
         Utility.FunctionTimer.StopTimer( "SpawnTarget" );
 
-        LevelFinished();
+        LevelFinished( 0.0f, false );
     }
 
     private void CountDown()

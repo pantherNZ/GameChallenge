@@ -72,7 +72,7 @@ public class Level2_BridgeBall : BaseLevel
             levelObj.Destroy();
             objects.DestroyAll();
 
-            Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
+            LevelFinished( 2.0f );
         } );
     }
 }
