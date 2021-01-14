@@ -12,6 +12,7 @@ public class Level2_BridgeBall : BaseLevel
     [SerializeField] float ballHeight = 5.0f;
     [SerializeField] float ballScale = 2.5f;
     [SerializeField] float ballFrequency = 2.0f;
+    [SerializeField] AudioClip bounceAudio = null;
     List<GameObject> objects = new List<GameObject>();
     GameObject levelObj = null;
     Utility.FunctionTimer timer;
@@ -58,6 +59,7 @@ public class Level2_BridgeBall : BaseLevel
     {
         var newBall = Instantiate( ballPrefab, new Vector3( ballOffset, ballHeight, 5.0f ), Quaternion.identity );
         newBall.GetComponent<Rigidbody2D>().AddForce( new Vector2( ballVelocity, 0.0f ) );
+        newBall.GetComponent<EventDispatcher>().OnCollisionEnter2DEvent += ( x ) => desktop.PlayAudio( bounceAudio );
         newBall.transform.localScale = new Vector2( ballScale, ballScale );
         objects.Add( newBall );
     }

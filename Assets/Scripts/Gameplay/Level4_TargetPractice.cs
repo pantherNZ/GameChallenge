@@ -14,6 +14,8 @@ public class Level4_TargetPractice : BaseLevel
     [SerializeField] float targetDuration = 4.0f;
     [SerializeField] float targetFadeDuration = 2.0f;
     [SerializeField] int maxFails = 3;
+    [SerializeField] AudioClip shootAudio = null;
+    [SerializeField] AudioClip hitAudio = null;
 
     // Dynamic data
     int targetsCount, countdown, fails;
@@ -98,6 +100,7 @@ public class Level4_TargetPractice : BaseLevel
             var bullet = Utility.CreateSprite( "Textures/LineShot/beam_straight", barrelEnd + direction / 2.0f, new Vector3( 1.0f, direction.magnitude ), gun.transform.rotation );
             Utility.FunctionTimer.CreateTimer( 0.1f, () => bullet?.Destroy() );
             bullets.Add( bullet );
+            desktop.PlayAudio( shootAudio );
 
             var hit = Physics2D.Raycast( mousePos, Vector2.zero, 0.0f );
 
@@ -107,6 +110,7 @@ public class Level4_TargetPractice : BaseLevel
                 {
                     targets.Remove( hit.collider.gameObject );
                     hit.collider.gameObject.Destroy();
+                    desktop.PlayAudio( hitAudio );
                     CheckLevelComplete();
                 }
                 else

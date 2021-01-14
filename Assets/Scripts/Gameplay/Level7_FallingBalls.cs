@@ -8,6 +8,8 @@ public class Level7_FallingBalls : BaseLevel
     [SerializeField] int ballCountHard = 30;
     [SerializeField] int numTargets = 3;
     [SerializeField] float xVelocityRange = 1.0f;
+    [SerializeField] AudioClip bounceAudio = null;
+    [SerializeField] AudioClip selectAudio = null;
 
     List<GameObject> balls = new List<GameObject>();
     List<GameObject> targetBalls = new List<GameObject>();
@@ -46,6 +48,7 @@ public class Level7_FallingBalls : BaseLevel
         var position = desktopBound.RandomPosition().ToVector3( 40.0f );
         balls.Add( Instantiate( ballPrefab, position, Quaternion.identity ) );
         balls.Back().GetComponent<Rigidbody2D>().AddForce( new Vector2( UnityEngine.Random.Range( -xVelocityRange, xVelocityRange ), 0.0f ) );
+        balls.Back().GetComponent<EventDispatcher>().OnCollisionEnter2DEvent += ( x ) => desktop.PlayAudio( bounceAudio );
 
         if( targets.Contains( balls.Count - 1 ) )
         {
@@ -86,6 +89,7 @@ public class Level7_FallingBalls : BaseLevel
             {
                 targetBalls.Remove( hit.collider.gameObject );
                 hit.collider.gameObject.Destroy();
+                desktop.PlayAudio( selectAudio );
                 CheckLevelComplete();
             }
         }

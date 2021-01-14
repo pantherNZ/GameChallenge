@@ -93,6 +93,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     new AudioSource audio;
     [Header("Audio")]
     [SerializeField] AudioClip difficultySelectionAudio = null;
+    [SerializeField] AudioClip recycleAudio = null;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -374,7 +375,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             {
                 // Recycling bin
                 if( obj == shortcuts[0].shortcut )
+                {
                     RemoveShortcut( newShortcut );
+                    PlayAudio( recycleAudio );
+                }
             };
         }
 
@@ -659,10 +663,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     }
 
-    public void PlayAudio( AudioClip clip )
+    public void PlayAudio( AudioClip clip, float volume = 1.0f )
     { 
         if( clip )
-            audio.PlayOneShot( clip );
+            audio.PlayOneShot( clip, volume );
     }
 
     public void ToggleDateTimeUI()

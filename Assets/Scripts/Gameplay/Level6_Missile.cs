@@ -18,6 +18,8 @@ public class Level6_Missile : BaseLevel
     [SerializeField] float moveSpeed2 = 10.0f;
     [SerializeField] float missileStartPos = -6.0f;
     [SerializeField] Vector2 windowStartPos = new Vector2( -3.0f, 0.0f );
+    [SerializeField] AudioClip fireAudio = null;
+    [SerializeField] AudioClip explodeAudio = null;
     List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher;
     List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
@@ -98,6 +100,7 @@ public class Level6_Missile : BaseLevel
     void FireMissile()
     {
         missileLauncher.GetComponent<Animator>().Play( "Fire" );
+        desktop.PlayAudio( fireAudio );
         firstMissileSuccess = false;
 
         Utility.FunctionTimer.CreateTimer( 0.5f, () =>
@@ -144,6 +147,7 @@ public class Level6_Missile : BaseLevel
             return;
 
         missile.GetComponent<Animator>().Play( "Explode" );
+        desktop.PlayAudio( explodeAudio );
         StopCoroutine( missiles.FindPairFirst( missile ).Second );
 
         Utility.FunctionTimer.CreateTimer( 1.0f, () =>

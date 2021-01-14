@@ -6,7 +6,9 @@ public class Level8_SmallestSquare : BaseLevel
 {
     [SerializeField] GameObject squarePrefab = null;
     [SerializeField] int count = 8;
+    [SerializeField] AudioClip selectAudio = null;
     List<GameObject> squares = new List<GameObject>();
+
     GameObject smallest;
 
     public override void OnStartLevel()
@@ -62,6 +64,7 @@ public class Level8_SmallestSquare : BaseLevel
             {
                 squares.Remove( hit.collider.gameObject );
                 hit.collider.gameObject.Destroy();
+                desktop.PlayAudio( selectAudio );
 
                 if( hit.collider.gameObject == smallest )
                 {

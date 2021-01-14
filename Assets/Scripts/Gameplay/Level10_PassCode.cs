@@ -8,6 +8,7 @@ public class Level10_PassCode : BaseLevel
     [SerializeField] GameObject passCodeUI = null;
     [SerializeField] CanvasGroup canvas = null;
     [SerializeField] Text passCodeText = null;
+    [SerializeField] AudioClip incorrectPasswordAudio = null;
 
     // Dynamic data
     int subtitleIndex = 0;
@@ -60,6 +61,7 @@ public class Level10_PassCode : BaseLevel
             else
             {
                 this.ShakeTarget( passCodeUI.transform, 0.3f, 5.0f, 3.0f, 40.0f, 2.0f );
+                desktop.PlayAudio( incorrectPasswordAudio );
             }
         }
         else if( value == 11 )

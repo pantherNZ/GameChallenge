@@ -19,6 +19,7 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] Sprite[] stage1UI = new Sprite[3];
     [SerializeField] Sprite[] stage2UI = new Sprite[3];
     [SerializeField] Sprite[] stage3UI = new Sprite[3];
+    [SerializeField] AudioClip stageCompleteAudio = null;
 
     [Serializable]
     public class Connections
@@ -194,6 +195,7 @@ public class Level12_Bomb : BaseLevel
             return;
         }
 
+        desktop.PlayAudio( stageCompleteAudio );
         hackingCanvas.SetVisibility( false );
         var stageUI = stageTextures[( int )subLevelStage] == 1 ? stage1UI : stageTextures[( int )subLevelStage] == 2 ? stage2UI : stage3UI;
         mainImage.sprite = stageUI[0];
