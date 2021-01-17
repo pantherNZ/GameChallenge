@@ -214,6 +214,23 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         return new Rect( xPos, yPos, width, height );
     }
 
+    public Rect GetScreenBound( float margin = 0.0f, bool includeStartBar = false )
+    {
+        var rect = ( transform as RectTransform ).rect;
+        rect.x += MainCamera.pixelWidth / 2.0f;
+        rect.y += MainCamera.pixelHeight / 2.0f;
+        rect.width -= margin * 2.0f;
+        rect.height -= margin * 2.0f;
+
+        if( !includeStartBar )
+        {
+            rect.height -= ( taskBar.transform as RectTransform ).rect.height;
+            rect.y += ( taskBar.transform as RectTransform ).rect.height / 2.0f;
+        }
+
+        return rect;
+    }
+
     public bool IsEasyMode()
     {
         return easyDifficulty;
@@ -280,7 +297,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public GameObject CreateWindow( string title, bool destroyExisting = false, Vector2 offset = new Vector2() )
     {
-        return CreateWindowInternal( title, windowBasePrefab, destroyExisting, offset );
+        return CreateWindow( title, windowBasePrefab, destroyExisting, offset );
     }
 
     public void CreateOptionsWindow()
@@ -297,7 +314,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         SetContextMenuVisibility( false );
     }
 
-    private GameObject CreateWindowInternal( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset )
+    public GameObject CreateWindow( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset )
     {
         if( destroyExisting )
             DestroyWindow( title );

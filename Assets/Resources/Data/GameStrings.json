@@ -212,6 +212,12 @@
       }
     },
     {
+      "Key": "Level11_Random_Strings",
+      "Value": {
+        "english": "turn on the supercomputer, run hacks.exe, overclock cpu, start simulation, download extra ram, initiate quantum computing, enable bluetooth connection, activate network logging, detect hidden firewall, unlock remote connection, transfer data files, trace root kernel"
+      }
+    },
+    {
       "Key": "Spoiler_Level1",
       "Value": {
         "english": "The window gives a good view of the problem at hand, if only there was a way you could move it to get an even better view."
