@@ -176,6 +176,18 @@
       }
     },
     {
+      "Key": "Narrator_Level_11_Start",
+      "Value": {
+        "english": "Alex hated dealing with pop-ups. He also had never been a strong typer."
+      }
+    },
+    {
+      "Key": "Narrator_Level_11_1",
+      "Value": {
+        "english": "Alex was struggling to keep up, but he always persisted."
+      }
+    },
+    {
       "Key": "Narrator_Level_12_Start",
       "Value": {
         "english": "After the problems Alex had faced before, he was confident he would be able to solve this one easily."
@@ -214,7 +226,7 @@
     {
       "Key": "Level11_Random_Strings",
       "Value": {
-        "english": "turn on the supercomputer, run hacks.exe, overclock cpu, start simulation, download extra ram, initiate quantum computing, enable bluetooth connection, activate network logging, detect hidden firewall, unlock remote connection, transfer data files, trace root kernel"
+        "english": "Replace hardware, Turn on the supercomputer, Run hacks.exe, Overclock CPU, Turn on, Restart code, Start simulation, Download extra RAM, Initiate quantum computing, Upgrade methods, Update software, Enable Bluetooth connection, Activate network logging, Detect hidden firewall, Unlock remote connection, Transfer data files, Trace root kernel"
       }
     },
     {

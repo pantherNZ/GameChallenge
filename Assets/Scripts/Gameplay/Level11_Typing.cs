@@ -18,8 +18,12 @@ public class Level11_Typing : BaseLevel
     [SerializeField] Interval speedIntervalEasy = new Interval();
     [SerializeField] Interval speedIntervalHard = new Interval();
 
+    [SerializeField] AudioClip createWindowAudio = null;
+    [SerializeField] AudioClip completeWindowAudio = null;
+
     // Dynamic data
-    int numWindows = 0;
+    int numWindowsToSpawn = 0;
+
     class Window
     {
         public GameObject obj;
@@ -34,14 +38,16 @@ public class Level11_Typing : BaseLevel
     public override void OnStartLevel()
     {
         gameStrings = DataManager.Instance.GetGameString( "Level11_Random_Strings" ).Split( new [] { ", " }, StringSplitOptions.RemoveEmptyEntries ).ToList();
+        numWindowsToSpawn = desktop.IsEasyMode() ? numWindowsEasy : numWindowsHard;
+
         CreateWindow();
     }
 
     private void CreateWindow()
     {
-        numWindows++;
+        numWindowsToSpawn--;
 
-        var window = desktop.CreateWindow( "Information", windowPrefab, false, desktop.GetScreenBound( 100.0f, false ).RandomPosition() );
+        var window = desktop.CreateWindow( "Information", windowPrefab, false, desktop.GetScreenBound( 125.0f, false ).RandomPosition() );
         var index = UnityEngine.Random.Range( 0, gameStrings.Count - 1 );
 
         windows.Add( new Window()
@@ -54,18 +60,21 @@ public class Level11_Typing : BaseLevel
 
         UpdateText( windows.Back() );
         gameStrings.RemoveBySwap( index );
+        desktop.PlayAudio( createWindowAudio );
 
-        if( numWindows < ( desktop.IsEasyMode() ? numWindowsEasy : numWindowsHard ) )
-            Utility.FunctionTimer.CreateTimer( UnityEngine.Random.Range( speedIntervalEasy.First, speedIntervalHard.Second ), CreateWindow );
+        if( numWindowsToSpawn > 0 )
+        {
+            var range = desktop.IsEasyMode() ? speedIntervalEasy : speedIntervalHard;
+            Utility.FunctionTimer.CreateTimer( UnityEngine.Random.Range( range.First, range.Second ), CreateWindow );
+        }
     }
 
     private readonly Dictionary<char, KeyCode> keycodeCache = new Dictionary<char, KeyCode>();
     private KeyCode GetKeyCode( char character )
     {
-        // Get from cache if it was taken before to prevent unnecessary enum parse
-        KeyCode code;
-        if( keycodeCache.TryGetValue( character, out code ) ) return code;
-        // Cast to it's integer value
+        if( keycodeCache.TryGetValue( character, out KeyCode code ) )
+            return code;
+
         int alphaValue = character;
         code = ( KeyCode )Enum.Parse( typeof( KeyCode ), alphaValue.ToString() );
         keycodeCache.Add( character, code );
@@ -80,9 +89,10 @@ public class Level11_Typing : BaseLevel
 
             foreach( var window in windows )
             {
-                if( Input.GetKeyDown( GetKeyCode( window.str[window.index] ) ) )
-                {
-                    window.index++;
+                if( Input.GetKeyDown( GetKeyCode( char.ToLower( window.str[window.index] ) ) ) ||
+                    Input.GetKeyDown( GetKeyCode( char.ToUpper( window.str[window.index] ) ) ) )
+                    {
+                        window.index++;
 
                     if( window.index < window.str.Length )
                     {
@@ -92,12 +102,24 @@ public class Level11_Typing : BaseLevel
                     {
                         checkRemove = true;
                         desktop.DestroyWindow( window.obj );
+                        window.obj = null;
+                        desktop.PlayAudio( completeWindowAudio );
                     }
                 }
             }
 
             if( checkRemove )
+            {
                 windows.RemoveAll( ( window ) => window.obj == null );
+
+                if( windows.IsEmpty() )
+                {
+                    if( numWindowsToSpawn == 0 )
+                        LevelFinished( 3.0f );
+                    else
+                        CreateWindow();
+                }
+            }
         }
     }
 
@@ -130,6 +152,5 @@ public class Level11_Typing : BaseLevel
             window.obj.Destroy();
         windows.Clear();
         gameStrings.Clear();
-        numWindows = 0;
     }
 }

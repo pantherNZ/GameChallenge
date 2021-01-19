@@ -41,8 +41,6 @@ public class Level1_BouncingBall : BaseLevel
         objects.Add( goal1 );
         objects.Add( goal2 );
 
-        CreateBall();
-
         objects.Add( Utility.CreateSprite( "Textures/Backgrounds/1_game_background", desktop.windowCameraStartPosition + new Vector3( 0.0f, 0.0f, 20.0f ), new Vector3( 1.5f, 1.5f ), Quaternion.identity, "SecondaryCamera" ) );
 
         Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
@@ -77,7 +75,7 @@ public class Level1_BouncingBall : BaseLevel
 
     private void CheckComplete()
     {
-        if( complete[0] ^ complete[1] )
+        if( complete[0] || complete[1] )
             desktop.PlayAudio( inGoalAudio );
 
         if( complete[0] && complete[1] && !complete[2] )
@@ -88,12 +86,12 @@ public class Level1_BouncingBall : BaseLevel
             Utility.FunctionTimer.StopTimer( "Narrator_Level_1_2" );
             Utility.FunctionTimer.StopTimer( "Narrator_Level_1_1" );
 
-            Utility.FunctionTimer.CreateTimer( 3.0f, () =>
+            Utility.FunctionTimer.CreateTimer( 2.0f, () => LevelFinished( 4.0f ) );
+
+            Utility.FunctionTimer.CreateTimer( 2.0f, () =>
             {
                 objects.DestroyAll();
-                desktop.DestroyWindow( "Bouncy Balls" );
-
-                Utility.FunctionTimer.CreateTimer( 4.0f, StartNextLevel );
+                desktop.DestroyWindowByTitle( "Bouncy Balls" );
             } );
         }
     }

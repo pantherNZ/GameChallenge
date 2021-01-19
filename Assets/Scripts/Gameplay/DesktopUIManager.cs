@@ -93,7 +93,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     new AudioSource audio;
     [Header("Audio")]
     [SerializeField] AudioClip difficultySelectionAudio = null;
-    [SerializeField] AudioClip recycleAudio = null;
+    [SerializeField] List<AudioClip> recycleAudio = new List<AudioClip>();
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -211,22 +211,34 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         var height = MainCamera.orthographicSize * 2.0f - margin * 2.0f - startOffset;
         var xPos = -width / 2.0f;
         var yPos = -height / 2.0f + startOffset / 2.0f;
-        return new Rect( xPos, yPos, width, height );
+        var rect = new Rect( xPos, yPos, width, height );
+
+        //Debug.DrawLine( rect.BottomLeft(), rect.BottomRight(), Color.red, 5.0f );
+        //Debug.DrawLine( rect.BottomRight(), rect.TopRight(), Color.red, 5.0f );
+        //Debug.DrawLine( rect.TopRight(), rect.TopLeft(), Color.red, 5.0f );
+        //Debug.DrawLine( rect.TopLeft(), rect.BottomLeft(), Color.red, 5.0f );
+
+        return rect;
     }
 
     public Rect GetScreenBound( float margin = 0.0f, bool includeStartBar = false )
     {
         var rect = ( transform as RectTransform ).rect;
-        rect.x += MainCamera.pixelWidth / 2.0f;
-        rect.y += MainCamera.pixelHeight / 2.0f;
+        rect.x += MainCamera.pixelWidth / 2.0f + margin;
+        rect.y += MainCamera.pixelHeight / 2.0f + margin;
         rect.width -= margin * 2.0f;
         rect.height -= margin * 2.0f;
 
         if( !includeStartBar )
         {
             rect.height -= ( taskBar.transform as RectTransform ).rect.height;
-            rect.y += ( taskBar.transform as RectTransform ).rect.height / 2.0f;
+            rect.y += ( taskBar.transform as RectTransform ).rect.height;
         }
+
+        //Debug.DrawLine( MainCamera.ScreenToWorldPoint( rect.BottomLeft() ), MainCamera.ScreenToWorldPoint( rect.BottomRight() ), Color.red, 5.0f );
+        //Debug.DrawLine( MainCamera.ScreenToWorldPoint( rect.BottomRight() ), MainCamera.ScreenToWorldPoint( rect.TopRight() ), Color.red, 5.0f );
+        //Debug.DrawLine( MainCamera.ScreenToWorldPoint( rect.TopRight() ), MainCamera.ScreenToWorldPoint( rect.TopLeft() ), Color.red, 5.0f );
+        //Debug.DrawLine( MainCamera.ScreenToWorldPoint( rect.TopLeft() ), MainCamera.ScreenToWorldPoint( rect.BottomLeft() ), Color.red, 5.0f );
 
         return rect;
     }
@@ -317,7 +329,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public GameObject CreateWindow( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset )
     {
         if( destroyExisting )
-            DestroyWindow( title );
+            DestroyWindowByTitle( title );
 
         var window = Instantiate( windowPrefab, DesktopCanvas ).GetComponent<Window>();
         ( window.transform as RectTransform ).anchoredPosition = offset.ToVector3();
@@ -328,7 +340,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         return window.gameObject;
     }
 
-    public void DestroyWindow( string title )
+    public void DestroyWindowByTitle( string title )
     {
         windows.RemoveBySwap( ( pair ) =>
         {
@@ -338,14 +350,24 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         } );
     }
 
-    public void DestroyWindow( Window window )
+    public void DestroyWindowByTitle( Window window )
     {
-        DestroyWindow( window.GetTitle() );
+        DestroyWindowByTitle( window.GetTitle() );
     }
 
     public void DestroyWindow( GameObject window )
     {
-        DestroyWindow( window.GetComponent<Window>().GetTitle() );
+        DestroyWindow( window.GetComponent<Window>() );
+    }
+
+    public void DestroyWindow( Window window )
+    {
+        windows.RemoveBySwap( ( pair ) =>
+        {
+            if( pair.First == window )
+                pair.First.DestroyObject();
+            return pair.First == window;
+        } );
     }
 
     public Rect GetGridBounds()
@@ -394,7 +416,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                 if( obj == shortcuts[0].shortcut )
                 {
                     RemoveShortcut( newShortcut );
-                    PlayAudio( recycleAudio );
+                    PlayAudio( recycleAudio.RandomItem() );
                 }
             };
         }

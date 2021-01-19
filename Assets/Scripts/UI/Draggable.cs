@@ -14,6 +14,11 @@ public class Draggable : MonoBehaviour
         transform = base.transform as RectTransform;
     }
 
+    public void StartDrag()
+    {
+        StartDrag( null );
+    }
+
     public void StartDrag( Transform parent )
     {
         if( dragging || !enabled )
@@ -29,7 +34,7 @@ public class Draggable : MonoBehaviour
     public Vector3 GetMousePosScreen()
     {
         var centre = new Vector3( Screen.width, Screen.height, 0.0f ) / 2.0f;
-        return ( Input.mousePosition - centre ).RotateZ( parentRef.rotation.eulerAngles.z ) + centre;
+        return ( Input.mousePosition - centre ).RotateZ( parentRef != null ? parentRef.rotation.eulerAngles.z : 0.0f ) + centre;
     }
 
     public void EndDrag()
