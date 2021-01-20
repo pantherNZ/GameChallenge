@@ -18,7 +18,7 @@ public class Level11_Typing : BaseLevel
     [SerializeField] Interval speedIntervalEasy = new Interval();
     [SerializeField] Interval speedIntervalHard = new Interval();
 
-    [SerializeField] AudioClip createWindowAudio = null;
+    [SerializeField] List<AudioClip> createWindowAudio = new List<AudioClip>();
     [SerializeField] AudioClip completeWindowAudio = null;
 
     // Dynamic data
@@ -60,7 +60,7 @@ public class Level11_Typing : BaseLevel
 
         UpdateText( windows.Back() );
         gameStrings.RemoveBySwap( index );
-        desktop.PlayAudio( createWindowAudio );
+        desktop.PlayAudio( createWindowAudio.RandomItem() );
 
         if( numWindowsToSpawn > 0 )
         {

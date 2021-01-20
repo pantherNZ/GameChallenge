@@ -18,8 +18,10 @@ public class Level6_Missile : BaseLevel
     [SerializeField] float moveSpeed2 = 10.0f;
     [SerializeField] float missileStartPos = -6.0f;
     [SerializeField] Vector2 windowStartPos = new Vector2( -3.0f, 0.0f );
+    Vector2 nextWindowStartPos;
     [SerializeField] AudioClip fireAudio = null;
     [SerializeField] AudioClip explodeAudio = null;
+    [SerializeField] AudioClip stageCompleteAudio = null;
     List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher;
     List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
@@ -37,16 +39,15 @@ public class Level6_Missile : BaseLevel
             icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" )
         };
 
+        levelCounter = 0;
         shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), CreateWindow );
-        CreateWindow( shortcut );
+        SetupLevel();
 
         missileLauncher = Instantiate( missileLauncherPrefab );
         missileLauncher.transform.position = windows.Back().windowCamera.gameObject.transform.position + new Vector3( missileStartPos, 0.0f, 50.0f );
         missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
 
-        Utility.FunctionTimer.CreateTimer( 3.0f, FireMissile, "FireMissile", true );
-        levelCounter = 2;
-        SetupLevel();
+        Utility.FunctionTimer.CreateTimer( 1.0f, FireMissile, "FireMissile", true );
     }
 
     void CreateWindow( GameObject shortcut )
@@ -56,8 +57,8 @@ public class Level6_Missile : BaseLevel
         if( windows.Count >= maxWindows )
             return;
 
-        windows.Add( desktop.CreateWindow( "Missiles", false, windowStartPos ).GetComponent<Window>() );
-        windowStartPos += new Vector2( 0.3f, windowStartPos.y > -2.0f ? -0.3f : 0.0f );
+        windows.Add( desktop.CreateWindow( "Missiles", false, nextWindowStartPos ).GetComponent<Window>() );
+        nextWindowStartPos += new Vector2( 0.3f, nextWindowStartPos.y > -2.0f ? -0.3f : 0.0f );
     }
 
     protected override void OnLevelUpdate()
@@ -184,6 +185,13 @@ public class Level6_Missile : BaseLevel
 
     void SetupLevel()
     {
+        foreach( var window in windows )
+            desktop.DestroyWindow( window );
+
+        windows.Clear();
+        nextWindowStartPos = windowStartPos;
+        CreateWindow( shortcut );
+
         switch( levelCounter )
         {
             case 0:
@@ -202,5 +210,8 @@ public class Level6_Missile : BaseLevel
                 break;
             }
         }
+
+        if( levelCounter > 0 )
+            desktop.PlayAudio( stageCompleteAudio );
     }
 }

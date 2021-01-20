@@ -16,6 +16,7 @@ public class Level4_TargetPractice : BaseLevel
     [SerializeField] int maxFails = 3;
     [SerializeField] AudioClip shootAudio = null;
     [SerializeField] AudioClip hitAudio = null;
+    [SerializeField] Color crosshairColour = Color.white;
 
     // Dynamic data
     int targetsCount, countdown, fails;
@@ -33,6 +34,7 @@ public class Level4_TargetPractice : BaseLevel
         
         countdownSprite = Utility.CreateSprite( "Textures/Numbers/spell_rank_3", new Vector3( 0.0f, 0.0f, 20.0f ), new Vector3( 1.0f, 1.0f ) );
         crosshair = Utility.CreateSprite( "Textures/crosshair", desktop.MainCamera.ScreenToWorldPoint( Input.mousePosition ).SetZ( 20.0f ), new Vector3( 1.0f, 1.0f ) );
+        crosshair.GetComponent<SpriteRenderer>().color = crosshairColour;
         gun = Instantiate( gunPrefab, new Vector3( 0.0f, -desktop.GetWorldBound().height / 2.0f, 20.0f ), Quaternion.identity );
         gun.transform.localScale = new Vector3( 1.0f, 1.0f );
         CountDown();
@@ -98,7 +100,7 @@ public class Level4_TargetPractice : BaseLevel
             var barrelEnd = gun.transform.GetChild( 0 ).transform.position;
             direction = mousePos - barrelEnd;
             var bullet = Utility.CreateSprite( "Textures/LineShot/beam_straight", barrelEnd + direction / 2.0f, new Vector3( 1.0f, direction.magnitude ), gun.transform.rotation );
-            Utility.FunctionTimer.CreateTimer( 0.1f, () => bullet?.Destroy() );
+            Utility.FunctionTimer.CreateTimer( 0.07f, () => bullet?.Destroy() );
             bullets.Add( bullet );
             desktop.PlayAudio( shootAudio );
 

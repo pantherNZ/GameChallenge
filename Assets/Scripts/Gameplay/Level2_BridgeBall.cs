@@ -13,6 +13,7 @@ public class Level2_BridgeBall : BaseLevel
     [SerializeField] float ballScale = 2.5f;
     [SerializeField] float ballFrequency = 2.0f;
     [SerializeField] AudioClip bounceAudio = null;
+    [SerializeField] AudioClip inGoalAudio = null;
     List<GameObject> objects = new List<GameObject>();
     GameObject levelObj = null;
     Utility.FunctionTimer timer;
@@ -61,6 +62,7 @@ public class Level2_BridgeBall : BaseLevel
         newBall.GetComponent<Rigidbody2D>().AddForce( new Vector2( ballVelocity, 0.0f ) );
         newBall.GetComponent<EventDispatcher>().OnCollisionEnter2DEvent += ( x ) => desktop.PlayAudio( bounceAudio );
         newBall.transform.localScale = new Vector2( ballScale, ballScale );
+        newBall.transform.localRotation = Quaternion.Euler( 0.0f, 0.0f, UnityEngine.Random.Range( 0.0f, 360.0f ) );
         objects.Add( newBall );
     }
 
@@ -68,6 +70,7 @@ public class Level2_BridgeBall : BaseLevel
     {
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_2_Complete" );
         Utility.FunctionTimer.StopTimer( "CreateBall" );
+        desktop.PlayAudio( inGoalAudio );
 
         Utility.FunctionTimer.CreateTimer( 3.0f, () =>
         {

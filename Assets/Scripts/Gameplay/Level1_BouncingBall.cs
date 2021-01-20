@@ -57,6 +57,7 @@ public class Level1_BouncingBall : BaseLevel
         var newBall = Instantiate( ballPrefab, desktop.windowCameraStartPosition + ballPosition.SetX( alternate ? ballPosition.x : -ballPosition.x ), Quaternion.identity );
         newBall.GetComponent<Rigidbody2D>().AddForce( new Vector2( alternate ? -ballVelocity : ballVelocity, 0.0f ) );
         newBall.GetComponent<EventDispatcher>().OnCollisionEnter2DEvent += ( x ) => desktop.PlayAudio( bounceAudio );
+        newBall.transform.localRotation = Quaternion.Euler( 0.0f, 0.0f, Random.Range( 0.0f, 360.0f ) );
         objects.Add( newBall );
     }
 
