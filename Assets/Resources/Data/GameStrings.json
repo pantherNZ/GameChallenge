@@ -218,6 +218,12 @@
       }
     },
     {
+      "Key": "System_Update",
+      "Value": {
+        "english": "System Update in: {0}"
+      }
+    },
+    {
       "Key": "Level12_Mash_Text",
       "Value": {
         "english": "Data Transferred: {0} / {1}"

@@ -151,6 +151,9 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         {
             timeDateText.text = DateTime.Today.Add( newT ).ToString( "h:mm tt\nM/dd/yyyy", System.Globalization.CultureInfo.CreateSpecificCulture( "en-US" ) );
         };
+
+        if( startingLevelId >= 7 ) // Earthquake
+            StartCoroutine( desktop.RunTimer() );
     }
 
     public void Serialise( BinaryWriter writer )
@@ -732,11 +735,26 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     {
         updateTimerCanvas.SetVisibility( true );
 
+        StartCoroutine( RunTimerFlash( 8, 0.3f ) );
+
         while( updateTimeLeftSec > 0 )
         {
             updateTimeLeftSec--;
-            updateTimerCanvas.GetComponentInChildren<Text>().text = TimeSpan.FromSeconds( updateTimeLeftSec ).ToString( @"mm\:ss" ); 
+            updateTimerCanvas.GetComponentInChildren<Text>().text = DataManager.Instance.GetGameStringFormatted( "System_Update", new[] { TimeSpan.FromSeconds( updateTimeLeftSec ).ToString( @"mm\:ss" ) } );
+
+            if( updateTimeLeftSec == 10 )
+                StartCoroutine( RunTimerFlash( 10, 1.0f ) );
+
             yield return new WaitForSeconds( 1.0f );
+        }
+    }
+
+    public IEnumerator RunTimerFlash( int numFlashes, float flashInterval )
+    {
+        for( int i = 0; i < numFlashes; ++i )
+        {
+            yield return Utility.FadeToColour( updateTimerCanvas.GetComponentInChildren<Text>(), Color.red, flashInterval / 2.0f );
+            yield return Utility.FadeToColour( updateTimerCanvas.GetComponentInChildren<Text>(), Color.white, flashInterval / 2.0f );
         }
     }
 }

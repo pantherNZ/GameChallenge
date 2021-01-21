@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static partial class Utility
 {
@@ -30,6 +32,38 @@ public static partial class Utility
     public static void FadeFromBlack( this MonoBehaviour mono, float fadeDurationSec )
     {
         mono.StartCoroutine( FadeFromBlack( mono.GetComponent<CanvasGroup>(), fadeDurationSec ) );
+    }
+
+    public static IEnumerator FadeToColour( Graphic image, Color colour, float fadeDurationSec )
+    {
+        return FadeToColour( image, colour, fadeDurationSec, Lerp );
+    }
+
+    public static IEnumerator FadeToColour( Graphic image, Color colour, float fadeDurationSec, Func<float, float, float, float> interpolator )
+    {
+        Debug.Assert( image != null );
+        if( image == null )
+            yield break;
+
+        var startColour = image.color;
+
+        for( float interp = 0.0f; interp < 1.0f; interp += Time.deltaTime * ( 1.0f / fadeDurationSec ) )
+        {
+            image.color = InterpolateColour( startColour, colour, interp, interpolator );
+            yield return null;
+        }
+
+        image.color = colour;
+    }
+
+    public static void FadeToColour( this MonoBehaviour mono, Color colour, float fadeDurationSec )
+    {
+        mono.StartCoroutine( FadeToColour( mono.GetComponent<Graphic>(), colour, fadeDurationSec ) );
+    }
+
+    public static void FadeToColour( this MonoBehaviour mono, Color colour, float fadeDurationSec, Func<float, float, float, float> interpolator )
+    {
+        mono.StartCoroutine( FadeToColour( mono.GetComponent<Graphic>(), colour, fadeDurationSec, interpolator ) );
     }
 
     public static IEnumerator InterpolateScale( Transform transform, Vector3 targetScale, float durationSec )

@@ -74,6 +74,37 @@ public static partial class Utility
     public static float DistanceSq( Transform a, Transform b ) { return DistanceSq( a.position, b.position ); }
     public static float DistanceSq( Vector3 a, Vector3 b ) { return ( a - b ).sqrMagnitude; }
 
+    public static Color GetRainbowColour( float value )
+    {
+        float inc = 6.0f;
+        float x = value * inc;
+        float r = 0.0f;
+        float g = 0.0f;
+        float b = 0.0f;
+
+        if( ( 0 <= x && x <= 1 ) || ( 5 <= x && x <= 6 ) ) r = 1.0f;
+        else if( 4 <= x && x <= 5 ) r = x - 4;
+        else if( 1 <= x && x <= 2 ) r = 1.0f - ( x - 1 );
+        if( 1 <= x && x <= 3 ) g = 1.0f;
+        else if( 0 <= x && x <= 1 ) g = x - 0;
+        else if( 3 <= x && x <= 4 ) g = 1.0f - ( x - 3 );
+        if( 3 <= x && x <= 5 ) b = 1.0f;
+        else if( 2 <= x && x <= 3 ) b = x - 2;
+        else if( 5 <= x && x <= 6 ) b = 1.0f - ( x - 5 );
+
+        return new Color( r, g, b, 1.0f );
+    }
+
+    public static Color InterpolateColour( Color a, Color b, float t, Func< float, float, float, float > interpolator )
+    {
+        Color.RGBToHSV( a, out float h1, out float s1, out float v1 );
+        Color.RGBToHSV( b, out float h2, out float s2, out float v2 );
+        float h = interpolator( h1, h2, t );
+        float s = interpolator( s1, s2, t );
+        float v = interpolator( v1, v2, t );
+        return Color.HSVToRGB( h, s, v );
+    }
+
     public static void DrawCircle( Vector3 position, float diameter, float lineWidth, Color? colour = null )
     {
         colour = colour ?? new Color( 1.0f, 1.0f, 1.0f, 1.0f );

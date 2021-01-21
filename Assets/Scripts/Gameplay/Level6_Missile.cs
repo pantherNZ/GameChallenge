@@ -23,11 +23,21 @@ public class Level6_Missile : BaseLevel
     [SerializeField] AudioClip explodeAudio = null;
     [SerializeField] AudioClip stageCompleteAudio = null;
     List<Window> windows = new List<Window>();
-    GameObject shortcut, missileLauncher;
-    List<Pair<GameObject, Coroutine>> missiles = new List<Pair<GameObject, Coroutine>>();
-    int levelCounter = 0;
-    bool fireLeft, firstMissileSuccess;
+    GameObject shortcut, missileLauncher, background;
+
+    class Missile
+    {
+        public GameObject missile;
+        public Coroutine movement;
+        public int index;
+    }
+
+    List<Missile> missiles = new List<Missile>();
+    int levelCounter;
+    bool fireLeft;
     int maxWindows;
+    int index;
+    int lastHitIndex = -1;
 
     public override void OnStartLevel()
     {
@@ -47,7 +57,9 @@ public class Level6_Missile : BaseLevel
         missileLauncher.transform.position = windows.Back().windowCamera.gameObject.transform.position + new Vector3( missileStartPos, 0.0f, 50.0f );
         missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
 
-        Utility.FunctionTimer.CreateTimer( 1.0f, FireMissile, "FireMissile", true );
+        Utility.FunctionTimer.CreateTimer( 2.0f, FireMissile, "FireMissile", true );
+
+        background = Utility.CreateSprite( "Textures/Backgrounds/Repeated 1", desktop.windowCameraStartPosition + new Vector3( 0.0f, 0.0f, 20.0f ), new Vector3( 1.5f, 1.5f ), Quaternion.identity, "SecondaryCamera" );
     }
 
     void CreateWindow( GameObject shortcut )
@@ -65,16 +77,16 @@ public class Level6_Missile : BaseLevel
     {
         base.OnLevelUpdate();
 
-        foreach( var (missile, _) in missiles )
+        foreach( var missile in missiles )
         {
             var found = windows.Any( window =>
             {
                 var rect = window.GetCameraViewWorldRect();
-                return rect.Contains( missile.GetComponent<Collider2D>().bounds );
+                return rect.Contains( missile.missile.GetComponent<Collider2D>().bounds );
             } );
 
             if( !found )
-                Explode( missile, false );
+                Explode( missile.missile, false );
         }
     }
 
@@ -83,9 +95,10 @@ public class Level6_Missile : BaseLevel
         base.OnLevelFinished();
 
         missileLauncher.Destroy();
+        background.Destroy();
 
-        foreach( var (missile, _) in missiles )
-            missile.Destroy();
+        foreach( var missile in missiles )
+            missile.missile.Destroy();
 
         foreach( var window in windows)
             desktop.DestroyWindow( window );
@@ -102,7 +115,6 @@ public class Level6_Missile : BaseLevel
     {
         missileLauncher.GetComponent<Animator>().Play( "Fire" );
         desktop.PlayAudio( fireAudio );
-        firstMissileSuccess = false;
 
         Utility.FunctionTimer.CreateTimer( 0.5f, () =>
         {
@@ -110,13 +122,22 @@ public class Level6_Missile : BaseLevel
             var spawnLocation = missileLauncher.GetComponentInChildren<Transform>();
             missile.transform.position = spawnLocation.position;
             missile.transform.rotation = spawnLocation.rotation;
-            missiles.Add( new Pair<GameObject, Coroutine>( missile, StartCoroutine( MoveMissileRoutine( missile ) ) ) );
+            fireLeft = !fireLeft;
+            missiles.Add( new Missile()
+            {
+                missile = missile,
+                movement = StartCoroutine( MoveMissileRoutine( missile ) ),
+                index = index,
+            } );
+
             Physics2D.SyncTransforms();
+
+            if( fireLeft )
+                index++;
         } );
 
         if( levelCounter == 2 && !fireLeft )
             Utility.FunctionTimer.CreateTimer( 0.75f, FireMissile, "FireMissile2" );
-        fireLeft = !fireLeft;
     }
 
     public IEnumerator MoveMissileRoutine( GameObject missile )
@@ -149,37 +170,31 @@ public class Level6_Missile : BaseLevel
 
         missile.GetComponent<Animator>().Play( "Explode" );
         desktop.PlayAudio( explodeAudio );
-        StopCoroutine( missiles.FindPairFirst( missile ).Second );
+        StopCoroutine( missiles.Find( x => x.missile == missile ).movement );
 
         Utility.FunctionTimer.CreateTimer( 1.0f, () =>
         {
             if( missile != null )
             {
-                missiles.RemovePairFirst( missile );
+                missiles.RemoveAll( x => x.missile == missile );
                 missile.Destroy();
             }
         } );
 
+        var newIndex = missiles.Find( x => x.missile == missile ).index;
+        var prevIndex = lastHitIndex;
+        lastHitIndex = newIndex;
+
         if( reached_end )
         {
-            if( levelCounter == 2 )
-            {
-                if( !firstMissileSuccess )
-                {
-                    firstMissileSuccess = true;
-                    return;
-                }
-            }
+            if( levelCounter == 2 && prevIndex != newIndex )
+                return;
 
             Utility.FunctionTimer.CreateTimer( 1.0f, () =>
             {
                 ++levelCounter;
                 SetupLevel();
             } );
-        }
-        else
-        {
-            firstMissileSuccess = false;
         }
     }
 
