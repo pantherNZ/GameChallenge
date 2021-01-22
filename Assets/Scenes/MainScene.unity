@@ -1822,7 +1822,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 9
+  startingLevelId: 8
   DesktopCanvas: {fileID: 610674837}
   loginUI: {fileID: 1897650524}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
@@ -2182,20 +2182,18 @@ MonoBehaviour:
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
-  missileLauncherPrefab: {fileID: 8852268591402643551, guid: f8a8e9de7ecddb54cbdec26525d9bf37,
-    type: 3}
   missilePrefab: {fileID: 3364911981123608486, guid: 70afa14818d43c54e9a8a8458cbedf7c,
     type: 3}
-  missileBezierPrefab: {fileID: 1040798677768606696, guid: e7dd05c2997d3d54f8f6376c8ebeb664,
+  stage1Prefab: {fileID: 8176792974594325537, guid: b919f316f62088f4ab8dfa43f1baf253,
     type: 3}
-  missileBezier2Prefab: {fileID: 1040798677768606696, guid: f9ee6de942f045647b440e28eccbb1cb,
+  stage2Prefab: {fileID: 8176792974594325537, guid: fc102d3648c1f9f4695094b40e043f3f,
     type: 3}
-  missileBezier3Prefab: {fileID: 1040798677768606696, guid: 905ba984bb01d5641b849be11765052d,
+  stage3Prefab: {fileID: 8176792974594325537, guid: 7c6411a541bddb24f98a9a96f3e655ea,
     type: 3}
-  moveDist: 10
   moveSpeed: 6
   moveSpeed2: 2.5
-  missileStartPos: -12
+  explosionRadius: 5
+  explosionStrength: 100
   windowStartPos: {x: -360, y: 0}
   fireAudio: {fileID: 0}
   explodeAudio: {fileID: 0}

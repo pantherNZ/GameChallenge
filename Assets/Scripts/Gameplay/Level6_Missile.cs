@@ -8,22 +8,21 @@ using UnityEngine;
 
 public class Level6_Missile : BaseLevel
 {
-    [SerializeField] GameObject missileLauncherPrefab = null;
     [SerializeField] GameObject missilePrefab = null;
-    [SerializeField] GameObject missileBezierPrefab = null;
-    [SerializeField] GameObject missileBezier2Prefab = null;
-    [SerializeField] GameObject missileBezier3Prefab = null;
-    [SerializeField] float moveDist = 20.0f;
+    [SerializeField] GameObject stage1Prefab = null;
+    [SerializeField] GameObject stage2Prefab = null;
+    [SerializeField] GameObject stage3Prefab = null;
     [SerializeField] float moveSpeed = 30.0f;
     [SerializeField] float moveSpeed2 = 10.0f;
-    [SerializeField] float missileStartPos = -6.0f;
+    [SerializeField] float explosionRadius = 5.0f;
+    [SerializeField] float explosionStrength = 5.0f;
     [SerializeField] Vector2 windowStartPos = new Vector2( -3.0f, 0.0f );
     Vector2 nextWindowStartPos;
     [SerializeField] AudioClip fireAudio = null;
     [SerializeField] AudioClip explodeAudio = null;
     [SerializeField] AudioClip stageCompleteAudio = null;
     List<Window> windows = new List<Window>();
-    GameObject shortcut, missileLauncher, background;
+    GameObject shortcut, missileLauncher, level;
 
     class Missile
     {
@@ -53,13 +52,7 @@ public class Level6_Missile : BaseLevel
         shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), CreateWindow );
         SetupLevel();
 
-        missileLauncher = Instantiate( missileLauncherPrefab );
-        missileLauncher.transform.position = windows.Back().windowCamera.gameObject.transform.position + new Vector3( missileStartPos, 0.0f, 50.0f );
-        missileLauncher.transform.localEulerAngles = new Vector3( 0.0f, 0.0f, -90.0f );
-
         Utility.FunctionTimer.CreateTimer( 2.0f, FireMissile, "FireMissile", true );
-
-        background = Utility.CreateSprite( "Textures/Backgrounds/Repeated 1", desktop.windowCameraStartPosition + new Vector3( 0.0f, 0.0f, 20.0f ), new Vector3( 1.5f, 1.5f ), Quaternion.identity, "SecondaryCamera" );
     }
 
     void CreateWindow( GameObject shortcut )
@@ -94,8 +87,7 @@ public class Level6_Missile : BaseLevel
     {
         base.OnLevelFinished();
 
-        missileLauncher.Destroy();
-        background.Destroy();
+        level.Destroy();
 
         foreach( var missile in missiles )
             missile.missile.Destroy();
@@ -142,20 +134,22 @@ public class Level6_Missile : BaseLevel
 
     public IEnumerator MoveMissileRoutine( GameObject missile )
     {
+        var paths = level.GetComponentsInChildren<PathCreation.PathCreator>();
+
         switch( levelCounter )
         {
             case 0:
-                yield return Utility.InterpolatePosition( missile.transform, missile.transform.position + new Vector3( moveDist, 0.0f, 0.0f ), moveDist / moveSpeed );
+                yield return Utility.InterpolateAlongPath( missile.transform, paths[0], paths[0].path.length / moveSpeed );
                 break;
             case 1:
-                yield return Utility.InterpolateAlongPath( missile.transform, missileBezierPrefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed2 );
+                yield return Utility.InterpolateAlongPath( missile.transform, paths[0], paths[0].path.length / moveSpeed2 );
                 break;
             case 2:
             {
                 if( fireLeft )
-                    yield return Utility.InterpolateAlongPath( missile.transform, missileBezier2Prefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed2 );
+                    yield return Utility.InterpolateAlongPath( missile.transform, paths[0], paths[0].path.length / moveSpeed2 );
                 else
-                    yield return Utility.InterpolateAlongPath( missile.transform, missileBezier3Prefab.GetComponent<PathCreation.PathCreator>(), moveDist / moveSpeed2 );
+                    yield return Utility.InterpolateAlongPath( missile.transform, paths[1], paths[1].path.length / moveSpeed2 );
                 break;
             }
         }
@@ -189,6 +183,12 @@ public class Level6_Missile : BaseLevel
         {
             if( levelCounter == 2 && prevIndex != newIndex )
                 return;
+
+            var overlaps = Physics2D.OverlapCircleAll( missile.transform.position, explosionRadius );
+
+            foreach( var overlap in overlaps )
+                if( overlap.gameObject != missile && overlap.attachedRigidbody != null )
+                    overlap.attachedRigidbody.AddRelativeForce( ( overlap.transform.position - missile.transform.position ).normalized * explosionStrength );
 
             Utility.FunctionTimer.CreateTimer( 1.0f, () =>
             {
@@ -225,6 +225,11 @@ public class Level6_Missile : BaseLevel
                 break;
             }
         }
+
+        level?.Destroy();
+        level = Instantiate( levelCounter == 0 ? stage1Prefab : levelCounter == 1 ? stage2Prefab : stage3Prefab );
+        level.transform.position = windows.Back().windowCamera.gameObject.transform.position.SetZ( 10.0f );
+        missileLauncher = level.transform.GetChild( 0 ).gameObject;
 
         if( levelCounter > 0 )
             desktop.PlayAudio( stageCompleteAudio );
