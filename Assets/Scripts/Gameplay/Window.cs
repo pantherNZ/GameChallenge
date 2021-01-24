@@ -25,6 +25,7 @@ public class Window : MonoBehaviour
 
         closeButton.onClick.AddListener( () => { desktop.DestroyWindow( this ); } );
         desktopRef = desktop;
+        Update();
     }
 
     private void OnDestroy()

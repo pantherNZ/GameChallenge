@@ -145,8 +145,6 @@ public static partial class Utility
             yield return null;
         }
 
-        //yield return InterpolatePosition( transform, originalPos, 0.1f );
-
         transform.localPosition = originalPos;
     }
 

@@ -81,6 +81,13 @@ public class Level6_Missile : BaseLevel
             if( !found )
                 Explode( missile.missile, false );
         }
+
+        if( level != null )
+        {
+            var width = desktop.MainCamera.pixelWidth / 1400.0f;
+            var height = desktop.MainCamera.pixelHeight / 600.0f;
+            level.transform.localScale = new Vector3( width, height, 1.0f );
+        }
     }
 
     protected override void OnLevelFinished()
@@ -188,9 +195,9 @@ public class Level6_Missile : BaseLevel
 
             foreach( var overlap in overlaps )
                 if( overlap.gameObject != missile && overlap.attachedRigidbody != null )
-                    overlap.attachedRigidbody.AddRelativeForce( ( overlap.transform.position - missile.transform.position ).normalized * explosionStrength );
+                    overlap.attachedRigidbody.AddForce( ( overlap.transform.position - missile.transform.position ).normalized * explosionStrength );
 
-            Utility.FunctionTimer.CreateTimer( 1.0f, () =>
+            Utility.FunctionTimer.CreateTimer( 1.5f, () =>
             {
                 ++levelCounter;
                 SetupLevel();
@@ -228,7 +235,7 @@ public class Level6_Missile : BaseLevel
 
         level?.Destroy();
         level = Instantiate( levelCounter == 0 ? stage1Prefab : levelCounter == 1 ? stage2Prefab : stage3Prefab );
-        level.transform.position = windows.Back().windowCamera.gameObject.transform.position.SetZ( 10.0f );
+        level.transform.position = desktop.windowCameraStartPosition.SetZ( 10.0f );
         missileLauncher = level.transform.GetChild( 0 ).gameObject;
 
         if( levelCounter > 0 )
