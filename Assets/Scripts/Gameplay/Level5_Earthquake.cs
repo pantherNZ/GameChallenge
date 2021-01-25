@@ -6,7 +6,7 @@ using UnityEngine;
 public class Level5_Earthquake : BaseLevel
 {
     // Static data
-    [SerializeField] AudioClip quake = null;
+    [SerializeField] AudioClip quakeAudio = null;
     [SerializeField] List<DesktopIcon> data = new List<DesktopIcon>();
     [SerializeField] int numIconsEasy = 5;
     [SerializeField] int numIconsHard = 12;
@@ -29,7 +29,7 @@ public class Level5_Earthquake : BaseLevel
 
     public override void OnStartLevel()
     {
-        desktop.GetComponent<AudioSource>().PlayOneShot( quake );
+        desktop.PlayAudio( quakeAudio );
         float timer = 1.0f;
         Utility.FunctionTimer.CreateTimer( timer, () => this.ShakeTarget( desktop.GetBackground().transform, 2.0f, 18.0f, 3.0f, 30.0f, 2.0f ) ); timer += 0.5f;
         Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f ); timer += 0.1f;

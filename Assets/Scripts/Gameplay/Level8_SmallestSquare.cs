@@ -6,13 +6,22 @@ public class Level8_SmallestSquare : BaseLevel
 {
     [SerializeField] GameObject squarePrefab = null;
     [SerializeField] int count = 8;
+    [SerializeField] int stages = 3;
     [SerializeField] AudioClip selectAudio = null;
     List<GameObject> squares = new List<GameObject>();
 
+    int stage = 1;
     GameObject smallest;
 
     public override void OnStartLevel()
     {
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_8_1" );
+        Setup();
+    }
+
+    private void Setup()
+    {
+        squares.DestroyAll();
         float smallestScale = float.MaxValue;
 
         for( int i = 0; i < count; ++i )
@@ -29,7 +38,12 @@ public class Level8_SmallestSquare : BaseLevel
             squares.Add( Instantiate( squarePrefab, position.ToVector3( 10.0f ), Quaternion.identity ) );
             bool isSquare = i == 0 || Random.Range( 0, 2 ) == 0;
             var xScale = Random.Range( 0.5f, 3.0f );
-            squares.Back().transform.localScale = new Vector3( xScale, isSquare ? xScale : Random.Range( 0.5f, 3.0f ), 1.0f );
+            float yScale = xScale;
+
+            while( !isSquare && Mathf.Abs( yScale - xScale ) <= 0.1f )
+                yScale = Random.Range( 0.5f, 3.0f );
+
+            squares.Back().transform.localScale = new Vector3( xScale, yScale, 1.0f );
 
             if( isSquare && xScale < smallestScale )
             {
@@ -38,7 +52,7 @@ public class Level8_SmallestSquare : BaseLevel
             }
         }
 
-        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_8_1" );
+        
         //smallest.GetComponent<SpriteRenderer>().color = Color.red;
     }
 
@@ -64,11 +78,20 @@ public class Level8_SmallestSquare : BaseLevel
             {
                 squares.Remove( hit.collider.gameObject );
                 hit.collider.gameObject.Destroy();
-                desktop.PlayAudio( selectAudio );
 
                 if( hit.collider.gameObject == smallest )
                 {
-                    LevelFinished();
+                    desktop.PlayAudio( selectAudio );
+
+                    if( stage < stages )
+                    {
+                        stage++;
+                        Setup();
+                    }
+                    else
+                    {
+                        LevelFinished();
+                    }
                 }
                 else
                 {

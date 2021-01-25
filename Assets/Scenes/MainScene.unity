@@ -1822,7 +1822,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 9
+  startingLevelId: 14
   DesktopCanvas: {fileID: 610674837}
   loginUI: {fileID: 1897650524}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
@@ -1972,7 +1972,7 @@ MonoBehaviour:
   ballHeight: 4.5
   ballScale: 2.5
   ballFrequency: 1.5
-  bounceAudio: {fileID: 8300000, guid: 7f35b857d3cf7084887b39162f1880f9, type: 3}
+  bounceAudio: {fileID: 8300000, guid: bbe68ccd73f6b6d479adf470817bc687, type: 3}
   inGoalAudio: {fileID: 8300000, guid: 6231cf760e0d25f4191975747c61b058, type: 3}
 --- !u!114 &203328302
 MonoBehaviour:
@@ -2022,11 +2022,11 @@ MonoBehaviour:
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Earthquake
   spoilerTextGameString: Spoiler_Level5
-  levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
+  levelCompleteAudio: {fileID: 8300000, guid: 4bc371e846260504fbb69a7204afe1a3, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
   nextLevel: {fileID: 0}
-  quake: {fileID: 8300000, guid: fe27c7acdf4c5594a860f0d48fc4cdef, type: 3}
+  quakeAudio: {fileID: 8300000, guid: fe27c7acdf4c5594a860f0d48fc4cdef, type: 3}
   data:
   - name: Backup Generator
     icon: {fileID: 2800000, guid: 1180fb63eba6e8c4ab89148f6558ecea, type: 3}
@@ -2277,6 +2277,7 @@ MonoBehaviour:
   squarePrefab: {fileID: 6432754147987560635, guid: 884ef377b4702e64694e32fe1e8da136,
     type: 3}
   count: 8
+  stages: 3
   selectAudio: {fileID: 8300000, guid: db122cfda15df0f47a9056df6dfd4169, type: 3}
 --- !u!114 &203328309
 MonoBehaviour:
@@ -2321,7 +2322,7 @@ MonoBehaviour:
   passCodeUI: {fileID: 2133047563}
   canvas: {fileID: 2133047564}
   passCodeText: {fileID: 2133047561}
-  incorrectPasswordAudio: {fileID: 8300000, guid: 1fb74ac7a2afd40418bdaffc0d254200,
+  incorrectPasswordAudio: {fileID: 8300000, guid: 8dea60d3f7e8e0642ae0929f0e3a9cd4,
     type: 3}
 --- !u!114 &203328311
 MonoBehaviour:
@@ -2348,7 +2349,7 @@ MonoBehaviour:
   numWindowsHard: 12
   speedIntervalEasy:
     First: 4
-    Second: 8
+    Second: 7
   speedIntervalHard:
     First: 2
     Second: 4
@@ -2357,7 +2358,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: aec240eba9084804b9ab07c19b509dc4, type: 3}
   - {fileID: 8300000, guid: c3d04d2ef696dd9479bc09d9de9f3e4c, type: 3}
   - {fileID: 8300000, guid: 6b76dfdd00fa88c4ca61d7977923e7fb, type: 3}
-  completeWindowAudio: {fileID: 8300000, guid: 57957de0ec1f4704e932936858303e8c, type: 3}
+  completeWindowAudio: {fileID: 8300000, guid: 334c02fa2d8e7cc419d4af4425f206d2, type: 3}
 --- !u!114 &203328312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2404,6 +2405,7 @@ MonoBehaviour:
   - {fileID: 2460911298213897348, guid: cf1b29a08f0ab5845a74116b9b4386d2, type: 3}
   - {fileID: -3609754129978504188, guid: 82a98a00ed83ad14abf15d27466d13f5, type: 3}
   stageCompleteAudio: {fileID: 8300000, guid: ed83210fe3d52c64c8c9666efa148946, type: 3}
+  badPasswordAudio: {fileID: 8300000, guid: 8dea60d3f7e8e0642ae0929f0e3a9cd4, type: 3}
   buttonConnections:
   - connections:
     - {fileID: 40471631}
@@ -10773,7 +10775,7 @@ MonoBehaviour:
   loginDisplay: {fileID: 1127619246}
   incorrectPasswordDisplay: {fileID: 1841373566}
   incorrectPasswordButton: {fileID: 68581673}
-  incorrectPasswordAudio: {fileID: 8300000, guid: 55f6074681bb57e4ea322b76ed1a9864,
+  incorrectPasswordAudio: {fileID: 8300000, guid: 8dea60d3f7e8e0642ae0929f0e3a9cd4,
     type: 3}
 --- !u!225 &1897650525
 CanvasGroup:

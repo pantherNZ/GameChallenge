@@ -20,6 +20,7 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] Sprite[] stage2UI = new Sprite[3];
     [SerializeField] Sprite[] stage3UI = new Sprite[3];
     [SerializeField] AudioClip stageCompleteAudio = null;
+    [SerializeField] AudioClip badPasswordAudio = null;
 
     [Serializable]
     public class Connections
@@ -184,18 +185,26 @@ public class Level12_Bomb : BaseLevel
 
     private void IncrementStage()
     {
+        if( subLevelStage > SubLevelStage.Intro )
+            desktop.PlayAudio( stageCompleteAudio );
+
         subLevelStage++;
 
         if( subLevelStage == SubLevelStage.Finished )
         {
             //SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Finish" );
-            Utility.FunctionTimer.CreateTimer( 3.0f, desktop.FinishGame );
-            window.GetComponent<CanvasGroup>().SetVisibility( false );
-            hackingCanvas.SetVisibility( false );
+            Utility.FunctionTimer.CreateTimer( 1.5f, () =>
+            {
+                desktop.FinishGame();
+                window.GetComponent<CanvasGroup>().SetVisibility( false );
+                hackingCanvas.SetVisibility( false );
+            } );
+
+            Utility.FunctionTimer.CreateTimer( 3.5f, desktop.FinishGame );
+
             return;
         }
 
-        desktop.PlayAudio( stageCompleteAudio );
         hackingCanvas.SetVisibility( false );
         var stageUI = stageTextures[( int )subLevelStage] == 1 ? stage1UI : stageTextures[( int )subLevelStage] == 2 ? stage2UI : stage3UI;
         mainImage.sprite = stageUI[0];
@@ -353,12 +362,18 @@ public class Level12_Bomb : BaseLevel
                 {
                     if( passwordInput.text == "Alex" )
                     {
+                        ModifyButtonState( () =>
+                        {
+                            foreach( var b in buttons )
+                                b.isOn = true;
+                        } );
+
                         IncrementStage();
                     }
                     else
                     {
                         passwordInput.text = string.Empty;
-                        // Play fail audio
+                        desktop.PlayAudio( badPasswordAudio );
                     }
                 } );
 
