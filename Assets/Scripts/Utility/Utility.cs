@@ -74,6 +74,11 @@ public static partial class Utility
     public static float DistanceSq( Transform a, Transform b ) { return DistanceSq( a.position, b.position ); }
     public static float DistanceSq( Vector3 a, Vector3 b ) { return ( a - b ).sqrMagnitude; }
 
+    public static Sprite CreateSprite( Texture2D texture )
+    {
+        return Sprite.Create( texture, new Rect( 0.0f, 0.0f, texture.width, texture.height ), new Vector2( 0.5f, 0.5f ) );
+    }
+
     public static Color GetRainbowColour( float value )
     {
         float inc = 6.0f;

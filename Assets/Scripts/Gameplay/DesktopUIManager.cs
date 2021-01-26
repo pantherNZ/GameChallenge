@@ -11,7 +11,7 @@ using System;
 public class DesktopIcon
 {
     public string name;
-    public Texture2D icon;
+    public Sprite icon;
 }
 
 public class DesktopUIManager : BaseLevel, Game.ISavableObject
@@ -94,6 +94,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [Header("Audio")]
     [SerializeField] AudioClip difficultySelectionAudio = null;
     [SerializeField] List<AudioClip> recycleAudio = new List<AudioClip>();
+    [SerializeField] AudioClip gameLostAudio = null;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -128,7 +129,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         updateTimeLeftSec = timeUntilUpdateSec;
         updateProgressBar = updateTimerCanvas.GetComponentInChildren<UIProgressBar>();
 
-        CreateShortcut( new DesktopIcon() { name = "Recycle Bin", icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" ) }, new Vector2Int() );
+        CreateShortcut( new DesktopIcon() { name = "Recycle Bin", icon = Utility.CreateSprite( Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" ) ) }, new Vector2Int() );
 
         for( int i = 0; i < levels.Count; ++i )
         {
@@ -287,12 +288,21 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public void GameOver()
     {
+        // Already won? bail
+        if( gameCompleteCamera.gameObject.activeSelf )
+            return;
+
         blueScreenCamera.gameObject.SetActive( true );
         MainCamera.gameObject.SetActive( false );
+        PlayAudio( gameLostAudio );
     }
 
     public void FinishGame()
     {
+        // Already lost? bail
+        if( blueScreenCamera.gameObject.activeSelf )
+            return;
+
         gameCompleteCamera.gameObject.SetActive( true );
         MainCamera.gameObject.SetActive( false );
     }
@@ -394,7 +404,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         ( newShortcut.transform as RectTransform ).localPosition = position - new Vector2( 0.0f, gridSize.y / 2.0f );
         ( newShortcut.transform as RectTransform ).pivot = new Vector2( 0.5f, 0.5f );
         newShortcut.GetComponentInChildren<Text>().text = icon.name;
-        newShortcut.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon.icon, new Rect( 0.0f, 0.0f, icon.icon.width, icon.icon.height ), new Vector2( 0.5f, 0.5f ) );
+        newShortcut.GetComponentsInChildren<Image>()[1].sprite = icon.icon;
         newShortcut.name = icon.name;
 
         newShortcut.AddComponent<EventDispatcher>().OnDoubleClickEvent += ( x ) =>
@@ -696,7 +706,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
             var entry = Instantiate( startMenuEntryPrefab, startMenuList.transform );
             entry.GetComponentInChildren<Text>().text = levels[i].startMenuEntryText;
-            entry.GetComponentsInChildren<Image>()[1].sprite = Sprite.Create( icon, new Rect( 0.0f, 0.0f, icon.width, icon.height ), new Vector2( 0.5f, 0.5f ) );
+            entry.GetComponentsInChildren<Image>()[1].sprite = icon;
         }
     }
 
@@ -747,6 +757,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
             yield return new WaitForSeconds( 1.0f );
         }
+
+        GameOver();
     }
 
     public IEnumerator RunTimerFlash( int numFlashes, float flashInterval )

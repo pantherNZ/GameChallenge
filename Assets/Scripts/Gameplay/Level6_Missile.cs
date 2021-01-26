@@ -23,6 +23,7 @@ public class Level6_Missile : BaseLevel
     [SerializeField] AudioClip stageCompleteAudio = null;
     List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher, level;
+    List<GameObject> paths;
 
     class Missile
     {
@@ -45,7 +46,7 @@ public class Level6_Missile : BaseLevel
         var icon = new DesktopIcon()
         {
             name = "Missiles",
-            icon = Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" )
+            icon = startMenuEntryIcon
         };
 
         levelCounter = 0;
@@ -63,7 +64,7 @@ public class Level6_Missile : BaseLevel
             return;
 
         windows.Add( desktop.CreateWindow( "Missiles", false, nextWindowStartPos ).GetComponent<Window>() );
-        nextWindowStartPos += new Vector2( 0.3f, nextWindowStartPos.y > -2.0f ? -0.3f : 0.0f );
+        nextWindowStartPos += new Vector2( 30.0f, nextWindowStartPos.y > -desktop.MainCamera.pixelHeight / 2.0f + 250.0f ? -30.0f : 0.0f );
     }
 
     protected override void OnLevelUpdate()
@@ -79,7 +80,10 @@ public class Level6_Missile : BaseLevel
             } );
 
             if( !found )
+            {
                 Explode( missile.missile, false );
+                break;
+            }
         }
 
         if( level != null )
@@ -87,6 +91,9 @@ public class Level6_Missile : BaseLevel
             var width = desktop.MainCamera.pixelWidth / 1400.0f;
             var height = desktop.MainCamera.pixelHeight / 600.0f;
             level.transform.localScale = new Vector3( width, height, 1.0f );
+
+            foreach( var path in paths )
+                path.gameObject.transform.localScale = new Vector3( 1.0f / width, 1.0f / height, 1.0f );
         }
     }
 
@@ -112,8 +119,17 @@ public class Level6_Missile : BaseLevel
 
     void FireMissile()
     {
+        var found = windows.Any( window =>
+        {
+            var rect = window.GetCameraViewWorldRect();
+            return rect.Contains( missileLauncher.transform.position );
+        } );
+
+        if( !found )
+            return;
+
         missileLauncher.GetComponent<Animator>().Play( "Fire" );
-        desktop.PlayAudio( fireAudio );
+        desktop.PlayAudio( fireAudio, 0.4f );
 
         Utility.FunctionTimer.CreateTimer( 0.5f, () =>
         {
@@ -171,23 +187,23 @@ public class Level6_Missile : BaseLevel
 
         missile.GetComponent<Animator>().Play( "Explode" );
         desktop.PlayAudio( explodeAudio );
-        StopCoroutine( missiles.Find( x => x.missile == missile ).movement );
+        var found = missiles.Find( x => x.missile == missile );
+        StopCoroutine( found.movement );
 
         Utility.FunctionTimer.CreateTimer( 1.0f, () =>
         {
             if( missile != null )
-            {
-                missiles.RemoveAll( x => x.missile == missile );
                 missile.Destroy();
-            }
         } );
 
-        var newIndex = missiles.Find( x => x.missile == missile ).index;
-        var prevIndex = lastHitIndex;
-        lastHitIndex = newIndex;
+           var newIndex = found.index;
+        missiles.Remove( found );
 
         if( reached_end )
         {
+            var prevIndex = lastHitIndex;
+            lastHitIndex = newIndex;
+
             if( levelCounter == 2 && prevIndex != newIndex )
                 return;
 
@@ -237,6 +253,7 @@ public class Level6_Missile : BaseLevel
         level = Instantiate( levelCounter == 0 ? stage1Prefab : levelCounter == 1 ? stage2Prefab : stage3Prefab );
         level.transform.position = desktop.windowCameraStartPosition.SetZ( 10.0f );
         missileLauncher = level.transform.GetChild( 0 ).gameObject;
+        paths = level.GetComponentsInChildren<PathCreation.PathCreator>().Select( x => x.gameObject ).ToList();
 
         if( levelCounter > 0 )
             desktop.PlayAudio( stageCompleteAudio );

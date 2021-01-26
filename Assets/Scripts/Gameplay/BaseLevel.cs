@@ -2,7 +2,7 @@
 
 abstract public class BaseLevel : MonoBehaviour
 {
-    public Texture2D startMenuEntryIcon;
+    public Sprite startMenuEntryIcon;
     public string startMenuEntryText;
     public string spoilerTextGameString;
     [SerializeField] AudioClip levelCompleteAudio = null;
