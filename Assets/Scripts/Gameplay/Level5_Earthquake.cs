@@ -46,6 +46,8 @@ public class Level5_Earthquake : BaseLevel
             desktop.contextMenuEnabled = false;
             darkness = Instantiate( darknessPrefab );
             darknessMesh = darkness.GetComponent<MeshRenderer>();
+            var desktopBound = desktop.GetWorldBound( 0.0f, true );
+            darkness.transform.localScale = new Vector3( desktopBound.width, desktopBound.height, 1.0f );
             darknessMesh.material.SetFloat( "aspectRatio", darkness.transform.localScale.x / darkness.transform.localScale.y );
         } );
 
