@@ -97,10 +97,8 @@ public class Level6_Missile : BaseLevel
         }
     }
 
-    protected override void OnLevelFinished()
+    protected override void Cleanup()
     {
-        base.OnLevelFinished();
-
         level.Destroy();
 
         foreach( var missile in missiles )
@@ -114,7 +112,6 @@ public class Level6_Missile : BaseLevel
 
         Utility.FunctionTimer.StopTimer( "FireMissile" );
         Utility.FunctionTimer.StopTimer( "FireMissile2" );
-        Utility.FunctionTimer.CreateTimer( 1.0f, StartNextLevel );
     }
 
     void FireMissile()
@@ -243,7 +240,7 @@ public class Level6_Missile : BaseLevel
                 break;
             case 3:
             {
-                LevelFinished();
+                LevelFinished( 1.0f );
                 SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_Complete" );
                 break;
             }

@@ -71,7 +71,6 @@ public class Level12_Bomb : BaseLevel
         window.GetComponent<CanvasGroup>().SetVisibility( false );
         //timeLeftSec = maxTimeSec;
         //timerText.text = TimeSpan.FromSeconds( timeLeftSec ).ToString( @"mm\:ss" );
-        hackingCanvas.SetVisibility( false );
 
         lightSequence = new List<int>();
 
@@ -83,9 +82,13 @@ public class Level12_Bomb : BaseLevel
 
     public override void OnStartLevel()
     {
+        hackingCanvas.SetVisibility( false );
         window.GetComponent<CanvasGroup>().SetVisibility( true );
         ( window.transform as RectTransform ).anchoredPosition = desktop.DesktopCanvas.anchoredPosition;
         progressBar = window.GetComponentInChildren<UIProgressBar>();
+        subLevelStage = SubLevelStage.Intro;
+        counter = lightIndex = 0;
+        progressDirection = true;
         IncrementStage();
         UpdateText();
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Start" );
@@ -395,8 +398,10 @@ public class Level12_Bomb : BaseLevel
         buttonMashText.text = DataManager.Instance.GetGameStringFormatted( "Level12_Mash_Text", new object[] { counter, total } );
     }
 
-    protected override void OnLevelFinished()
+    protected override void Cleanup()
     {
         window.GetComponent<CanvasGroup>().SetVisibility( false );
+        hackingCanvas.SetVisibility( false );
+        passwordInput.text = string.Empty;
     }
 }

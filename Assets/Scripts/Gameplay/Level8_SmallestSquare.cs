@@ -8,8 +8,8 @@ public class Level8_SmallestSquare : BaseLevel
     [SerializeField] int count = 8;
     [SerializeField] int stages = 3;
     [SerializeField] AudioClip selectAudio = null;
-    List<GameObject> squares = new List<GameObject>();
 
+    List<GameObject> squares = new List<GameObject>();
     int stage = 1;
     GameObject smallest;
 
@@ -56,11 +56,18 @@ public class Level8_SmallestSquare : BaseLevel
         //smallest.GetComponent<SpriteRenderer>().color = Color.red;
     }
 
+    protected override void Cleanup()
+    {
+        base.Cleanup();
+
+        squares.DestroyAll();
+        stage = 1;
+    }
+
     protected override void OnLevelFinished()
     {
         base.OnLevelFinished();
 
-        squares.DestroyAll();
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_8_Complete" );
         Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
     }

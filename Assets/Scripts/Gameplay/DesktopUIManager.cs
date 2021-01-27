@@ -122,7 +122,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
 
         MainCamera = Camera.main;
-        MainCamera.GetComponent<AudioListener>().enabled = enabledAudio;
+        SetAudoEnabled( enabledAudio );
         contextMenu.GetComponent<BoxCollider2D>().enabled = false;
 
         updateTimerCanvas.SetVisibility( false );
@@ -258,7 +258,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         Application.Quit();
     }
 
-    public void LevelFailed( BaseLevel level )
+    public void LevelFailed()
     {
         lives--;
 
@@ -280,7 +280,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             } );
             Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime + levelFailFadeInTime, () =>
             {
-                level.StartLevel();
+                RestartLevel();
                 DestroyWindow( window );
             } );
         }
@@ -310,6 +310,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void RestartGame()
     {
         this.FadeToBlack( restartGameFadeOutTime );
+        levels[currentLevel].Clear();
 
         Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime, () =>
         {
@@ -695,6 +696,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             helpWindowSpoilerText.text = DataManager.Instance.GetGameString( levels[currentLevel].spoilerTextGameString );
 
         helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
+
+        for( int i = 0; i < startMenuList.transform.childCount; ++i )
+            startMenuList.transform.GetChild( i ).gameObject.Destroy();
+
         startMenuList.transform.DetachChildren();
 
         for( int i = 0; i <= Mathf.Max( startingLevelId, currentLevel ); ++i )
@@ -768,5 +773,35 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             yield return Utility.FadeToColour( updateTimerCanvas.GetComponentInChildren<Text>(), Color.red, flashInterval / 2.0f );
             yield return Utility.FadeToColour( updateTimerCanvas.GetComponentInChildren<Text>(), Color.white, flashInterval / 2.0f );
         }
+    }
+
+    public void SetAudioVolume( float scale )
+    {
+        AudioListener.volume = scale;
+    }
+
+    public void SetAudioVolume( Slider slider )
+    {
+        SetAudioVolume( slider.value );
+    }
+
+    public void SetAudoEnabled( bool enabled )
+    {
+        MainCamera.GetComponent<AudioListener>().enabled = enabled;
+    }
+
+    public void SetAudoEnabled( Toggle toggle )
+    {
+        SetAudoEnabled( toggle.isOn );
+    }
+
+    public void RestartLevel()
+    {
+        levels[currentLevel].Restart();
+    }
+
+    public void DeleteSave()
+    {
+        Game.SaveGameSystem.DeleteSave( "UGC" );
     }
 }

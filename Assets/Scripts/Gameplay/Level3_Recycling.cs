@@ -55,14 +55,7 @@ public class Level3_Recycling : BaseLevel
         var timer = Utility.FunctionTimer.CreateTimer( desktop.IsEasyMode() ? rounds[roundNumber].timerEasySec : rounds[roundNumber].timerHardSec, () =>
         {
             SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_3_Failed" );
-
-            for( int i = shortcuts.Count - 1; i < 0; --i )
-                desktop.RemoveShortcut( shortcuts[i] );
-
-            shortcuts.Clear();
-            enabled = false;
-
-            desktop.LevelFailed( this );
+            desktop.LevelFailed();
         }, "Level_3" );
 
         SubtitlesManager.Instance.AssignTimer( timer );
@@ -74,10 +67,19 @@ public class Level3_Recycling : BaseLevel
 
         if( desktop != null && shortcuts.Count == 0 )
         {
-            enabled = false;
-            Utility.FunctionTimer.StopTimer( "Level_3" );
             SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_3_Complete" );
             LevelFinished( 3.0f );
         }
+    }
+
+    protected override void Cleanup()
+    {
+        for( int i = shortcuts.Count - 1; i < 0; --i )
+            desktop.RemoveShortcut( shortcuts[i] );
+
+        shortcuts.Clear();
+        enabled = false;
+        Utility.FunctionTimer.StopTimer( "Level_3" );
+        GetComponent<CanvasGroup>().SetVisibility( false );
     }
 }

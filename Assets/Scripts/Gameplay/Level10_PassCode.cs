@@ -32,10 +32,11 @@ public class Level10_PassCode : BaseLevel
 
     }
 
-    protected override void OnLevelFinished()
+    protected override void Cleanup()
     {
-        passCodeUI.Destroy();
-        StartNextLevel();
+        canvas.SetVisibility( false );
+        passCodeText.text = string.Empty;
+        subtitleIndex = 0;
     }
 
     void PlaySubtitle()
@@ -56,7 +57,7 @@ public class Level10_PassCode : BaseLevel
             {
                 canvas.SetVisibility( false );
                 Utility.FunctionTimer.StopTimer( "PlaySubtitle" );
-                Utility.FunctionTimer.CreateTimer( 1.0f, () => LevelFinished() );
+                Utility.FunctionTimer.CreateTimer( 1.0f, StartNextLevel );
             }
             else
             {

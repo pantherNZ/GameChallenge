@@ -111,6 +111,17 @@ namespace Game
             return true;
         }
 
+        public static bool DeleteSave( string name )
+        {
+            string fullPath = ConvertSaveNameToPath( name );
+
+            if( !File.Exists( fullPath ) )
+                return false;
+
+            File.Delete( fullPath );
+            return true;
+        }
+
         public static void AddSaveableObject( ISavableObject obj )
         {
             subscribers.Add( obj );

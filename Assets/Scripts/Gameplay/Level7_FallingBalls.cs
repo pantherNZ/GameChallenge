@@ -108,9 +108,9 @@ public class Level7_FallingBalls : BaseLevel
         }
     }
 
-    protected override void OnLevelFinished()
+    protected override void Cleanup()
     {
-        base.OnLevelFinished();
+        base.Cleanup();
 
         Utility.FunctionTimer.StopTimer( "CreateBall" );
 

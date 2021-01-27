@@ -45,7 +45,7 @@ public class Level4_TargetPractice : BaseLevel
         // Failed
         if( fails >= maxFails )
         {
-            desktop.LevelFailed( this );
+            desktop.LevelFailed();
         }
         // Success
         else if( targetsCount >= targetsMax && targets.IsEmpty() )
@@ -58,16 +58,19 @@ public class Level4_TargetPractice : BaseLevel
             return;
         }
 
+        LevelFinished( 0.0f, false );
+    }
+
+    protected override void Cleanup()
+    {
         bullets.DestroyAll();
         targets.DestroyAll();
         countdownSprite?.Destroy();
         gun?.Destroy();
         crosshair?.Destroy();
-
+        targetsCount = countdown = fails = 0;
         Utility.FunctionTimer.StopTimer( "CountDown" );
         Utility.FunctionTimer.StopTimer( "SpawnTarget" );
-
-        LevelFinished( 0.0f, false );
     }
 
     private void CountDown()
@@ -95,7 +98,7 @@ public class Level4_TargetPractice : BaseLevel
         Vector3 rotatedVectorToTarget = Quaternion.Euler( 0, 0, 90 ) * direction.RotateZ( -90.0f );
         gun.transform.rotation = Quaternion.LookRotation( Vector3.forward, rotatedVectorToTarget );
         
-        if( Input.GetMouseButtonDown( 0 ) )
+        if( Input.GetMouseButtonDown( 0 ) && !desktop.contextMenuEnabled )
         {
             var barrelEnd = gun.transform.GetChild( 0 ).transform.position;
             direction = mousePos - barrelEnd;
@@ -125,7 +128,7 @@ public class Level4_TargetPractice : BaseLevel
 
     private float GetSpawnTime()
     {
-        return targetSpawnRateBaseSec + UnityEngine.Random.Range( 0.0f, targetSpawnRateVarianceSec );
+        return targetSpawnRateBaseSec + Random.Range( 0.0f, targetSpawnRateVarianceSec );
     }
 
     private void SpawnTarget()

@@ -53,6 +53,7 @@ abstract public class BaseLevel : MonoBehaviour
         desktop.LevelFinished( levelIdx );
 
         levelActive = false;
+        Cleanup();
         OnLevelFinished();
 
         if( startNextLevelDelay > 0.0f )
@@ -64,6 +65,20 @@ abstract public class BaseLevel : MonoBehaviour
         return levelStarted;
     }
 
+    public void Clear()
+    {
+        Cleanup();
+        levelActive = false;
+        levelStarted = false;
+    }
+
+    public void Restart()
+    {
+        Cleanup();
+        levelStarted = false;
+        StartLevel();
+    }
+
     private void Update()
     {
         if( levelStarted && levelActive )
@@ -72,6 +87,7 @@ abstract public class BaseLevel : MonoBehaviour
 
     abstract public void OnStartLevel();
     virtual protected void OnLevelUpdate() { }
+    virtual protected void Cleanup() { }
     virtual protected void OnLevelFinished() { }
 }
 

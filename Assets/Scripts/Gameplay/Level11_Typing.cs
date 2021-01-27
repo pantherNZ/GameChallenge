@@ -146,7 +146,7 @@ public class Level11_Typing : BaseLevel
         window.text.text = text;
     }
 
-    protected override void OnLevelFinished()
+    protected override void Cleanup()
     {
         foreach( var window in windows )
             window.obj.Destroy();

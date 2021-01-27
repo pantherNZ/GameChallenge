@@ -22,11 +22,13 @@ public class Level1_BouncingBall : BaseLevel
 
     public override void OnStartLevel()
     {
+        complete = new bool[3];
         GetComponent<CanvasGroup>().SetVisibility( true );
 
         SubtitlesManager.Instance.QueueSubtitleGameString( 5.0f, "Narrator_Level_1_1" );
 
-        var window = desktop.CreateWindow( "Bouncy Balls" ).GetComponent<Window>();
+        objects.DestroyAll();
+        var window = desktop.CreateWindow( "Bouncy Balls", true ).GetComponent<Window>();
 
         var newPlatform = Instantiate( platform, window.windowCamera.gameObject.transform );
         newPlatform.transform.localPosition = new Vector3( 0.0f, platformHeight, 50.0f );
@@ -74,6 +76,13 @@ public class Level1_BouncingBall : BaseLevel
         }
     }
 
+    protected override void Cleanup()
+    {
+        Utility.FunctionTimer.StopTimer( "CreateBall" );
+        Utility.FunctionTimer.StopTimer( "Narrator_Level_1_2" );
+        Utility.FunctionTimer.StopTimer( "Narrator_Level_1_1" );
+    }
+
     private void CheckComplete()
     {
         if( complete[0] || complete[1] )
@@ -83,11 +92,7 @@ public class Level1_BouncingBall : BaseLevel
         {
             complete[2] = true;
             SubtitlesManager.Instance.AddSubtitleGameString("Narrator_Level_1_Complete" );
-            Utility.FunctionTimer.StopTimer( "CreateBall" );
-            Utility.FunctionTimer.StopTimer( "Narrator_Level_1_2" );
-            Utility.FunctionTimer.StopTimer( "Narrator_Level_1_1" );
-
-            Utility.FunctionTimer.CreateTimer( 2.0f, () => LevelFinished( 4.0f ) );
+            LevelFinished( 4.0f );
 
             Utility.FunctionTimer.CreateTimer( 2.0f, () =>
             {

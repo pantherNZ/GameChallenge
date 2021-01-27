@@ -74,10 +74,13 @@ public class Level2_BridgeBall : BaseLevel
 
         Utility.FunctionTimer.CreateTimer( 3.0f, () =>
         {
-            levelObj.Destroy();
-            objects.DestroyAll();
-
             LevelFinished( 2.0f );
         } );
+    }
+
+    protected override void Cleanup()
+    {
+        levelObj.Destroy();
+        objects.DestroyAll();
     }
 }
