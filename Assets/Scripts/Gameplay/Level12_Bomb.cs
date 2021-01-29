@@ -398,7 +398,7 @@ public class Level12_Bomb : BaseLevel
         buttonMashText.text = DataManager.Instance.GetGameStringFormatted( "Level12_Mash_Text", new object[] { counter, total } );
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
         window.GetComponent<CanvasGroup>().SetVisibility( false );
         hackingCanvas.SetVisibility( false );

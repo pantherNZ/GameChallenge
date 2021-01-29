@@ -97,7 +97,7 @@ public class Level6_Missile : BaseLevel
         }
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
         level.Destroy();
 

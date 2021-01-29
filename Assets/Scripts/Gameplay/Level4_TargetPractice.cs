@@ -61,7 +61,7 @@ public class Level4_TargetPractice : BaseLevel
         LevelFinished( 0.0f, false );
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
         bullets.DestroyAll();
         targets.DestroyAll();

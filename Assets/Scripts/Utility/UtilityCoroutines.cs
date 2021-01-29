@@ -13,6 +13,8 @@ public static partial class Utility
             group.alpha = Mathf.Max( 0.0f, group.alpha - Time.deltaTime * ( 1.0f / fadeDurationSec ) );
             yield return null;
         }
+
+        group.SetVisibility( false );
     }
 
     public static void FadeToBlack( this MonoBehaviour mono, float fadeDurationSec )
@@ -27,6 +29,8 @@ public static partial class Utility
             group.alpha = Mathf.Min( 1.0f, group.alpha + Time.deltaTime * ( 1.0f / fadeDurationSec ) );
             yield return null;
         }
+
+        group.SetVisibility( true );
     }
 
     public static void FadeFromBlack( this MonoBehaviour mono, float fadeDurationSec )

@@ -27,7 +27,7 @@ public class Level2_BridgeBall : BaseLevel
         levelObj = Instantiate( levelPrefab, new Vector3( 0.0f, 0.0f, 5.0f ), Quaternion.identity );
 
         var goal = levelObj.transform.GetChild( levelObj.transform.childCount - 1 );
-        goal.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { timer = Utility.FunctionTimer.CreateTimer( 1.0f, CheckComplete ); };
+        goal.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { desktop.PlayAudio( inGoalAudio ); timer = Utility.FunctionTimer.CreateTimer( 1.0f, CheckComplete ); };
         goal.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { timer.StopTimer(); };
 
         if( desktop.IsEasyMode() )
@@ -70,7 +70,6 @@ public class Level2_BridgeBall : BaseLevel
     {
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_2_Complete" );
         Utility.FunctionTimer.StopTimer( "CreateBall" );
-        desktop.PlayAudio( inGoalAudio );
 
         Utility.FunctionTimer.CreateTimer( 3.0f, () =>
         {
@@ -78,9 +77,10 @@ public class Level2_BridgeBall : BaseLevel
         } );
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
         levelObj.Destroy();
         objects.DestroyAll();
+        Utility.FunctionTimer.StopTimer( "CreateBall" );
     }
 }

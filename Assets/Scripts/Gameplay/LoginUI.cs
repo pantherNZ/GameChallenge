@@ -9,6 +9,7 @@ public class LoginUI : BaseLevel
     [SerializeField] CanvasGroup incorrectPasswordDisplay = null;
     [SerializeField] Button incorrectPasswordButton = null;
     [SerializeField] AudioClip incorrectPasswordAudio = null;
+    [SerializeField] float fadeInTime = 1.5f;
     readonly string password = "simple";
 
     private void Start()
@@ -17,6 +18,8 @@ public class LoginUI : BaseLevel
 
         loginButton.onClick.AddListener( () =>
         {
+            passworldInput.text = string.Empty;
+
             if( passworldInput.text.Length > 0 && passworldInput.text == password )
             {
                 GetComponent<CanvasGroup>().ToggleVisibility();
@@ -31,7 +34,6 @@ public class LoginUI : BaseLevel
             {
                 loginDisplay.ToggleVisibility();
                 incorrectPasswordDisplay.ToggleVisibility();
-                passworldInput.text = string.Empty;
                 desktop.PlayAudio( incorrectPasswordAudio );
             }
         } );
@@ -56,7 +58,7 @@ public class LoginUI : BaseLevel
     public override void OnStartLevel()
     {
         desktop.GetComponent<CanvasGroup>().SetVisibility( false );
-        GetComponent<CanvasGroup>().SetVisibility( true );
+        this.FadeFromBlack( fadeInTime );
         Utility.FunctionTimer.CreateTimer( 1.0f, () => SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_0_1" ) );
         Utility.FunctionTimer.CreateTimer( 20.0f, () => SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_0_2" ), "2nd_prompt" );
         Utility.FunctionTimer.CreateTimer( 35.0f, () =>

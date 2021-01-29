@@ -62,9 +62,21 @@
       }
     },
     {
-      "Key": "Narrator_Level_3_1",
+      "Key": "Narrator_Level_3_1_hard",
       "Value": {
-        "english": "Alex needed to urgently clean up his mess! <timer=Level_3>"
+        "english": "Alex needed to clean up his mess! <timer=Level_3>"
+      }
+    },
+    {
+      "Key": "Narrator_Level_3_1_easy",
+      "Value": {
+        "english": "Alex needed to clean up his mess!"
+      }
+    },
+    {
+      "Key": "Narrator_Level_3_2",
+      "Value": {
+        "english": "There's still more! Alex needed to urgently clean up the rest.. <timer=Level_3>"
       }
     },
     {

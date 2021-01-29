@@ -88,7 +88,7 @@ public class Level5_Earthquake : BaseLevel
         } );
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
         desktop.RemovePhysicsBound();
 

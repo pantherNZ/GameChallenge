@@ -32,7 +32,7 @@ public class Level10_PassCode : BaseLevel
 
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
         canvas.SetVisibility( false );
         passCodeText.text = string.Empty;

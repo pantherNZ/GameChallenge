@@ -56,9 +56,9 @@ public class Level8_SmallestSquare : BaseLevel
         //smallest.GetComponent<SpriteRenderer>().color = Color.red;
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
-        base.Cleanup();
+        base.Cleanup( fromRestart );
 
         squares.DestroyAll();
         stage = 1;

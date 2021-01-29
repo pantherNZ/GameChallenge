@@ -76,11 +76,17 @@ public class Level1_BouncingBall : BaseLevel
         }
     }
 
-    protected override void Cleanup()
+    protected override void Cleanup( bool fromRestart )
     {
         Utility.FunctionTimer.StopTimer( "CreateBall" );
         Utility.FunctionTimer.StopTimer( "Narrator_Level_1_2" );
         Utility.FunctionTimer.StopTimer( "Narrator_Level_1_1" );
+
+        if( fromRestart )
+        {
+            objects.DestroyAll();
+            objects.Clear();
+        }
     }
 
     private void CheckComplete()

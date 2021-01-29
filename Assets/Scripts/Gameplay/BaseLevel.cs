@@ -8,8 +8,8 @@ abstract public class BaseLevel : MonoBehaviour
     [SerializeField] AudioClip levelCompleteAudio = null;
 
     [HideInInspector] public DesktopUIManager desktop;
-    bool levelStarted;
-    bool levelActive;
+    protected bool levelStarted;
+    protected bool levelActive;
 
     [HideInInspector]
     public int levelIdx = 0;
@@ -36,6 +36,9 @@ abstract public class BaseLevel : MonoBehaviour
 
     public void StartNextLevel()
     {
+        if( !levelStarted )
+            return;
+
         if( levelActive )
             LevelFinished();
 
@@ -53,7 +56,7 @@ abstract public class BaseLevel : MonoBehaviour
         desktop.LevelFinished( levelIdx );
 
         levelActive = false;
-        Cleanup();
+        Cleanup( false );
         OnLevelFinished();
 
         if( startNextLevelDelay > 0.0f )
@@ -67,14 +70,14 @@ abstract public class BaseLevel : MonoBehaviour
 
     public void Clear()
     {
-        Cleanup();
+        Cleanup( true );
         levelActive = false;
         levelStarted = false;
     }
 
     public void Restart()
     {
-        Cleanup();
+        Cleanup( true );
         levelStarted = false;
         StartLevel();
     }
@@ -87,7 +90,7 @@ abstract public class BaseLevel : MonoBehaviour
 
     abstract public void OnStartLevel();
     virtual protected void OnLevelUpdate() { }
-    virtual protected void Cleanup() { }
+    virtual protected void Cleanup( bool fromRestart ) { }
     virtual protected void OnLevelFinished() { }
 }
 

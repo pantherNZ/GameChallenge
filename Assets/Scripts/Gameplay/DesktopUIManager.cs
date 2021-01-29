@@ -83,7 +83,6 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] float levelFailFadeOutTime = 2.0f;
     [SerializeField] float levelFailFadeInTime = 2.0f;
     [SerializeField] float restartGameFadeOutTime = 5.0f;
-    [SerializeField] float restartGameFadeInTime = 2.0f;
     [SerializeField] bool enabledAudio = true;
     [SerializeField] bool enabledSaveLoad = true;
     [SerializeField] int timeUntilUpdateSec = 500;
@@ -186,7 +185,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                     Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
                 }
             } );
-        } );
+        }, "selectionDelay" );
 
         difficultyTimer = Utility.FunctionTimer.CreateTimer( 5.0f, () =>
         {
@@ -194,6 +193,15 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                 SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelectHard" ) );
             Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
         } );
+    }
+
+    protected override void Cleanup( bool fromRestart )
+    {
+        base.Cleanup( fromRestart );
+
+        easyDifficulty = false;
+        difficultyTimer.StopTimer();
+        Utility.FunctionTimer.StopTimer( "selectionDelay" );
     }
 
     public BaseLevel GetLevel( int index )
@@ -311,10 +319,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     {
         this.FadeToBlack( restartGameFadeOutTime );
         levels[currentLevel].Clear();
+        startingLevelId = 0;
 
         Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime, () =>
         {
-            this.FadeFromBlack( restartGameFadeInTime );
             MainCamera.gameObject.SetActive( true );
             blueScreenCamera.gameObject.SetActive( false );
             loginUI.StartLevel();
