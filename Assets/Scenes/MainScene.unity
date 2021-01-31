@@ -1998,7 +1998,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 5
+  startingLevelId: 0
   DesktopCanvas: {fileID: 610674837}
   loginUI: {fileID: 1897650524}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
@@ -7213,7 +7213,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.40624243}
-  m_AnchoredPosition: {x: 56, y: -61.4}
+  m_AnchoredPosition: {x: 56, y: -61.40001}
   m_SizeDelta: {x: -517.2, y: -203.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1009632337

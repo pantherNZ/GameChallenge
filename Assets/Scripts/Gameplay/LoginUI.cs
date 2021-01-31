@@ -18,8 +18,6 @@ public class LoginUI : BaseLevel
 
         loginButton.onClick.AddListener( () =>
         {
-            passworldInput.text = string.Empty;
-
             if( passworldInput.text.Length > 0 && passworldInput.text == password )
             {
                 GetComponent<CanvasGroup>().ToggleVisibility();
@@ -36,6 +34,8 @@ public class LoginUI : BaseLevel
                 incorrectPasswordDisplay.ToggleVisibility();
                 desktop.PlayAudio( incorrectPasswordAudio );
             }
+
+            passworldInput.text = string.Empty;
         } );
 
         incorrectPasswordButton.onClick.AddListener( () =>

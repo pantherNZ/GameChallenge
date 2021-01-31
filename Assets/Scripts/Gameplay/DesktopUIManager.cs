@@ -82,7 +82,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] float lifeLostDisplayTime = 3.0f;
     [SerializeField] float levelFailFadeOutTime = 2.0f;
     [SerializeField] float levelFailFadeInTime = 2.0f;
-    [SerializeField] float restartGameFadeOutTime = 5.0f;
+    public float restartGameFadeOutTime = 5.0f;
     [SerializeField] bool enabledAudio = true;
     [SerializeField] bool enabledSaveLoad = true;
     [SerializeField] int timeUntilUpdateSec = 500;

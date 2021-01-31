@@ -29,9 +29,18 @@ public class Level9_UpsideDown : BaseLevel
 
     protected override void OnLevelFinished()
     {
-        desktop.DesktopCanvas.localRotation = Quaternion.identity;
-        subtitlesCanvas.localRotation = Quaternion.identity;
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_9_Complete" );
         Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
+    }
+
+    protected override void Cleanup( bool fromRestart )
+    {
+        base.Cleanup( fromRestart );
+
+        Utility.FunctionTimer.CreateTimer( fromRestart ? desktop.restartGameFadeOutTime : 0.0f, () =>
+        {
+            desktop.DesktopCanvas.localRotation = Quaternion.identity;
+            subtitlesCanvas.localRotation = Quaternion.identity;
+        } );
     }
 }

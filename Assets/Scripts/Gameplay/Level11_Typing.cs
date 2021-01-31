@@ -45,6 +45,9 @@ public class Level11_Typing : BaseLevel
 
     private void CreateWindow()
     {
+        if( !levelActive )
+            return;
+
         numWindowsToSpawn--;
 
         var window = desktop.CreateWindow( "Information", windowPrefab, false, desktop.GetScreenBound( 125.0f, false ).RandomPosition() );
