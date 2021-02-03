@@ -1998,7 +1998,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 0
+  startingLevelId: 14
   DesktopCanvas: {fileID: 610674837}
   loginUI: {fileID: 1897650524}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
@@ -2381,6 +2381,7 @@ MonoBehaviour:
   fireAudio: {fileID: 8300000, guid: 9c5cdd0faf31c304b8d01b95d52e793d, type: 3}
   explodeAudio: {fileID: 8300000, guid: b4291f46f9251f24195f077256f5c2d0, type: 3}
   stageCompleteAudio: {fileID: 8300000, guid: ea0955b1fe09c87438df53d226e19eae, type: 3}
+  finalStageHintGameString: Spoiler_Level6_2
 --- !u!114 &203328306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2556,7 +2557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startMenuEntryIcon: {fileID: 0}
   startMenuEntryText: Bomb
-  spoilerTextGameString: 
+  spoilerTextGameString: Spoiler_Level12_1
   levelCompleteAudio: {fileID: 8300000, guid: d319632c9dfc0d84f998de0691c2fa4c, type: 3}
   desktop: {fileID: 0}
   levelIdx: 0
@@ -2621,6 +2622,10 @@ MonoBehaviour:
   progressSpeedStart: 1
   lightSequenceThresholdEasy: 0.85
   lightSequenceThresholdHard: 0.95
+  dataTransferStageHintGameString: Spoiler_Level12_2
+  progressBarsHintGameString: Spoiler_Level12_3
+  timeMatchHintGameString: Spoiler_Level12_4
+  passcodeStageHintGameString: Spoiler_Level12_5
 --- !u!1 &214368265
 GameObject:
   m_ObjectHideFlags: 0
@@ -4233,8 +4238,8 @@ CanvasGroup:
   m_GameObject: {fileID: 522667999}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &522668005
 MonoBehaviour:

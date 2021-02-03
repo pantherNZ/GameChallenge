@@ -39,6 +39,11 @@ public class Level12_Bomb : BaseLevel
     [SerializeField] float lightSequenceThresholdEasy = 0.85f;
     [SerializeField] float lightSequenceThresholdHard = 0.95f;
 
+    [SerializeField] string dataTransferStageHintGameString = string.Empty;
+    [SerializeField] string progressBarsHintGameString = string.Empty;
+    [SerializeField] string timeMatchHintGameString = string.Empty;
+    [SerializeField] string passcodeStageHintGameString = string.Empty;
+
     // Dynamic data
     SubLevelStage subLevelStage = SubLevelStage.Intro;
     //int timeLeftSec;
@@ -186,9 +191,9 @@ public class Level12_Bomb : BaseLevel
         }
     }
 
-    private void IncrementStage()
+    private void IncrementStage( bool playAudio = true )
     {
-        if( subLevelStage > SubLevelStage.Intro )
+        if( playAudio && subLevelStage > SubLevelStage.Intro )
             desktop.PlayAudio( stageCompleteAudio );
 
         subLevelStage++;
@@ -299,6 +304,7 @@ public class Level12_Bomb : BaseLevel
                 hackingCanvas.SetVisibility( true );
                 hackingCanvas.GetComponentInChildren<Text>().GetComponent<CanvasGroup>().SetVisibility( true );
                 SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Hack" );
+                desktop.ResetSpoiler( dataTransferStageHintGameString );
                 foreach( var button in buttons )
                     button.enabled = false;
             }
@@ -308,7 +314,7 @@ public class Level12_Bomb : BaseLevel
             {
                 for( int i = 0; i < buttons.Count; ++i )
                     lightSequence[i] = i;
-
+                desktop.ResetSpoiler( progressBarsHintGameString );
                 goto case SubLevelStage.ProgressBars2;
             }
             case SubLevelStage.ProgressBars2:
@@ -350,14 +356,18 @@ public class Level12_Bomb : BaseLevel
             case SubLevelStage.TimeMatch:
             {
                 if( Mathf.Abs( ( float )( desktop.GetVirtualTime().TotalSeconds - DateTime.Now.TimeOfDay.TotalSeconds ) ) < 1.0f )
-                    IncrementStage();
+                    IncrementStage( false );
                 else
+                {
                     SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_12_Time1" );
+                    desktop.ResetSpoiler( timeMatchHintGameString );
+                }
             }
             break;
 
             case SubLevelStage.Passcode:
             {
+                desktop.ResetSpoiler( passcodeStageHintGameString );
                 passwordInput.interactable = true;
                 var passwordBtn = passwordInput.GetComponentInChildren<Button>();
                 passwordBtn.interactable = true;

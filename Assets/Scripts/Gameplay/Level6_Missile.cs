@@ -21,6 +21,7 @@ public class Level6_Missile : BaseLevel
     [SerializeField] AudioClip fireAudio = null;
     [SerializeField] AudioClip explodeAudio = null;
     [SerializeField] AudioClip stageCompleteAudio = null;
+    [SerializeField] string finalStageHintGameString = string.Empty;
     List<Window> windows = new List<Window>();
     GameObject shortcut, missileLauncher, level;
     List<GameObject> paths;
@@ -240,6 +241,7 @@ public class Level6_Missile : BaseLevel
                 break;
             case 2:
                 SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_6_3" );
+                desktop.ResetSpoiler( finalStageHintGameString );
                 break;
             case 3:
             {

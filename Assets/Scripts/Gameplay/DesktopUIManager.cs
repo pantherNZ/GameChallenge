@@ -693,17 +693,24 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( true );
     }
 
+    public void ResetSpoiler( string spoilerTextGameString )
+    {
+        helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( false );
+        helpWindowSpoilerText.text = string.Empty;
+
+        if( levels[currentLevel].spoilerTextGameString.Length > 0 )
+            helpWindowSpoilerText.text = DataManager.Instance.GetGameString( spoilerTextGameString );
+
+        helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
+    }
+
     public void LevelStarted( int level )
     {
         currentLevel = level;
         if( enabledSaveLoad )
             Game.SaveGameSystem.SaveGame( "UGC" );
-        helpWindowSpoilerText.GetComponent<CanvasGroup>().SetVisibility( false );
 
-        if( levels[currentLevel].spoilerTextGameString.Length > 0 )
-            helpWindowSpoilerText.text = DataManager.Instance.GetGameString( levels[currentLevel].spoilerTextGameString );
-
-        helpWindowSpoilerButton.interactable = helpWindowSpoilerText.text.Length > 0;
+        ResetSpoiler( levels[currentLevel].spoilerTextGameString );
 
         for( int i = 0; i < startMenuList.transform.childCount; ++i )
             startMenuList.transform.GetChild( i ).gameObject.Destroy();

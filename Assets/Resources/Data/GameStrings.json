@@ -256,49 +256,55 @@
     {
       "Key": "Spoiler_Level2",
       "Value": {
-        "english": ""
+        "english": "The desktop context menu might be of use here."
       }
     },
     {
       "Key": "Spoiler_Level3",
       "Value": {
-        "english": ""
+        "english": "Put the things into the recycling bin quickly! Maybe it will help to move things around a bit first?"
       }
     },
     {
       "Key": "Spoiler_Level4",
       "Value": {
-        "english": ""
+        "english": "Shoot the targets as quickly as possible, don't miss!"
       }
     },
     {
       "Key": "Spoiler_Level5",
       "Value": {
-        "english": ""
+        "english": "Find the power generator to turn the lights back on!"
       }
     },
     {
       "Key": "Spoiler_Level6",
       "Value": {
-        "english": ""
+        "english": "The missiles are limited by the window, maybe you can guide the missile with it?"
+      }
+    },
+    {
+      "Key": "Spoiler_Level6_2",
+      "Value": {
+        "english": "The missiles are limited by the window, maybe you can guide the missile with it? You might need multiple different views."
       }
     },
     {
       "Key": "Spoiler_Level7",
       "Value": {
-        "english": ""
+        "english": "Catch the falling balls! Maybe there's a way to block them to stop them moving so fast?"
       }
     },
     {
       "Key": "Spoiler_Level8",
       "Value": {
-        "english": ""
+        "english": "Carefully pick the smallest SQUARE. Ignore the rectangles!"
       }
     },
     {
       "Key": "Spoiler_Level9",
       "Value": {
-        "english": "Only changing the time would help fix Alex's perspective."
+        "english": "The time needs to be adjusted in order to get a level view. Try opening the date/time menu on the taskbar."
       }
     },
     {
@@ -310,7 +316,37 @@
     {
       "Key": "Spoiler_Level11",
       "Value": {
-        "english": ""
+        "english": "Prepare your hands and get typing!"
+      }
+    },
+    {
+      "Key": "Spoiler_Level12_1",
+      "Value": {
+        "english": "The buttons must all be activated using a sequence to unlock the system."
+      }
+    },
+    {
+      "Key": "Spoiler_Level12_2",
+      "Value": {
+        "english": "Data is often best transferred with the help of user input."
+      }
+    },
+    {
+      "Key": "Spoiler_Level12_3",
+      "Value": {
+        "english": "The buttons must all be activated using a sequence to unlock the system. Timing is key."
+      }
+    },
+    {
+      "Key": "Spoiler_Level12_4",
+      "Value": {
+        "english": "The time needs to match the real time to unlock the system."
+      }
+    },
+    {
+      "Key": "Spoiler_Level12_5",
+      "Value": {
+        "english": "The window can be dragged using the progress bar. He himself refers to the character you are playing, who is that?"
       }
     }
   ]
