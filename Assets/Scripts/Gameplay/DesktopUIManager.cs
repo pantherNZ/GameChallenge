@@ -94,6 +94,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] AudioClip difficultySelectionAudio = null;
     [SerializeField] List<AudioClip> recycleAudio = new List<AudioClip>();
     [SerializeField] AudioClip gameLostAudio = null;
+    [SerializeField] AudioClip levelFailAudio = null;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -269,9 +270,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void LevelFailed()
     {
         lives--;
+        PlayAudio( levelFailAudio );
+        levels[currentLevel].Clear();
 
         if( lives == 0 )
         {
+            this.FadeToBlack( levelFailFadeOutTime );
             Utility.FunctionTimer.CreateTimer( 3.0f, GameOver );
         }
         else
@@ -279,17 +283,14 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             var errorTexture = errorTextures.RandomItem();
             var window = CreateWindow( "Critical Error" );
             window.GetComponent<Window>().image.GetComponent<RawImage>().texture = errorTexture;
-            ( window.transform as RectTransform ).sizeDelta = new Vector2( errorTexture.width, errorTexture.height );
+            //( window.transform as RectTransform ).sizeDelta = new Vector2( errorTexture.width, errorTexture.height );
 
             Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime, () => this.FadeToBlack( levelFailFadeOutTime ) );
-            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime, () =>
+            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime + 0.5f, () =>
             {
-                this.FadeFromBlack( levelFailFadeInTime );
-            } );
-            Utility.FunctionTimer.CreateTimer( lifeLostDisplayTime + levelFailFadeOutTime + levelFailFadeInTime, () =>
-            {
-                RestartLevel();
                 DestroyWindow( window );
+                RestartLevel();
+                this.FadeFromBlack( levelFailFadeInTime );
             } );
         }
     }

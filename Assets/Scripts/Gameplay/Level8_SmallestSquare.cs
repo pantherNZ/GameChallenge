@@ -102,7 +102,7 @@ public class Level8_SmallestSquare : BaseLevel
                 }
                 else
                 {
-                    desktop.GameOver();
+                    desktop.LevelFailed();
                 }
             }
         }

@@ -1998,7 +1998,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 14
+  startingLevelId: 10
   DesktopCanvas: {fileID: 610674837}
   loginUI: {fileID: 1897650524}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
@@ -2033,7 +2033,7 @@ MonoBehaviour:
   windowCameraStartPosition: {x: -20, y: 0, z: -10}
   lifeLostDisplayTime: 3
   levelFailFadeOutTime: 2
-  levelFailFadeInTime: 2
+  levelFailFadeInTime: 1
   restartGameFadeOutTime: 5
   enabledAudio: 1
   enabledSaveLoad: 0
@@ -2045,7 +2045,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2d0491fad35c1e6438e41cbb503fd879, type: 3}
   - {fileID: 8300000, guid: 9075f939c2607084f81a557d3bb4d0ac, type: 3}
   - {fileID: 8300000, guid: c29bb5bd625457e4abeaf2f8b32c4dec, type: 3}
-  gameLostAudio: {fileID: 0}
+  gameLostAudio: {fileID: 8300000, guid: e01ee2b08c125d747afd5ba4f03c122c, type: 3}
+  levelFailAudio: {fileID: 8300000, guid: 8484c7e3b8867d84f89fce2fff0f00b0, type: 3}
 --- !u!225 &203328298
 CanvasGroup:
   m_ObjectHideFlags: 0
