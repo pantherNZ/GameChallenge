@@ -26,7 +26,6 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     // UI stuff
     [Header( "UI" )]
     public RectTransform DesktopCanvas;
-    [SerializeField] LoginUI loginUI = null;
     [SerializeField] GameObject windowBasePrefab = null;
     [SerializeField] GameObject optionsWindow = null;
     [SerializeField] GameObject helpWindow = null;
@@ -316,17 +315,16 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         MainCamera.gameObject.SetActive( false );
     }
 
-    public void RestartGame()
+    public void RestartGame( int startLevel = 0 )
     {
         this.FadeToBlack( restartGameFadeOutTime );
         levels[currentLevel].Clear();
-        startingLevelId = 0;
 
         Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime, () =>
         {
             MainCamera.gameObject.SetActive( true );
             blueScreenCamera.gameObject.SetActive( false );
-            loginUI.StartLevel();
+            levels[startLevel].StartLevel();
         } );
     }
 
@@ -728,6 +726,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             var entry = Instantiate( startMenuEntryPrefab, startMenuList.transform );
             entry.GetComponentInChildren<Text>().text = levels[i].startMenuEntryText;
             entry.GetComponentsInChildren<Image>()[1].sprite = icon;
+            int levelIdx = i;
+            entry.GetComponent<Button>().onClick.AddListener( () =>
+            {
+                RestartGame( levelIdx );
+                ToggleStartMenuVisibility();
+            } );
         }
     }
 
