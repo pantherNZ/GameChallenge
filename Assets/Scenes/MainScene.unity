@@ -2233,7 +2233,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 10
+  startingLevelId: 0
   DesktopCanvas: {fileID: 610674837}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -2272,7 +2272,7 @@ MonoBehaviour:
   enabledAudio: 1
   enabledSaveLoad: 0
   timeUntilUpdateSec: 600
-  easyDifficulty: 0
+  easyDifficulty: 1
   difficultySelectionAudio: {fileID: 8300000, guid: 14c5e2d91c06a1b4b8ea12bf75463e4d,
     type: 3}
   recycleAudio:
