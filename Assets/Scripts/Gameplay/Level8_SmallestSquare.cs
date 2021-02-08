@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class Level8_SmallestSquare : BaseLevel
 {
@@ -26,16 +27,9 @@ public class Level8_SmallestSquare : BaseLevel
 
         for( int i = 0; i < count; ++i )
         {
-            Vector2 position;
-            int safety = 0;
+            var square = Instantiate( squarePrefab, new Vector3(), Quaternion.identity, desktop.DesktopCanvas );
 
-            do
-            {
-                position = desktop.GetWorldBound( 1.0f ).RandomPosition();
-            }
-            while( ++safety < 20 && squares.Any( x => ( x.transform.position.ToVector2() - position ).sqrMagnitude <= 5.0f ) );
-
-            squares.Add( Instantiate( squarePrefab, position.ToVector3( 10.0f ), Quaternion.identity ) );
+            var squareTransform = square.transform as RectTransform;
             bool isSquare = i == 0 || Random.Range( 0, 2 ) == 0;
             var xScale = Random.Range( 0.5f, 3.0f );
             float yScale = xScale;
@@ -43,13 +37,26 @@ public class Level8_SmallestSquare : BaseLevel
             while( !isSquare && Mathf.Abs( yScale - xScale ) <= 0.1f )
                 yScale = Random.Range( 0.5f, 3.0f );
 
-            squares.Back().transform.localScale = new Vector3( xScale, yScale, 1.0f );
+            squareTransform.localScale = new Vector3( xScale, yScale, 1.0f );
 
             if( isSquare && xScale < smallestScale )
             {
-                smallest = squares.Back();
+                smallest = square;
                 smallestScale = xScale;
             }
+
+            int safety = 0;
+            do
+            {
+                var pos = desktop.GetScreenBound( 100.0f ).RandomPosition().ToVector3( 10.0f );
+                pos -= new Vector3( desktop.MainCamera.pixelWidth / 2.0f, desktop.MainCamera.pixelHeight / 2.0f, 0.0f );
+                squareTransform.localPosition = pos;
+                squareTransform.ForceUpdateRectTransforms();
+            }
+            while( ++safety < 20 && squares.Any( x => ( ( x.transform as RectTransform ).GetWorldRect().Overlaps( squareTransform.GetWorldRect() ) ) ) );
+
+            square.GetComponent<Button>().onClick.AddListener( () => OnClick( square ) );
+            squares.Add( square );
         }
 
         
@@ -72,39 +79,28 @@ public class Level8_SmallestSquare : BaseLevel
         Utility.FunctionTimer.CreateTimer( 2.0f, StartNextLevel );
     }
 
-    protected override void OnLevelUpdate()
+    private void OnClick( GameObject square )
     {
-        base.OnLevelUpdate();
+        squares.Remove( square );
+        square.Destroy();
 
-        if( Input.GetMouseButton( 0 ) )
+        if( square == smallest )
         {
-            var mousePos = desktop.MainCamera.ScreenToWorldPoint( Input.mousePosition ).SetZ( 20.0f );
-            var hit = Physics2D.Raycast( mousePos, Vector2.zero, 0.0f );
+            desktop.PlayAudio( selectAudio );
 
-            if( hit.collider != null && squares.Contains( hit.collider.gameObject ) )
+            if( stage < stages )
             {
-                squares.Remove( hit.collider.gameObject );
-                hit.collider.gameObject.Destroy();
-
-                if( hit.collider.gameObject == smallest )
-                {
-                    desktop.PlayAudio( selectAudio );
-
-                    if( stage < stages )
-                    {
-                        stage++;
-                        Setup();
-                    }
-                    else
-                    {
-                        LevelFinished();
-                    }
-                }
-                else
-                {
-                    desktop.LevelFailed();
-                }
+                stage++;
+                Setup();
             }
+            else
+            {
+                LevelFinished();
+            }
+        }
+        else
+        {
+            desktop.LevelFailed();
         }
     }
 }
