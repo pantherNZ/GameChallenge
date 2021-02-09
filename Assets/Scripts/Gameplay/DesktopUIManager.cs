@@ -88,12 +88,15 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] bool easyDifficulty = true;
 
     // Audio
-    new AudioSource audio;
     [Header("Audio")]
+    new AudioSource audio;
+    AudioSource music;
+    int musicIdx = 0;
     [SerializeField] AudioClip difficultySelectionAudio = null;
     [SerializeField] List<AudioClip> recycleAudio = new List<AudioClip>();
     [SerializeField] AudioClip gameLostAudio = null;
     [SerializeField] AudioClip levelFailAudio = null;
+    [SerializeField] List<AudioClip> musicTracks = new List<AudioClip>();
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -115,7 +118,9 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     private void Start()
     {
-        audio = GetComponent<AudioSource>();
+        var audioSources = GetComponents<AudioSource>();
+        audio = audioSources[0];
+        music = audioSources[1];
         currentTime = DateTime.Now;
         blueScreenCamera.gameObject.SetActive( false );
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
@@ -154,6 +159,17 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
         if( startingLevelId >= 7 ) // Earthquake
             StartCoroutine( desktop.RunTimer() );
+
+        PlayMusic();
+    }
+
+    private void PlayMusic()
+    {
+        musicTracks.RandomShuffle();
+        music.clip = musicTracks[musicIdx];
+        music.Play();
+        musicIdx = ( musicIdx + 1 ) % musicTracks.Count;
+        Utility.FunctionTimer.CreateTimer( music.clip.length + 5.0f, PlayMusic );
     }
 
     public void Serialise( BinaryWriter writer )
@@ -797,7 +813,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public void SetAudioVolume( float scale )
     {
-        AudioListener.volume = scale;
+        audio.volume = scale;
+    }
+
+    public void SetMusicVolume( float scale )
+    {
+        music.volume = scale;
     }
 
     public void SetAudioVolume( Slider slider )

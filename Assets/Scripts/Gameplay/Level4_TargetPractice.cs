@@ -33,7 +33,7 @@ public class Level4_TargetPractice : BaseLevel
         targetsCount = countdown = fails = 0;
         
         countdownSprite = Utility.CreateSprite( "Textures/Numbers/spell_rank_3", new Vector3( 0.0f, 0.0f, 20.0f ), new Vector3( 1.0f, 1.0f ) );
-        crosshair = Utility.CreateSprite( "Textures/crosshair", desktop.MainCamera.ScreenToWorldPoint( Input.mousePosition ).SetZ( 20.0f ), new Vector3( 1.0f, 1.0f ) );
+        crosshair = Utility.CreateSprite( "Textures/ShootingLevel/crosshair", desktop.MainCamera.ScreenToWorldPoint( Input.mousePosition ).SetZ( 20.0f ), new Vector3( 1.0f, 1.0f ) );
         crosshair.GetComponent<SpriteRenderer>().color = crosshairColour;
         gun = Instantiate( gunPrefab, new Vector3( 0.0f, -desktop.GetWorldBound().height / 2.0f, 20.0f ), Quaternion.identity );
         gun.transform.localScale = new Vector3( 1.0f, 1.0f );
