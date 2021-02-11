@@ -111,6 +111,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     int updateTimeLeftSec;
     UIProgressBar updateProgressBar;
 
+    [Header( "Flags" )]
+    [SerializeField] List<GameObject> flags = new List<GameObject>();
+    List<int> flagsFound = new List<int>();
+
     void Awake()
     {
         lastScreenSize = new Vector2( Screen.width, Screen.height );
@@ -133,7 +137,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         updateTimeLeftSec = timeUntilUpdateSec;
         updateProgressBar = updateTimerCanvas.GetComponentInChildren<UIProgressBar>();
 
-        CreateShortcut( new DesktopIcon() { name = "Recycle Bin", icon = Utility.CreateSprite( Resources.Load<Texture2D>( "Textures/Full_Recycle_Bin" ) ) }, new Vector2Int() );
+        CreateShortcut( new DesktopIcon() { name = "Recycle Bin", icon = Utility.CreateSprite( Resources.Load<Texture2D>( "Textures/StartMenuIcons/Full_Recycle_Bin" ) ) }, new Vector2Int() );
 
         for( int i = 0; i < levels.Count; ++i )
         {
@@ -148,6 +152,29 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             Game.SaveGameSystem.AddSaveableObject( this );
             Game.SaveGameSystem.folderName = string.Empty;
             Game.SaveGameSystem.LoadGame( "UGC" );
+        }
+
+        // Flags
+        for( int i = 0; i < flags.Count; ++i )
+        {
+            if( flagsFound.Contains( i ) )
+            {
+                flags[i].Destroy();
+            }
+            else
+            {
+                int idx = i;
+
+                flags[i].GetComponent<Button>().onClick.AddListener( () =>
+                {
+                    flagsFound.Add( idx );
+
+                    if( enabledSaveLoad )
+                        Game.SaveGameSystem.SaveGame( "UGC" );
+
+                    flags[idx].Destroy();
+                } );
+            }
         }
 
         Utility.FunctionTimer.CreateTimer( 0.001f, GetLevel( startingLevelId ).StartLevel );
@@ -175,11 +202,19 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void Serialise( BinaryWriter writer )
     {
         writer.Write( Mathf.Max( startingLevelId, currentLevel ) );
+        writer.Write( flagsFound.Count );
+
+        foreach( var flag in flagsFound )
+            writer.Write( flag );
     }
 
     public void Deserialise( BinaryReader reader )
     {
         startingLevelId = reader.ReadInt32();
+
+        int flags = reader.ReadInt32();
+        for( int i = 0; i < flags; ++i )
+            flagsFound.Add( reader.ReadInt32() );
     }
 
     public override void OnStartLevel()

@@ -4,6 +4,9 @@ using UnityEngine.UI;
 public class LoginUI : BaseLevel
 {
     [SerializeField] Button loginButton = null;
+    [SerializeField] CanvasGroup hintButton = null;
+    [SerializeField] CanvasGroup hintText = null;
+    [SerializeField] Button flag = null;
     [SerializeField] InputField passworldInput = null;
     [SerializeField] CanvasGroup loginDisplay = null;
     [SerializeField] CanvasGroup incorrectPasswordDisplay = null;
@@ -33,6 +36,11 @@ public class LoginUI : BaseLevel
                 loginDisplay.ToggleVisibility();
                 incorrectPasswordDisplay.ToggleVisibility();
                 desktop.PlayAudio( incorrectPasswordAudio );
+                hintButton.GetComponent<Button>().interactable = true;
+                hintButton.SetVisibility( true );
+                hintText.SetVisibility( false );
+                if( flag != null )
+                    flag.interactable = true;
             }
 
             passworldInput.text = string.Empty;
@@ -58,6 +66,12 @@ public class LoginUI : BaseLevel
     public override void OnStartLevel()
     {
         desktop.GetComponent<CanvasGroup>().SetVisibility( false );
+        hintButton.SetVisibility( false );
+        hintButton.GetComponent<Button>().interactable = false;
+        hintText.SetVisibility( false );
+        if( flag != null )
+            flag.interactable = false;
+
         this.FadeFromBlack( fadeInTime );
         Utility.FunctionTimer.CreateTimer( 1.0f, () => SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_0_1" ) );
         Utility.FunctionTimer.CreateTimer( 20.0f, () => SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_0_2" ), "2nd_prompt" );
