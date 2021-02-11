@@ -107,7 +107,9 @@ public static partial class Utility
         float h = interpolator( h1, h2, t );
         float s = interpolator( s1, s2, t );
         float v = interpolator( v1, v2, t );
-        return Color.HSVToRGB( h, s, v );
+        var colour = Color.HSVToRGB( h, s, v );
+        colour.a = interpolator( a.a, b.a, t );
+        return colour;
     }
 
     public static void DrawCircle( Vector3 position, float diameter, float lineWidth, Color? colour = null )

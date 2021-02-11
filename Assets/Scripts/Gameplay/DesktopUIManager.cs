@@ -113,6 +113,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     [Header( "Flags" )]
     [SerializeField] List<GameObject> flags = new List<GameObject>();
+    [SerializeField] GameObject flagAcquiredPrefab = null;
     List<int> flagsFound = new List<int>();
 
     void Awake()
@@ -172,6 +173,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                     if( enabledSaveLoad )
                         Game.SaveGameSystem.SaveGame( "UGC" );
 
+                    var obj = Instantiate( flagAcquiredPrefab, DesktopCanvas );
+                    obj.transform.position = flags[idx].transform.position;
+                    StartCoroutine( Utility.FadeToColour( obj.GetComponent<Text>(), new Color( 1.0f, 1.0f, 1.0f, 0.0f ), 1.0f ) );
+                    StartCoroutine( Utility.InterpolatePosition( obj.transform, obj.transform.position + new Vector3( 0.0f, 1.0f, 0.0f ), 1.0f ) );
+                    Utility.FunctionTimer.CreateTimer( 1.0f, () => obj.Destroy() );
                     flags[idx].Destroy();
                 } );
             }
