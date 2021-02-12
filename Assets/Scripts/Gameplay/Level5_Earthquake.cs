@@ -26,12 +26,19 @@ public class Level5_Earthquake : BaseLevel
     bool canCreateLights = false;
     float cooldown = 0.0f;
     EventDispatcher generator;
+    GameObject flag;
+
+    private void Start()
+    {
+        flag = desktop.CreateFlag( new Vector2( desktop.GetScreenBound().width / 2.0f - 100.0f, desktop.GetScreenBound().height / 2.0f - 200.0f ), 5, true );
+        flag.GetComponent<CanvasGroup>().SetVisibility( false );
+    }
 
     public override void OnStartLevel()
     {
         desktop.PlayAudio( quakeAudio );
         float timer = 1.0f;
-        Utility.FunctionTimer.CreateTimer( timer, () => this.ShakeTarget( desktop.GetBackground().transform, 2.0f, 18.0f, 3.0f, 30.0f, 2.0f ) ); timer += 0.5f;
+        Utility.FunctionTimer.CreateTimer( timer, () => this.Shake( desktop.GetBackground().transform, 2.0f, 18.0f, 3.0f, 30.0f, 2.0f ) ); timer += 0.5f;
         Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f ); timer += 0.1f;
         Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 1.0f ); timer += 0.8f;
         Utility.FunctionTimer.CreateTimer( timer, () => desktop.GetComponent<CanvasGroup>().alpha = 0.0f ); timer += 0.1f;
@@ -49,6 +56,7 @@ public class Level5_Earthquake : BaseLevel
             var desktopBound = desktop.GetWorldBound( 0.0f, true );
             darkness.transform.localScale = new Vector3( desktopBound.width, desktopBound.height, 1.0f );
             darknessMesh.material.SetFloat( "aspectRatio", darkness.transform.localScale.x / darkness.transform.localScale.y );
+            flag.GetComponent<CanvasGroup>().SetVisibility( true );
         } );
 
         // Create icons

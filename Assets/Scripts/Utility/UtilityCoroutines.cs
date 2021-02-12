@@ -81,6 +81,16 @@ public static partial class Utility
             image.color = colour;
     }
 
+    public static void InterpolateScale( this MonoBehaviour mono, Vector3 targetScale, float durationSec )
+    {
+        mono.InterpolateScale( mono.transform, targetScale, durationSec );
+    }
+
+    public static void InterpolateScale( this MonoBehaviour mono, Transform transform, Vector3 targetScale, float durationSec )
+    {
+        mono.StartCoroutine( InterpolateScale( transform, targetScale, durationSec ) );
+    }
+
     public static IEnumerator InterpolateScale( Transform transform, Vector3 targetScale, float durationSec )
     {
         var interp = targetScale - transform.localScale;
@@ -97,9 +107,14 @@ public static partial class Utility
         }
     }
 
-    public static void InterpolateScale( this MonoBehaviour mono, Vector3 targetScale, float durationSec )
+    public static void InterpolatePosition( this MonoBehaviour mono, Vector3 targetPosition, float durationSec )
     {
-        mono.StartCoroutine( InterpolateScale( mono.transform, targetScale, durationSec ) );
+        mono.InterpolatePosition( mono.transform, targetPosition, durationSec );
+    }
+
+    public static void InterpolatePosition( this MonoBehaviour mono, Transform transform, Vector3 targetPosition, float durationSec )
+    {
+        mono.StartCoroutine( InterpolatePosition( transform, targetPosition, durationSec ) );
     }
 
     public static IEnumerator InterpolatePosition( Transform transform, Vector3 targetPosition, float durationSec )
@@ -118,9 +133,14 @@ public static partial class Utility
         }
     }
 
-    public static void InterpolatePosition( this MonoBehaviour mono, Vector3 targetPosition, float durationSec )
+    public static void InterpolateAlongPath( this MonoBehaviour mono, PathCreation.PathCreator path, float durationSec )
     {
-        mono.StartCoroutine( InterpolatePosition( mono.transform, targetPosition, durationSec ) );
+        mono.InterpolateAlongPath( mono.transform, path, durationSec );
+    }
+
+    public static void InterpolateAlongPath( this MonoBehaviour mono, Transform transform, PathCreation.PathCreator path, float durationSec )
+    {
+        mono.StartCoroutine( InterpolateAlongPath( transform, path, durationSec ) );
     }
 
     public static IEnumerator InterpolateAlongPath( Transform transform, PathCreation.PathCreator path, float durationSec )
@@ -137,9 +157,14 @@ public static partial class Utility
         }
     }
 
-    public static void InterpolateAlongPath( this MonoBehaviour mono, PathCreation.PathCreator path, float durationSec )
+    public static void Shake( this MonoBehaviour mono, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
     {
-        mono.StartCoroutine( InterpolateAlongPath( mono.transform, path, durationSec ) );
+        mono.Shake( mono.transform, duration, amplitudeStart, amplitudeEnd, frequency, yMultiplier );
+    }
+
+    public static void Shake( this MonoBehaviour mono, Transform target, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
+    {
+        mono.StartCoroutine( Shake( target, duration, amplitudeStart, amplitudeEnd, frequency, yMultiplier ) );
     }
 
     public static IEnumerator Shake( Transform transform, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
@@ -154,7 +179,7 @@ public static partial class Utility
             var dynamicAmplitude = Mathf.Lerp( amplitudeStart, amplitudeEnd, elapsed / duration );
             transform.localPosition = originalPos + new Vector3(
                 Mathf.Sin( elapsed * frequency ) * dynamicAmplitude,
-                Mathf.Sin( elapsed * frequency * yMultiplier ) * dynamicAmplitude / yMultiplier, 
+                Mathf.Sin( elapsed * frequency * yMultiplier ) * dynamicAmplitude / yMultiplier,
                 0.0f );
 
             yield return null;
@@ -162,15 +187,5 @@ public static partial class Utility
 
         if( transform != null )
             transform.localPosition = originalPos;
-    }
-
-    public static void Shake( this MonoBehaviour mono, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
-    {
-        mono.StartCoroutine( Shake( mono.transform, duration, amplitudeStart, amplitudeEnd, frequency, yMultiplier ) );
-    }
-
-    public static void ShakeTarget( this MonoBehaviour mono, Transform target, float duration, float amplitudeStart, float amplitudeEnd, float frequency, float yMultiplier )
-    {
-        mono.StartCoroutine( Shake( target, duration, amplitudeStart, amplitudeEnd, frequency, yMultiplier ) );
     }
 }

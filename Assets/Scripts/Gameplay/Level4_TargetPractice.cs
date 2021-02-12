@@ -24,6 +24,17 @@ public class Level4_TargetPractice : BaseLevel
     List<GameObject> targets = new List<GameObject>();
     List<GameObject> bullets = new List<GameObject>();
 
+    GameObject flag;
+    int flagSpawnIdx;
+
+    private void Start()
+    {
+        var pos = ( desktop.DesktopCanvas.transform as RectTransform ).rect.BottomLeft() + desktop.GetScreenBound( 100.0f, false ).RandomPosition();
+        flag = desktop.CreateFlag( pos, 4, true );
+        flag.GetComponent<CanvasGroup>().SetVisibility( false );
+        flagSpawnIdx = Random.Range( 0, targetsMax );
+    }
+
     public override void OnStartLevel()
     {
         GetComponent<CanvasGroup>().SetVisibility( true );
@@ -69,6 +80,7 @@ public class Level4_TargetPractice : BaseLevel
         gun?.Destroy();
         crosshair?.Destroy();
         targetsCount = countdown = fails = 0;
+        Cursor.visible = true;
         Utility.FunctionTimer.StopTimer( "CountDown" );
         Utility.FunctionTimer.StopTimer( "SpawnTarget" );
     }
@@ -98,7 +110,7 @@ public class Level4_TargetPractice : BaseLevel
         Vector3 rotatedVectorToTarget = Quaternion.Euler( 0, 0, 90 ) * direction.RotateZ( -90.0f );
         gun.transform.rotation = Quaternion.LookRotation( Vector3.forward, rotatedVectorToTarget );
         
-        if( Input.GetMouseButtonDown( 0 ) && !desktop.contextMenuEnabled )
+        if( Input.GetMouseButtonDown( 0 ) && !desktop.ContextMenuVisibile() )
         {
             var barrelEnd = gun.transform.GetChild( 0 ).transform.position;
             direction = mousePos - barrelEnd;
@@ -119,7 +131,7 @@ public class Level4_TargetPractice : BaseLevel
                     CheckLevelComplete();
                 }
                 else
-                {
+                { 
                     Miss();
                 }
             }
@@ -135,6 +147,12 @@ public class Level4_TargetPractice : BaseLevel
     {
         ++targetsCount;
 
+        if( targetsCount == flagSpawnIdx && flag != null )
+        {
+            flag.GetComponent<CanvasGroup>().SetVisibility( true );
+            SetupTarget( flag );
+        }
+
         Vector3 position;
 
         do
@@ -144,6 +162,15 @@ public class Level4_TargetPractice : BaseLevel
         while( ( position - gun.transform.position ).sqrMagnitude <= 6.0f * 6.0f );
 
         var target = Instantiate( targetPrefab, position, Quaternion.identity, desktop.MainCamera.transform );
+        SetupTarget( target );
+        targets.Add( target );
+
+        if( targetsCount < targetsMax )
+            Utility.FunctionTimer.CreateTimer( GetSpawnTime(), SpawnTarget, "SpawnTarget" );
+    }
+
+    private void SetupTarget( GameObject target )
+    {
         target.transform.localScale = new Vector3( 0.1f, 0.1f, 0.1f );
         StartCoroutine( Utility.InterpolateScale( target.transform, new Vector3( targetSize, targetSize, 1.0f ), targetFadeDuration ) );
         Utility.FunctionTimer.CreateTimer( targetFadeDuration + targetDuration, () =>
@@ -156,21 +183,12 @@ public class Level4_TargetPractice : BaseLevel
                     if( target != null )
                     {
                         target.Destroy();
-                        Miss();
+                        if( target != flag )
+                            Miss();
                     }
                 } );
             }
         } );
-
-        targets.Add( target );
-
-        //if( targetSpeed != 0.0f )
-
-
-        if( targetsCount < targetsMax )
-        {
-            Utility.FunctionTimer.CreateTimer( GetSpawnTime(), SpawnTarget, "SpawnTarget" );
-        }
     }
 
     private void Miss()

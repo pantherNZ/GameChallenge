@@ -111,8 +111,17 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     int updateTimeLeftSec;
     UIProgressBar updateProgressBar;
 
+    [System.Serializable]
+    public class Flag
+    {
+        public GameObject flag;
+        public int index;
+        public bool blackAquireText;
+    }
+
     [Header( "Flags" )]
-    [SerializeField] List<GameObject> flags = new List<GameObject>();
+    [SerializeField] List<Flag> flags = new List<Flag>();
+    [SerializeField] GameObject flagPrefab = null;
     [SerializeField] GameObject flagAcquiredPrefab = null;
     List<int> flagsFound = new List<int>();
 
@@ -155,33 +164,37 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             Game.SaveGameSystem.LoadGame( "UGC" );
         }
 
-        // Flags
-        for( int i = 0; i < flags.Count; ++i )
+        Utility.FunctionTimer.CreateTimer( 0.1f, () =>
         {
-            if( flagsFound.Contains( i ) )
+            for( int i = 0; i < flags.Count; ++i )
             {
-                flags[i].Destroy();
-            }
-            else
-            {
-                int idx = i;
-
-                flags[i].GetComponent<Button>().onClick.AddListener( () =>
+                if( flagsFound.Contains( flags[i].index ) )
                 {
-                    flagsFound.Add( idx );
+                    flags[i].flag.Destroy();
+                }
+                else
+                {
+                    int idx = i;
 
-                    if( enabledSaveLoad )
-                        Game.SaveGameSystem.SaveGame( "UGC" );
+                    flags[i].flag.GetComponent<Button>().onClick.AddListener( () =>
+                    {
+                        flagsFound.Add( idx );
 
-                    var obj = Instantiate( flagAcquiredPrefab, DesktopCanvas );
-                    obj.transform.position = flags[idx].transform.position;
-                    StartCoroutine( Utility.FadeToColour( obj.GetComponent<Text>(), new Color( 1.0f, 1.0f, 1.0f, 0.0f ), 1.0f ) );
-                    StartCoroutine( Utility.InterpolatePosition( obj.transform, obj.transform.position + new Vector3( 0.0f, 1.0f, 0.0f ), 1.0f ) );
-                    Utility.FunctionTimer.CreateTimer( 1.0f, () => obj.Destroy() );
-                    flags[idx].Destroy();
-                } );
+                        if( enabledSaveLoad )
+                            Game.SaveGameSystem.SaveGame( "UGC" );
+
+                        var obj = Instantiate( flagAcquiredPrefab, DesktopCanvas );
+                        obj.transform.position = flags[idx].flag.transform.position;
+                        var colour = flags[idx].blackAquireText ? Color.black : Color.white;
+                        obj.GetComponent<Text>().color = colour;
+                        this.FadeToColour( obj.GetComponent<Text>(), colour.SetA( 0.0f ), 1.0f );
+                        this.InterpolatePosition( obj.transform, obj.transform.position + new Vector3( 0.0f, 1.0f, 0.0f ), 1.0f );
+                        Utility.FunctionTimer.CreateTimer( 1.0f, () => obj.Destroy() );
+                        flags[idx].flag.Destroy();
+                    } );
+                }
             }
-        }
+        } );
 
         Utility.FunctionTimer.CreateTimer( 0.001f, GetLevel( startingLevelId ).StartLevel );
 
@@ -194,6 +207,20 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             StartCoroutine( desktop.RunTimer() );
 
         PlayMusic();
+    }
+
+    public GameObject CreateFlag( Vector2 offset, int index, bool blackText )
+    {
+        var flag = Instantiate( flagPrefab, DesktopCanvas );
+        ( flag.transform as RectTransform ).anchoredPosition = offset.ToVector3();
+        flags.Add( new Flag() { flag = flag, index = index, blackAquireText = blackText } );
+        flags.Sort( ( x, y ) => x.index - y.index);
+        return flag;
+    }
+
+    public void ShowDesktopFlag()
+    {
+        flags.Find( ( x ) => x.index == 1 ).flag?.GetComponent<CanvasGroup>().SetVisibility( true );
     }
 
     private void PlayMusic()
@@ -711,6 +738,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     {
         contextMenu.GetComponent<CanvasGroup>().SetVisibility( visible );
         contextMenu.GetComponent<BoxCollider2D>().enabled = visible;
+    }
+
+    public bool ContextMenuVisibile()
+    {
+        return contextMenu.GetComponent<CanvasGroup>().IsVisible();
     }
 
     private void LateUpdate()
