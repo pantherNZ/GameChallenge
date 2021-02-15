@@ -123,6 +123,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] List<Flag> flags = new List<Flag>();
     [SerializeField] GameObject flagPrefab = null;
     [SerializeField] GameObject flagAcquiredPrefab = null;
+    [SerializeField] Text flagsFoundCreditsText = null;
     List<int> flagsFound = new List<int>();
 
     void Awake()
@@ -166,6 +167,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
         Utility.FunctionTimer.CreateTimer( 0.1f, () =>
         {
+            flagsFoundCreditsText.text = string.Format( "{0} / {1} Flags Found", flagsFound.Count, flags.Count );
+
             for( int i = 0; i < flags.Count; ++i )
             {
                 if( flagsFound.Contains( flags[i].index ) )
@@ -183,7 +186,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                         if( enabledSaveLoad )
                             Game.SaveGameSystem.SaveGame( "UGC" );
 
-                        var obj = Instantiate( flagAcquiredPrefab, DesktopCanvas );
+                        var obj = Instantiate( flagAcquiredPrefab, flags[idx].flag.transform.parent );
                         obj.transform.position = flags[idx].flag.transform.position;
                         var colour = flags[idx].blackAquireText ? Color.black : Color.white;
                         obj.GetComponent<Text>().color = colour;
@@ -191,6 +194,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                         this.InterpolatePosition( obj.transform, obj.transform.position + new Vector3( 0.0f, 1.0f, 0.0f ), 1.0f );
                         Utility.FunctionTimer.CreateTimer( 1.0f, () => obj.Destroy() );
                         flags[idx].flag.Destroy();
+                        flagsFoundCreditsText.text = string.Format( "{0} / {1} Flags Found", flagsFound.Count, flags.Count );
                     } );
                 }
             }
@@ -209,12 +213,15 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         PlayMusic();
     }
 
-    public GameObject CreateFlag( Vector2 offset, int index, bool blackText )
+    public GameObject CreateFlag( Vector2 offset, int index, bool blackText = false, bool startHidden = false, string text = "" )
     {
         var flag = Instantiate( flagPrefab, DesktopCanvas );
         ( flag.transform as RectTransform ).anchoredPosition = offset.ToVector3();
         flags.Add( new Flag() { flag = flag, index = index, blackAquireText = blackText } );
         flags.Sort( ( x, y ) => x.index - y.index);
+        flag.GetComponent<CanvasGroup>().SetVisibility( !startHidden );
+        flag.GetComponentInChildren<Text>().text = text;
+        flag.name = "Flag: " + index;
         return flag;
     }
 

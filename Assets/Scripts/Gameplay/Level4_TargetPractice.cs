@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Level4_TargetPractice : BaseLevel
 {
@@ -30,8 +31,7 @@ public class Level4_TargetPractice : BaseLevel
     private void Start()
     {
         var pos = ( desktop.DesktopCanvas.transform as RectTransform ).rect.BottomLeft() + desktop.GetScreenBound( 100.0f, false ).RandomPosition();
-        flag = desktop.CreateFlag( pos, 4, true );
-        flag.GetComponent<CanvasGroup>().SetVisibility( false );
+        flag = desktop.CreateFlag( pos, 4, true, true, "4" );
         flagSpawnIdx = Random.Range( 0, targetsMax );
     }
 

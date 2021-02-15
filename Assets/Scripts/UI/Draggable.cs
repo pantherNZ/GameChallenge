@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class Draggable : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class Draggable : MonoBehaviour
     Vector3 offset;
     new RectTransform transform;
     Transform parentRef;
+
+    public Action<Draggable, Vector3> updatePosition;
 
     void Start()
     {
@@ -55,8 +58,10 @@ public class Draggable : MonoBehaviour
         if( dragging )
         {
             var targetPos = GetMousePosScreen() + offset;
-            transform.anchoredPosition = targetPos;
-            targetPos.z = 100.0f;
+            if( updatePosition != null )
+                updatePosition.Invoke( this, targetPos );
+            else
+                transform.anchoredPosition = targetPos;
             transform.SetAsLastSibling();
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Level5_Earthquake : BaseLevel
 {
@@ -30,8 +31,7 @@ public class Level5_Earthquake : BaseLevel
 
     private void Start()
     {
-        flag = desktop.CreateFlag( new Vector2( desktop.GetScreenBound().width / 2.0f - 100.0f, desktop.GetScreenBound().height / 2.0f - 200.0f ), 5, true );
-        flag.GetComponent<CanvasGroup>().SetVisibility( false );
+        flag = desktop.CreateFlag( new Vector2( desktop.GetScreenBound().width / 2.0f - 100.0f, desktop.GetScreenBound().height / 2.0f - 200.0f ), 5, true, true, "5" );
     }
 
     public override void OnStartLevel()

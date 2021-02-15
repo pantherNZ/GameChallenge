@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Level1_BouncingBall : BaseLevel
 {
@@ -17,8 +18,14 @@ public class Level1_BouncingBall : BaseLevel
     [SerializeField] AudioClip inGoalAudio = null;
 
     List<GameObject> objects = new List<GameObject>();
+    GameObject flag;
     bool alternate;
     bool[] complete = new bool[3];
+
+    private void Start()
+    {
+        flag = desktop.CreateFlag( new Vector2( 0.0f, -desktop.MainCamera.pixelHeight / 2.0f + 100.0f ), 2, true, true, "1" );
+    }
 
     public override void OnStartLevel()
     {
@@ -29,6 +36,15 @@ public class Level1_BouncingBall : BaseLevel
 
         objects.DestroyAll();
         var window = desktop.CreateWindow( "Bouncy Balls", true ).GetComponent<Window>();
+        window.gameObject.AddComponent<RectMask2D>();
+        window.gameObject.GetComponent<Draggable>().updatePosition = ( _, pos ) =>
+        {
+            if( flag != null ) flag.transform.SetParent( desktop.DesktopCanvas, true );
+            ( window.transform as RectTransform ).anchoredPosition = pos;
+            if( flag != null ) flag.transform.SetParent( window.transform, true );
+        };
+        flag.transform.parent = window.transform;
+        flag.GetComponent<CanvasGroup>().SetVisibility( true );
 
         var newPlatform = Instantiate( platform, window.windowCamera.gameObject.transform );
         newPlatform.transform.localPosition = new Vector3( 0.0f, platformHeight, 50.0f );
@@ -87,6 +103,9 @@ public class Level1_BouncingBall : BaseLevel
             objects.DestroyAll();
             objects.Clear();
         }
+
+        if( flag != null )
+            flag.GetComponent<CanvasGroup>().SetVisibility( false );
     }
 
     private void CheckComplete()

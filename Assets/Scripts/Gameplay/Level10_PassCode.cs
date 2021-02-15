@@ -12,11 +12,14 @@ public class Level10_PassCode : BaseLevel
 
     // Dynamic data
     int subtitleIndex = 0;
+    GameObject flag;
 
     // Functions
     private void Start()
     {
         canvas.SetVisibility( false );
+
+        flag = desktop.CreateFlag( new Vector2( 200.0f, 0.0f ), 10, false, true );
     }
 
     public override void OnStartLevel()
@@ -53,11 +56,18 @@ public class Level10_PassCode : BaseLevel
         if( value == 10 )
         {
             var codes = new string[] { "4122", "1224", "1224", "2412" };
-            if( codes.Contains( passCodeText.text.Replace( " ", string.Empty ) ) )
+            var guess = passCodeText.text.Replace( " ", string.Empty );
+
+            if( codes.Contains( guess ) )
             {
                 canvas.SetVisibility( false );
                 Utility.FunctionTimer.StopTimer( "PlaySubtitle" );
                 Utility.FunctionTimer.CreateTimer( 1.0f, StartNextLevel );
+            }
+            else if( guess == "0145" && flag != null )
+            {
+                flag.GetComponent<CanvasGroup>().SetVisibility( true );
+                flag = null;
             }
             else
             {
