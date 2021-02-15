@@ -66,7 +66,7 @@ public class Level5_Earthquake : BaseLevel
             var icon = desktop.CreateShortcut( item, desktop.GetGridBounds().RandomPosition(), ( x ) =>
             {
                 if( canCreateLights && x == shortcuts[0] )
-                    LevelFinished( 5.0f );
+                    LevelFinished( 2.0f );
             } );
 
             shortcuts.Add( icon );
@@ -109,11 +109,7 @@ public class Level5_Earthquake : BaseLevel
 
     protected override void OnLevelFinished()
     {
-        Utility.FunctionTimer.CreateTimer( 3.0f, () =>
-        {
-            StartCoroutine( desktop.RunTimer() );
-            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Start_Update" );
-        } );
+
     }
 
     protected override void OnLevelUpdate()

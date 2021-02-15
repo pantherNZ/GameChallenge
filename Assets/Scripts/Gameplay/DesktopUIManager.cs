@@ -22,6 +22,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [Header( "Levels" )]
     [SerializeField] List<BaseLevel> levels = new List<BaseLevel>();
     [SerializeField] int startingLevelId = 0;
+    int highestLevelUnlocked;
 
     // UI stuff
     [Header( "UI" )]
@@ -97,6 +98,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] AudioClip gameLostAudio = null;
     [SerializeField] AudioClip levelFailAudio = null;
     [SerializeField] List<AudioClip> musicTracks = new List<AudioClip>();
+    [SerializeField] AudioClip updateStartedAudio = null;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
     GameObject taskbarPhysics;
@@ -210,6 +212,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         if( startingLevelId >= 7 ) // Earthquake
             StartCoroutine( desktop.RunTimer() );
 
+        musicTracks.RandomShuffle();
         PlayMusic();
     }
 
@@ -232,7 +235,6 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     private void PlayMusic()
     {
-        musicTracks.RandomShuffle();
         music.clip = musicTracks[musicIdx];
         music.Play();
         musicIdx = ( musicIdx + 1 ) % musicTracks.Count;
@@ -242,6 +244,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void Serialise( BinaryWriter writer )
     {
         writer.Write( Mathf.Max( startingLevelId, currentLevel ) );
+        writer.Write( Mathf.Max( highestLevelUnlocked, currentLevel ) );
+        writer.Write( easyDifficulty );
         writer.Write( flagsFound.Count );
 
         foreach( var flag in flagsFound )
@@ -251,8 +255,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void Deserialise( BinaryReader reader )
     {
         startingLevelId = reader.ReadInt32();
-
+        highestLevelUnlocked = reader.ReadInt32();
+        easyDifficulty = reader.ReadBoolean();
         int flags = reader.ReadInt32();
+
         for( int i = 0; i < flags; ++i )
             flagsFound.Add( reader.ReadInt32() );
     }
@@ -270,20 +276,13 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                 if( selection == "hard" )
                 {
                     easyDifficulty = false;
-
-                    if( !difficultyTimer.active )
-                        SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelectHard" ) );
+                    SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelectHard" ) );
                     Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
                 }
             } );
         }, "selectionDelay" );
 
-        difficultyTimer = Utility.FunctionTimer.CreateTimer( 5.0f, () =>
-        {
-            if( !easyDifficulty )
-                SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelectHard" ) );
-            Utility.FunctionTimer.CreateTimer( 3.0f, StartNextLevel );
-        } );
+        difficultyTimer = Utility.FunctionTimer.CreateTimer( 10.0f, StartNextLevel );
     }
 
     protected override void Cleanup( bool fromRestart )
@@ -406,10 +405,27 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         MainCamera.gameObject.SetActive( false );
     }
 
-    public void RestartGame( int startLevel = 0 )
+    public void RestartGame( int startLevel )
     {
-        this.FadeToBlack( restartGameFadeOutTime );
+        RestartGame( startLevel, restartGameFadeOutTime );
+    }
+
+    public void RestartGame( float fadeOutTime )
+    {
+        RestartGame( 0, fadeOutTime );
+    }
+
+    public void RestartGame( int startLevel, float fadeOutTime )
+    {
+        gameCompleteCamera.gameObject.SetActive( false );
+        blueScreenCamera.gameObject.SetActive( false );
+        MainCamera.gameObject.SetActive( true );
+
+        this.FadeToBlack( fadeOutTime );
         levels[currentLevel].Clear();
+        startingLevelId = startLevel;
+        if( enabledSaveLoad )
+            Game.SaveGameSystem.SaveGame( "UGC" );
 
         Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime, () =>
         {
@@ -705,7 +721,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
         if( blueScreenCamera.gameObject.activeSelf )
             if( Input.anyKeyDown )
-                RestartGame();
+                RestartGame( 0, 0.0f );
 
         for( int i = shortcuts.Count - 1; i >= 0; --i )
             if( shortcuts[i] == null )
@@ -812,7 +828,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
         startMenuList.transform.DetachChildren();
 
-        for( int i = 0; i <= Mathf.Max( startingLevelId, currentLevel ); ++i )
+        for( int i = 0; i <= Mathf.Max( highestLevelUnlocked, currentLevel ); ++i )
         {
             var icon = levels[i].startMenuEntryIcon;
 
@@ -865,6 +881,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public IEnumerator RunTimer()
     {
         updateTimerCanvas.SetVisibility( true );
+        desktop.PlayAudio( updateStartedAudio );
 
         StartCoroutine( RunTimerFlash( 8, 0.3f ) );
 

@@ -43,7 +43,7 @@ public class Level1_BouncingBall : BaseLevel
             ( window.transform as RectTransform ).anchoredPosition = pos;
             if( flag != null ) flag.transform.SetParent( window.transform, true );
         };
-        flag.transform.parent = window.transform;
+        flag.transform.SetParent( window.transform, true );
         flag.GetComponent<CanvasGroup>().SetVisibility( true );
 
         var newPlatform = Instantiate( platform, window.windowCamera.gameObject.transform );
@@ -81,6 +81,8 @@ public class Level1_BouncingBall : BaseLevel
 
     protected override void OnLevelUpdate()
     {
+        base.OnLevelUpdate();
+
         foreach( var ball in objects )
         {
             if( ball.transform.position.y <= -10.0f )
@@ -92,8 +94,24 @@ public class Level1_BouncingBall : BaseLevel
         }
     }
 
+    protected override void OnLevelFinished()
+    {
+        base.OnLevelFinished();
+
+        Utility.FunctionTimer.CreateTimer( 5.0f, () =>
+        {
+            StartCoroutine( desktop.RunTimer() );
+            Utility.FunctionTimer.CreateTimer( 1.0f, () =>
+            {
+                SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Start_Update" );
+            } );
+        } );
+    }
+
     protected override void Cleanup( bool fromRestart )
     {
+        base.Cleanup( fromRestart );
+
         Utility.FunctionTimer.StopTimer( "CreateBall" );
         Utility.FunctionTimer.StopTimer( "Narrator_Level_1_2" );
         Utility.FunctionTimer.StopTimer( "Narrator_Level_1_1" );
@@ -117,7 +135,7 @@ public class Level1_BouncingBall : BaseLevel
         {
             complete[2] = true;
             SubtitlesManager.Instance.AddSubtitleGameString("Narrator_Level_1_Complete" );
-            LevelFinished( 4.0f );
+            LevelFinished( 15.0f );
 
             Utility.FunctionTimer.CreateTimer( 2.0f, () =>
             {
