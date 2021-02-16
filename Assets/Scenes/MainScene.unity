@@ -1656,6 +1656,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 203328297}
+        m_MethodName: SortDesktopIcons
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &119870916
 GameObject:
   m_ObjectHideFlags: 0
@@ -2190,7 +2201,6 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 610674837}
-  - {fileID: 1164377890}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2265,7 +2275,8 @@ MonoBehaviour:
   desktopSelectionEnabled: 1
   contextMenu: {fileID: 1391013267}
   contextMenuEnabled: 1
-  gridSize: {x: 75, y: 75}
+  recyclingEnabled: 1
+  gridCellSize: {x: 75, y: 75}
   windowCameraStartPosition: {x: -20, y: 0, z: -10}
   lifeLostDisplayTime: 3
   levelFailFadeOutTime: 2
@@ -2960,7 +2971,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.513
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -5364,6 +5375,7 @@ RectTransform:
   - {fileID: 8383562142542080400}
   - {fileID: 1180525288}
   - {fileID: 1060671961773757633}
+  - {fileID: 1164377890}
   m_Father: {fileID: 203328296}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8865,7 +8877,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 203328296}
+    m_TransformParent: {fileID: 610674837}
     m_Modifications:
     - target: {fileID: -1424889962579402269, guid: 310a7776b5bfa964aa12b8c7c6bd4531,
         type: 3}
@@ -8905,17 +8917,17 @@ PrefabInstance:
     - target: {fileID: 6354118414424234440, guid: 310a7776b5bfa964aa12b8c7c6bd4531,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6354118414424234440, guid: 310a7776b5bfa964aa12b8c7c6bd4531,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6354118414424234440, guid: 310a7776b5bfa964aa12b8c7c6bd4531,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6354118414424234440, guid: 310a7776b5bfa964aa12b8c7c6bd4531,
         type: 3}
@@ -8925,7 +8937,7 @@ PrefabInstance:
     - target: {fileID: 6354118414424234440, guid: 310a7776b5bfa964aa12b8c7c6bd4531,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6354118414424234440, guid: 310a7776b5bfa964aa12b8c7c6bd4531,
         type: 3}
@@ -12654,7 +12666,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\t\tSort by"
+  m_Text: "\t\tSort"
 --- !u!222 &1653488109
 CanvasRenderer:
   m_ObjectHideFlags: 0

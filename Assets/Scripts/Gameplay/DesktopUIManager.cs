@@ -58,9 +58,10 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     // Desktop context menu
     [SerializeField] GameObject contextMenu = null;
     [HideInInspector] public bool contextMenuEnabled = true;
+    [HideInInspector] public bool recyclingEnabled = true;
 
     // Shortcuts
-    [SerializeField] Vector2Int gridSize = new Vector2Int( 100, 100 );
+    [SerializeField] Vector2Int gridCellSize = new Vector2Int( 100, 100 );
 
     public class Shortcut
     {
@@ -480,34 +481,39 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public void DestroyWindowByTitle( Window window )
     {
-        DestroyWindowByTitle( window.GetTitle() );
+        if( window != null )
+            DestroyWindowByTitle( window.GetTitle() );
     }
 
     public void DestroyWindow( GameObject window )
     {
-        DestroyWindow( window.GetComponent<Window>() );
+        if( window != null )
+            DestroyWindow( window.GetComponent<Window>() );
     }
 
     public void DestroyWindow( Window window )
     {
-        windows.RemoveBySwap( ( pair ) =>
+        if( window != null )
+        {
+            windows.RemoveBySwap( ( pair ) =>
         {
             if( pair.First == window )
                 pair.First.DestroyObject();
             return pair.First == window;
         } );
+        }
     }
 
     public Rect GetGridBounds()
     {
         var rect = ( transform as RectTransform ).rect;
-        float height = ( Mathf.Floor( rect.height / gridSize.y ) - 0.5f ) * gridSize.y;
-        return new Rect( rect.xMin, rect.yMin + rect.height - height, ( Mathf.Floor( rect.width / gridSize.x ) - 0.5f ) * gridSize.x, height );
+        float height = ( Mathf.Floor( rect.height / gridCellSize.y ) - 0.5f ) * gridCellSize.y;
+        return new Rect( rect.xMin, rect.yMin + rect.height - height, ( Mathf.Floor( rect.width / gridCellSize.x ) - 0.5f ) * gridCellSize.x, height );
     }
 
     public GameObject CreateShortcut( DesktopIcon icon, Vector2Int index, System.Action<GameObject> onOpened = null )
     {
-        return CreateShortcut( icon, GetGridBounds().TopLeft() + new Vector2( index.x * gridSize.x, -index.y * gridSize.y ), onOpened );
+        return CreateShortcut( icon, GetGridBounds().TopLeft() + new Vector2( index.x * gridCellSize.x, -index.y * gridCellSize.y ), onOpened );
     }
 
     public GameObject CreateShortcut( DesktopIcon icon, Vector2 position, System.Action<GameObject> onOpened = null )
@@ -516,7 +522,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             return null;
 
         var newShortcut = Instantiate( shortcutPrefab, DesktopCanvas );
-        ( newShortcut.transform as RectTransform ).localPosition = position - new Vector2( 0.0f, gridSize.y / 2.0f );
+        ( newShortcut.transform as RectTransform ).localPosition = position - new Vector2( 0.0f, gridCellSize.y / 2.0f );
         ( newShortcut.transform as RectTransform ).pivot = new Vector2( 0.5f, 0.5f );
         newShortcut.GetComponentInChildren<Text>().text = icon.name;
         newShortcut.GetComponentsInChildren<Image>()[1].sprite = icon.icon;
@@ -528,20 +534,20 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         };
 
         var grid = newShortcut.GetComponent<LockToGrid>();
-        grid.gridWidth = gridSize.x;
-        grid.gridHeight = gridSize.y;
+        grid.cellWidth = gridCellSize.x;
+        grid.cellHeight = gridCellSize.y;
         var bounds = GetGridBounds();
         grid.rootPos = bounds.TopLeft();
-        grid.minPos = bounds.min;
-        grid.maxPos = bounds.max;
-        grid.maxPos.y -= gridSize.y / 2.0f;
+        grid.MinPos = bounds.min;
+        grid.MaxPos = bounds.max;
+        grid.MaxPos = new Vector2( grid.MaxPos.x, grid.MaxPos.y - gridCellSize.y / 2.0f );
 
         if( !shortcuts.IsEmpty() )
         {
             grid.onOverlapWith += ( obj ) =>
             {
                 // Recycling bin
-                if( obj == shortcuts[0].shortcut )
+                if( recyclingEnabled && obj == shortcuts[0].shortcut )
                 {
                     RemoveShortcut( newShortcut );
                     PlayAudio( recycleAudio.RandomItem() );
@@ -737,8 +743,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
                 {
                     var bounds = GetGridBounds();
                     shortcut.grid.rootPos = bounds.TopLeft();
-                    shortcut.grid.minPos = bounds.min;
-                    shortcut.grid.maxPos = bounds.max;
+                    shortcut.grid.MinPos = bounds.min;
+                    shortcut.grid.MaxPos = bounds.max;
                 }
             }
         }
@@ -941,5 +947,18 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void DeleteSave()
     {
         Game.SaveGameSystem.DeleteSave( "UGC" );
+    }
+
+    public void SortDesktopIcons()
+    {
+        recyclingEnabled = false;
+
+        foreach( var shortcut in shortcuts )
+            shortcut.grid.SetGridPosition( new Vector2Int( shortcut.grid.gridWidth, shortcut.grid.gridHeight ) );
+
+        foreach( var( index, shortcut ) in shortcuts.Enumerate() )
+            shortcut.grid.SetGridPosition( new Vector2Int( index / shortcut.grid.gridWidth, -index % shortcut.grid.gridHeight ) );
+
+        recyclingEnabled = true;
     }
 }
