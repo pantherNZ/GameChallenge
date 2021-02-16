@@ -266,6 +266,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public override void OnStartLevel()
     {
+        easyDifficulty = true;
+
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
@@ -290,7 +292,6 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     {
         base.Cleanup( fromRestart );
 
-        easyDifficulty = false;
         difficultyTimer.StopTimer();
         Utility.FunctionTimer.StopTimer( "selectionDelay" );
     }
@@ -393,7 +394,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
         blueScreenCamera.gameObject.SetActive( true );
         MainCamera.gameObject.SetActive( false );
-        PlayAudio( gameLostAudio );
+        PlayAudio( gameLostAudio );    
     }
 
     public void FinishGame()
@@ -421,6 +422,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         gameCompleteCamera.gameObject.SetActive( false );
         blueScreenCamera.gameObject.SetActive( false );
         MainCamera.gameObject.SetActive( true );
+        SubtitlesManager.Instance.canvasGroup.SetVisibility( false );
 
         this.FadeToBlack( fadeOutTime );
         levels[currentLevel].Clear();
@@ -432,6 +434,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         {
             MainCamera.gameObject.SetActive( true );
             blueScreenCamera.gameObject.SetActive( false );
+            SubtitlesManager.Instance.canvasGroup.SetVisibility( true );
             levels[startLevel].StartLevel();
         } );
     }

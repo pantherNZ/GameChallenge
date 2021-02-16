@@ -40,7 +40,7 @@ public class SubtitlesManager : MonoBehaviour
 
     List<Timer> timers = new List<Timer>();
 
-    CanvasGroup canvasGroup;
+    [HideInInspector] public CanvasGroup canvasGroup;
 
     void Start()
     {

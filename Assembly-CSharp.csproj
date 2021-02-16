@@ -91,6 +91,7 @@
     <Compile Include="Assets\Scripts\UI\UIProgressBar.cs" />
     <Compile Include="Assets\Scripts\UI\UITimeSetter.cs" />
     <Compile Include="Assets\Scripts\Utility\Bezier.cs" />
+    <Compile Include="Assets\Scripts\Utility\DebugLogToScreen.cs" />
     <Compile Include="Assets\Scripts\Utility\EventDispatcher.cs" />
     <Compile Include="Assets\Scripts\Utility\Extensions.cs" />
     <Compile Include="Assets\Scripts\Utility\FunctionTimer.cs" />

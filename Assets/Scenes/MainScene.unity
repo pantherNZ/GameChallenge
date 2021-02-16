@@ -2102,11 +2102,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 203328296}
-  - component: {fileID: 203328295}
-  - component: {fileID: 203328294}
-  - component: {fileID: 203328293}
+  - component: {fileID: 203328314}
   - component: {fileID: 203328297}
-  - component: {fileID: 203328298}
   - component: {fileID: 203328299}
   - component: {fileID: 203328301}
   - component: {fileID: 203328300}
@@ -2122,6 +2119,10 @@ GameObject:
   - component: {fileID: 203328307}
   - component: {fileID: 203328304}
   - component: {fileID: 203328313}
+  - component: {fileID: 203328298}
+  - component: {fileID: 203328293}
+  - component: {fileID: 203328294}
+  - component: {fileID: 203328295}
   m_Layer: 5
   m_Name: Desktop
   m_TagString: Untagged
@@ -2245,7 +2246,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 5
+  startingLevelId: 0
   DesktopCanvas: {fileID: 610674837}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -2283,7 +2284,7 @@ MonoBehaviour:
   levelFailFadeInTime: 1
   restartGameFadeOutTime: 5
   enabledAudio: 1
-  enabledSaveLoad: 0
+  enabledSaveLoad: 1
   timeUntilUpdateSec: 600
   easyDifficulty: 1
   difficultySelectionAudio: {fileID: 8300000, guid: 14c5e2d91c06a1b4b8ea12bf75463e4d,
@@ -2423,7 +2424,7 @@ MonoBehaviour:
     subtitleEasy: Narrator_Level_3_1_easy
     subtitleHard: Narrator_Level_3_1_hard
   - timerEasySec: 20
-    timerHardSec: 15
+    timerHardSec: 20
     numShortcutsEasy: 10
     numShortcutsHard: 20
     subtitleEasy: Narrator_Level_3_2
@@ -3055,6 +3056,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &203328314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203328292}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c910a7a7d9d662a44902cbedd04ad510, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &214368265
 GameObject:
   m_ObjectHideFlags: 0
@@ -7921,6 +7934,7 @@ MonoBehaviour:
   appearInstantly: 1
   updateIntervalSec: 0.05
   selectionMargin: 4
+  canvasGroup: {fileID: 0}
 --- !u!114 &1009632339
 MonoBehaviour:
   m_ObjectHideFlags: 0
