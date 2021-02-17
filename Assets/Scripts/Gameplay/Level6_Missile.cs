@@ -59,8 +59,6 @@ public class Level6_Missile : BaseLevel
 
     void CreateWindow( GameObject shortcut )
     {
-        windows.RemoveAll( x => x == null );
-
         if( windows.Count >= maxWindows )
             return;
 
@@ -72,30 +70,40 @@ public class Level6_Missile : BaseLevel
     {
         base.OnLevelUpdate();
 
-        foreach( var missile in missiles )
-        {
-            var found = windows.Any( window =>
-            {
-                var rect = window.GetCameraViewWorldRect();
-                return rect.Contains( missile.missile.GetComponent<Collider2D>().bounds );
-            } );
+        windows.RemoveAll( x => x == null );
 
-            if( !found )
+        if( windows.IsEmpty() )
+        {
+            while( !missiles.IsEmpty() )
+                Explode( missiles.Front().missile, false, false );
+        }
+        else
+        {
+            foreach( var missile in missiles )
             {
-                Explode( missile.missile, false );
-                break;
+                var found = windows.Any( window =>
+                {
+                    var rect = window.GetCameraViewWorldRect();
+                    return rect.Contains( missile.missile.GetComponent<Collider2D>().bounds );
+                } );
+
+                if( !found )
+                {
+                    Explode( missile.missile, false );
+                    break;
+                }
             }
         }
 
-        if( level != null )
+        /*if( level != null )
         {
             var width = desktop.MainCamera.pixelWidth / 1400.0f;
             var height = desktop.MainCamera.pixelHeight / 600.0f;
-            level.transform.localScale = new Vector3( width, height, 1.0f );
+            //level.transform.localScale = new Vector3( width, height, 1.0f );
 
             foreach( var path in paths )
                 path.gameObject.transform.localScale = new Vector3( 1.0f / width, 1.0f / height, 1.0f );
-        }
+        }*/
     }
 
     protected override void Cleanup( bool fromRestart )
@@ -181,13 +189,17 @@ public class Level6_Missile : BaseLevel
         Explode( missile, true );
     }
 
-    public void Explode( GameObject missile, bool reached_end )
+    public void Explode( GameObject missile, bool reached_end, bool playEffects = true )
     {
         if( missile == null )
             return;
 
-        missile.GetComponent<Animator>().Play( "Explode" );
-        desktop.PlayAudio( explodeAudio );
+        if( playEffects )
+        {
+            missile.GetComponent<Animator>().Play( "Explode" );
+            desktop.PlayAudio( explodeAudio );
+        }
+
         var found = missiles.Find( x => x.missile == missile );
         StopCoroutine( found.movement );
 
@@ -197,7 +209,7 @@ public class Level6_Missile : BaseLevel
                 missile.Destroy();
         } );
 
-           var newIndex = found.index;
+        var newIndex = found.index;
         missiles.Remove( found );
 
         if( reached_end )

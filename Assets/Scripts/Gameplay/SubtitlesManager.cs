@@ -28,7 +28,7 @@ public class SubtitlesManager : MonoBehaviour
 
     List<Selection> selections = new List<Selection>();
 
-    [HideInInspector] public Action<string> onSelectionEvent;
+    [HideInInspector] public Action<string, string> onSelectionEvent;
 
     public class Timer
     {
@@ -104,12 +104,12 @@ public class SubtitlesManager : MonoBehaviour
         }
     }
 
-    public void AddSubtitleGameString( string gameString, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
+    public void AddSubtitleGameString( string gameString, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string, string> onSelection = null )
     {
         AddSubtitle( DataManager.Instance.GetGameString( gameString ), fadeOutDelay, fadeOutTime, onSelection );
     }
 
-    public void AddSubtitle( string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
+    public void AddSubtitle( string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string, string> onSelection = null )
     {
         ClearSubtitles();
         onSelectionEvent = onSelection;
@@ -157,7 +157,7 @@ public class SubtitlesManager : MonoBehaviour
                         selection.obj.transform.GetChild( 1 - index ).gameObject.Destroy();
                         updateColour( index, selectionColour );
                         selection.complete = true;
-                        onSelectionEvent?.Invoke( text.text );
+                        onSelectionEvent?.Invoke( subtitle, texts[index].text );
                     }
                 };
 
@@ -167,7 +167,7 @@ public class SubtitlesManager : MonoBehaviour
         }
     }
 
-    public void QueueSubtitle( float delay, string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
+    public void QueueSubtitle( float delay, string subtitle, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string, string> onSelection = null )
     {
         Utility.FunctionTimer.CreateTimer( delay, () =>
         {
@@ -175,7 +175,7 @@ public class SubtitlesManager : MonoBehaviour
         }, subtitle );
     }
 
-    public void QueueSubtitleGameString( float delay, string gameString, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string> onSelection = null )
+    public void QueueSubtitleGameString( float delay, string gameString, float fadeOutDelay = 0.0f, float fadeOutTime = 0.0f, Action<string, string> onSelection = null )
     {
         Utility.FunctionTimer.CreateTimer( delay, () =>
         {

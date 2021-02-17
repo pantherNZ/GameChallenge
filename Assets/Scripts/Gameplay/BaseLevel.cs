@@ -85,7 +85,12 @@ abstract public class BaseLevel : MonoBehaviour
     private void Update()
     {
         if( levelStarted && levelActive )
+        {
             OnLevelUpdate();
+
+            //if( Input.GetKeyDown( KeyCode.Colon ) )
+            //    LevelFinished();
+        }
     }
 
     abstract public void OnStartLevel();

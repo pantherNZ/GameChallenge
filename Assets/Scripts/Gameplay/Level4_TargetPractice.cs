@@ -104,7 +104,7 @@ public class Level4_TargetPractice : BaseLevel
     protected override void OnLevelUpdate()
     {
         var mousePos = desktop.MainCamera.ScreenToWorldPoint( Input.mousePosition ).SetZ( 20.0f );
-        crosshair.transform.position = mousePos;
+        crosshair.transform.position = mousePos.SetZ( 1.0f );
         mousePos = mousePos.SetY( Mathf.Max( desktop.GetWorldBound().yMin, mousePos.y ) );
         var direction = mousePos - gun.transform.position;
         Vector3 rotatedVectorToTarget = Quaternion.Euler( 0, 0, 90 ) * direction.RotateZ( -90.0f );

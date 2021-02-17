@@ -80,20 +80,25 @@ public class Level5_Earthquake : BaseLevel
             desktop.CreatePhysicsBound();
 
             foreach( var icon in shortcuts )
-            {
-                if( !icon )
-                    continue;
-                var physics = desktop.ShortcutAddPhysics( icon ).GetComponent<Rigidbody2D>();
-                var eventDispatcher = icon.AddComponent<EventDispatcher>();
-                eventDispatcher.OnPointerUpEvent = null;
-                eventDispatcher.OnPointerDownEvent = null;
-                physics.AddTorque( UnityEngine.Random.Range( -torqueForce / 2.0f, torqueForce / 2.0f ) );
-                physics.AddForce( UnityEngine.Random.insideUnitCircle * applyForce );
-                //Utility.FunctionTimer.CreateTimer( 4.0f, () => desktop.ShortcutRemovePhysics( icon ) );
-            }
+                if( icon != null )
+                    CreateShortcutPhysics( icon );
 
-            //Utility.FunctionTimer.CreateTimer( 4.0f, () => desktop.TaskbarRemovePhysics() );
+            CreateShortcutPhysics( desktop.shortcuts[0].shortcut );
+            Utility.FunctionTimer.CreateTimer( 4.0f, () =>
+            {
+                desktop.ShortcutRemovePhysics( desktop.shortcuts[0].shortcut, true );
+                desktop.shortcuts[0].shortcut.transform.localRotation = Quaternion.identity;
+             } );
         } );
+    }
+
+    private void CreateShortcutPhysics( GameObject shortcut )
+    {
+        var physics = desktop.ShortcutAddPhysics( shortcut ).GetComponent<Rigidbody2D>();
+        var eventDispatcher = shortcut.AddComponent<EventDispatcher>();
+        eventDispatcher.enabled = false;
+        physics.AddTorque( UnityEngine.Random.Range( -torqueForce / 2.0f, torqueForce / 2.0f ) );
+        physics.AddForce( UnityEngine.Random.insideUnitCircle * applyForce );
     }
 
     protected override void Cleanup( bool fromRestart )
@@ -105,6 +110,9 @@ public class Level5_Earthquake : BaseLevel
 
         darkness.Destroy();
         desktop.contextMenuEnabled = true;
+
+        if( flag != null )
+            flag.GetComponent<CanvasGroup>().SetVisibility( false );
     }
 
     protected override void OnLevelFinished()

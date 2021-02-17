@@ -272,7 +272,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         Utility.FunctionTimer.CreateTimer( 2.0f, () =>
         {
             var str = DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelect" );
-            SubtitlesManager.Instance.AddSubtitle( str, 0, 0, ( selection ) =>
+            SubtitlesManager.Instance.AddSubtitle( str, 0, 0, ( _, selection ) =>
             {
                 PlayAudio( difficultySelectionAudio );
 
