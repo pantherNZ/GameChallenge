@@ -83,6 +83,8 @@ public class Level1_BouncingBall : BaseLevel
     {
         base.OnLevelUpdate();
 
+        objects.RemoveAll( x => x == null );
+
         foreach( var ball in objects )
         {
             if( ball.transform.position.y <= -10.0f )

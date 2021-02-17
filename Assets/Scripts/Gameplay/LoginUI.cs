@@ -24,6 +24,7 @@ public class LoginUI : BaseLevel
             if( passworldInput.text.Length > 0 && passworldInput.text == password )
             {
                 GetComponent<CanvasGroup>().ToggleVisibility();
+                desktop.GetComponent<CanvasGroup>().SetVisibility( true );
                 LevelFinished();
                 StartNextLevel();
                 Utility.FunctionTimer.StopTimer( "2nd_prompt" );
@@ -65,6 +66,12 @@ public class LoginUI : BaseLevel
 
     public override void OnStartLevel()
     {
+        passworldInput.inputType = InputField.InputType.Password;
+        passworldInput.text = string.Empty;
+        passworldInput.readOnly = false;
+
+        loginDisplay.SetVisibility( true );
+        GetComponent<CanvasGroup>().SetVisibility( true );
         desktop.GetComponent<CanvasGroup>().SetVisibility( false );
         hintButton.SetVisibility( false );
         hintButton.GetComponent<Button>().interactable = false;

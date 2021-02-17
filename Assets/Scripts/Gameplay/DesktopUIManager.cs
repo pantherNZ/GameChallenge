@@ -247,6 +247,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         writer.Write( Mathf.Max( startingLevelId, currentLevel ) );
         writer.Write( Mathf.Max( highestLevelUnlocked, currentLevel ) );
         writer.Write( easyDifficulty );
+        writer.Write( music.volume );
+        writer.Write( audio.volume );
         writer.Write( flagsFound.Count );
 
         foreach( var flag in flagsFound )
@@ -258,6 +260,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         startingLevelId = reader.ReadInt32();
         highestLevelUnlocked = reader.ReadInt32();
         easyDifficulty = reader.ReadBoolean();
+        music.volume = reader.ReadSingle();
+        audio.volume = reader.ReadSingle();
+        var sliders = optionsWindow.GetComponentsInChildren<Slider>();
+        sliders[0].value = audio.volume;
+        sliders[1].value = music.volume;
         int flags = reader.ReadInt32();
 
         for( int i = 0; i < flags; ++i )
@@ -424,6 +431,9 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         MainCamera.gameObject.SetActive( true );
         SubtitlesManager.Instance.canvasGroup.SetVisibility( false );
 
+        foreach( var level in levels )
+            level.Clear();
+
         this.FadeToBlack( fadeOutTime );
         levels[currentLevel].Clear();
         startingLevelId = startLevel;
@@ -435,7 +445,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             MainCamera.gameObject.SetActive( true );
             blueScreenCamera.gameObject.SetActive( false );
             SubtitlesManager.Instance.canvasGroup.SetVisibility( true );
-            levels[startLevel].StartLevel();
+            levels[startLevel].Restart();
         } );
     }
 
@@ -925,6 +935,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void SetMusicVolume( float scale )
     {
         music.volume = scale;
+    }
+
+    public void SetMusicVolume( Slider slider )
+    {
+        SetMusicVolume( slider.value );
     }
 
     public void SetAudioVolume( Slider slider )
