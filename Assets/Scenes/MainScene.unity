@@ -2286,7 +2286,7 @@ MonoBehaviour:
   enabledAudio: 1
   enabledSaveLoad: 1
   timeUntilUpdateSec: 600
-  easyDifficulty: 1
+  easyDifficulty: 0
   difficultySelectionAudio: {fileID: 8300000, guid: 14c5e2d91c06a1b4b8ea12bf75463e4d,
     type: 3}
   recycleAudio:
@@ -2486,12 +2486,20 @@ MonoBehaviour:
     type: 3}
   gunPrefab: {fileID: 1404946478504284874, guid: 981e9351629abe04888f13fcd4bcef15,
     type: 3}
-  targetSize: 1
-  targetSpawnRateBaseSec: 0.75
-  targetSpawnRateVarianceSec: 0
-  targetsMax: 30
-  targetDuration: 2
-  targetFadeDuration: 2
+  dataEasy:
+    targetSize: 1
+    targetSpawnRateBaseSec: 0.8
+    targetSpawnRateVarianceSec: 0.1
+    targetsMax: 30
+    targetDuration: 4
+    targetFadeDuration: 2
+  dataHard:
+    targetSize: 1
+    targetSpawnRateBaseSec: 0.6
+    targetSpawnRateVarianceSec: 0.2
+    targetsMax: 35
+    targetDuration: 0.5
+    targetFadeDuration: 1
   maxFails: 3
   shootAudio: {fileID: 8300000, guid: 8e6cb38dcb2218449921d9dfd9e82de5, type: 3}
   hitAudio: {fileID: 0}

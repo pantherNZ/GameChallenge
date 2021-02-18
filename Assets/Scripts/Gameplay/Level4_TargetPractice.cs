@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,13 +8,20 @@ public class Level4_TargetPractice : BaseLevel
     // Static data
     [SerializeField] GameObject targetPrefab = null;
     [SerializeField] GameObject gunPrefab = null;
-    [SerializeField] float targetSize = 1.0f;
-    [SerializeField] float targetSpawnRateBaseSec = 1.0f;
-    [SerializeField] float targetSpawnRateVarianceSec = 1.0f;
-    [SerializeField] int targetsMax = 30;
-    //[SerializeField] float targetSpeed = 0.0f;
-    [SerializeField] float targetDuration = 4.0f;
-    [SerializeField] float targetFadeDuration = 2.0f;
+
+    [Serializable]
+    public class Data
+    {
+        public float targetSize = 1.0f;
+        public float targetSpawnRateBaseSec = 1.0f;
+        public float targetSpawnRateVarianceSec = 1.0f;
+        public int targetsMax = 30;
+        public float targetDuration = 4.0f;
+        public float targetFadeDuration = 2.0f;
+    };
+
+    [SerializeField] Data dataEasy = new Data();
+    [SerializeField] Data dataHard = new Data();
     [SerializeField] int maxFails = 3;
     [SerializeField] AudioClip shootAudio = null;
     [SerializeField] AudioClip hitAudio = null;
@@ -32,7 +40,7 @@ public class Level4_TargetPractice : BaseLevel
     {
         var pos = ( desktop.DesktopCanvas.transform as RectTransform ).rect.BottomLeft() + desktop.GetScreenBound( 100.0f, false ).RandomPosition();
         flag = desktop.CreateFlag( pos, 4, true, true, "4" );
-        flagSpawnIdx = Random.Range( 0, targetsMax );
+        flagSpawnIdx = UnityEngine.Random.Range( 0, GetData().targetsMax );
     }
 
     public override void OnStartLevel()
@@ -59,7 +67,7 @@ public class Level4_TargetPractice : BaseLevel
             desktop.LevelFailed();
         }
         // Success
-        else if( targetsCount >= targetsMax && targets.IsEmpty() )
+        else if( targetsCount >= GetData().targetsMax && targets.IsEmpty() )
         {
             LevelFinished( 3.0f );
             return;
@@ -138,9 +146,14 @@ public class Level4_TargetPractice : BaseLevel
         }
     }
 
+    private Data GetData()
+    {
+        return desktop.IsEasyMode() ? dataEasy : dataHard;
+    }
+
     private float GetSpawnTime()
     {
-        return targetSpawnRateBaseSec + Random.Range( 0.0f, targetSpawnRateVarianceSec );
+        return GetData().targetSpawnRateBaseSec + UnityEngine.Random.Range( 0.0f, GetData().targetSpawnRateVarianceSec );
     }
 
     private void SpawnTarget()
@@ -165,14 +178,19 @@ public class Level4_TargetPractice : BaseLevel
         SetupTarget( target );
         targets.Add( target );
 
-        if( targetsCount < targetsMax )
+        if( targetsCount < GetData().targetsMax )
             Utility.FunctionTimer.CreateTimer( GetSpawnTime(), SpawnTarget, "SpawnTarget" );
     }
 
     private void SetupTarget( GameObject target )
     {
         target.transform.localScale = new Vector3( 0.1f, 0.1f, 0.1f );
+        float targetFadeDuration = GetData().targetFadeDuration;
+        float targetDuration = GetData().targetDuration;
+        float targetSize = GetData().targetSize;
+
         StartCoroutine( Utility.InterpolateScale( target.transform, new Vector3( targetSize, targetSize, 1.0f ), targetFadeDuration ) );
+
         Utility.FunctionTimer.CreateTimer( targetFadeDuration + targetDuration, () =>
         {
             if( target != null )

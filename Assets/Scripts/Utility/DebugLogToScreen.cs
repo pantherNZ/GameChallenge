@@ -35,6 +35,7 @@ public class DebugLogToScreen : MonoBehaviour
 
     void OnGUI()
     {
+        GUI.color = Color.black;
         GUILayout.Label( myLog );
     }
 }

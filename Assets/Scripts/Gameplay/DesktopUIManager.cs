@@ -295,14 +295,15 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             } );
         }, "selectionDelay" );
 
-        difficultyTimer = Utility.FunctionTimer.CreateTimer( 10.0f, StartNextLevel );
+        difficultyTimer = Utility.FunctionTimer.CreateTimer( 10.0f, StartNextLevel );;
     }
 
     protected override void Cleanup( bool fromRestart )
     {
         base.Cleanup( fromRestart );
 
-        difficultyTimer.StopTimer();
+        if( difficultyTimer != null )
+            difficultyTimer.StopTimer();
         Utility.FunctionTimer.StopTimer( "selectionDelay" );
     }
 

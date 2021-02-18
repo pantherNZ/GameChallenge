@@ -37,9 +37,7 @@ public class Level1_BouncingBall : BaseLevel
         objects.DestroyAll();
         var newPlatform = Instantiate( platform );
         objects.Add( newPlatform );
-
-        var window = CreateWindow();
-        flag.GetComponent<CanvasGroup>().SetVisibility( true );
+        CreateWindow();
 
         newPlatform.transform.localPosition = new Vector3( 0.0f, platformHeight, 50.0f );
 
@@ -59,10 +57,10 @@ public class Level1_BouncingBall : BaseLevel
         shortcut = desktop.CreateShortcut( new DesktopIcon() { icon = startMenuEntryIcon, name = startMenuEntryText }, new Vector2Int( 0, 1 ), ( obj ) => CreateWindow() );
     }
 
-    private Window CreateWindow()
+    private void CreateWindow()
     {
         if( window != null )
-            return null;
+            return;
 
         var windowCmp = desktop.CreateWindow( "Bouncy Balls", true ).GetComponent<Window>();
 
@@ -86,10 +84,13 @@ public class Level1_BouncingBall : BaseLevel
             if( flag != null ) flag.transform.SetParent( window.transform, true );
         };
 
-        if( flag != null ) flag.transform.SetParent( window.transform, true );
-        objects[0].transform.SetParent( windowCmp.windowCamera.gameObject.transform, true );
+        if( flag != null )
+        {
+            flag.transform.SetParent( window.transform, true );
+            flag.GetComponent<CanvasGroup>().SetVisibility( true );
+        }
 
-        return windowCmp;
+        objects[0].transform.SetParent( windowCmp.windowCamera.gameObject.transform, true );
     }
 
     private void CreateBall()

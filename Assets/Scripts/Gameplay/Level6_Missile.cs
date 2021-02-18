@@ -222,8 +222,13 @@ public class Level6_Missile : BaseLevel
             var overlaps = Physics2D.OverlapCircleAll( missile.transform.position, explosionRadius );
 
             foreach( var overlap in overlaps )
+            {
                 if( overlap.gameObject != missile && overlap.attachedRigidbody != null )
+                {
+                    overlap.attachedRigidbody.bodyType = RigidbodyType2D.Dynamic;
                     overlap.attachedRigidbody.AddForce( ( overlap.transform.position - missile.transform.position ).normalized * explosionStrength );
+                }
+            }
 
             Utility.FunctionTimer.CreateTimer( 1.5f, () =>
             {
