@@ -122,8 +122,7 @@ public class Level6_Missile : BaseLevel
         Utility.FunctionTimer.StopTimer( "FireMissile" );
         Utility.FunctionTimer.StopTimer( "FireMissile2" );
 
-        if( fromRestart )
-            desktop.RemoveShortcut( shortcut );
+        desktop.RemoveShortcut( shortcut );
     }
 
     void FireMissile()

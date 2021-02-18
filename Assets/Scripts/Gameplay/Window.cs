@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class Window : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class Window : MonoBehaviour
     [HideInInspector] public GameObject image = null;
     [SerializeField] Text titleText = null;
     [SerializeField] Button closeButton = null;
+    [HideInInspector] public event Action<Window> onClose;
     RenderTexture renderTexture;
     DesktopUIManager desktopRef;
 
@@ -23,7 +25,12 @@ public class Window : MonoBehaviour
         if( HasViewPort() )
             image.GetComponent<RawImage>().texture = rt;
 
-        closeButton.onClick.AddListener( () => { desktop.DestroyWindow( this ); } );
+        closeButton.onClick.AddListener( () => 
+        {
+            onClose?.Invoke( this );
+            desktop.DestroyWindow( this );
+        } );
+
         desktopRef = desktop;
         Update();
     }

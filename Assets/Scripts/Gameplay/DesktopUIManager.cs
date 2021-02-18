@@ -127,6 +127,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] GameObject flagPrefab = null;
     [SerializeField] GameObject flagAcquiredPrefab = null;
     [SerializeField] Text flagsFoundCreditsText = null;
+    [SerializeField] AudioClip flagAcquiredAudio = null;
     List<int> flagsFound = new List<int>();
 
     void Awake()
@@ -188,6 +189,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
                         if( enabledSaveLoad )
                             Game.SaveGameSystem.SaveGame( "UGC" );
+
+                        PlayAudio( flagAcquiredAudio );
 
                         var obj = Instantiate( flagAcquiredPrefab, flags[idx].flag.transform.parent );
                         obj.transform.position = flags[idx].flag.transform.position;
@@ -449,11 +452,6 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         } );
     }
 
-    public GameObject CreateWindow( string title, bool destroyExisting = false, Vector2 offset = new Vector2() )
-    {
-        return CreateWindow( title, windowBasePrefab, destroyExisting, offset );
-    }
-
     public void CreateOptionsWindow()
     {
         ( optionsWindow.transform as RectTransform ).anchoredPosition = GetMousePosScreen();
@@ -466,6 +464,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         ( helpWindow.transform as RectTransform ).anchoredPosition = GetMousePosScreen();
         helpWindow.GetComponent<CanvasGroup>().SetVisibility( true );
         SetContextMenuVisibility( false );
+    }
+
+    public GameObject CreateWindow( string title, bool destroyExisting = false, Vector2 offset = new Vector2() )
+    {
+        return CreateWindow( title, windowBasePrefab, destroyExisting, offset );
     }
 
     public GameObject CreateWindow( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset )

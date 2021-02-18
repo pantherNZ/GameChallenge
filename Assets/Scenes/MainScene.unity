@@ -571,7 +571,7 @@ PrefabInstance:
     - target: {fileID: 8192425387029815924, guid: 4ee1cc8c8afd319429c3620b7424ce1a,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -418.95996
+      value: -418.96
       objectReference: {fileID: 0}
     - target: {fileID: 8192425387029815924, guid: 4ee1cc8c8afd319429c3620b7424ce1a,
         type: 3}
@@ -2323,6 +2323,7 @@ MonoBehaviour:
   flagAcquiredPrefab: {fileID: 3119581352647071119, guid: 442056a95d8fd784b902cc42e453bea3,
     type: 3}
   flagsFoundCreditsText: {fileID: 1692335690}
+  flagAcquiredAudio: {fileID: 8300000, guid: 334c02fa2d8e7cc419d4af4425f206d2, type: 3}
 --- !u!225 &203328298
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -11425,7 +11426,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 59, y: -209}
+  m_AnchoredPosition: {x: 59, y: -209.00003}
   m_SizeDelta: {x: -401.8, y: -632.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451187123
@@ -13170,7 +13171,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -122, y: 8}
+  m_AnchoredPosition: {x: -122.00003, y: 8}
   m_SizeDelta: {x: -1170.7, y: -779.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1692335690

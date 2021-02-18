@@ -18,7 +18,7 @@ public class Level1_BouncingBall : BaseLevel
     [SerializeField] AudioClip inGoalAudio = null;
 
     List<GameObject> objects = new List<GameObject>();
-    GameObject flag;
+    GameObject flag, shortcut, window;
     bool alternate;
     bool[] complete = new bool[3];
 
@@ -35,20 +35,13 @@ public class Level1_BouncingBall : BaseLevel
         SubtitlesManager.Instance.QueueSubtitleGameString( 5.0f, "Narrator_Level_1_1" );
 
         objects.DestroyAll();
-        var window = desktop.CreateWindow( "Bouncy Balls", true ).GetComponent<Window>();
-        window.gameObject.AddComponent<RectMask2D>();
-        window.gameObject.GetComponent<Draggable>().updatePosition = ( _, pos ) =>
-        {
-            if( flag != null ) flag.transform.SetParent( desktop.DesktopCanvas, true );
-            ( window.transform as RectTransform ).anchoredPosition = pos;
-            if( flag != null ) flag.transform.SetParent( window.transform, true );
-        };
-        flag.transform.SetParent( window.transform, true );
+        var newPlatform = Instantiate( platform );
+        objects.Add( newPlatform );
+
+        var window = CreateWindow();
         flag.GetComponent<CanvasGroup>().SetVisibility( true );
 
-        var newPlatform = Instantiate( platform, window.windowCamera.gameObject.transform );
         newPlatform.transform.localPosition = new Vector3( 0.0f, platformHeight, 50.0f );
-        objects.Add( newPlatform );
 
         var goal1 = Instantiate( goal, desktop.windowCameraStartPosition + goalPosition, Quaternion.identity );
         var goal2 = Instantiate( goal, desktop.windowCameraStartPosition + goalPosition.SetX( -goalPosition.x ), Quaternion.identity );
@@ -62,6 +55,41 @@ public class Level1_BouncingBall : BaseLevel
         objects.Add( Utility.CreateSprite( "Textures/Backgrounds/1_game_background", desktop.windowCameraStartPosition + new Vector3( 0.0f, 0.0f, 20.0f ), new Vector3( 1.5f, 1.5f ), Quaternion.identity, "SecondaryCamera" ) );
 
         Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
+
+        shortcut = desktop.CreateShortcut( new DesktopIcon() { icon = startMenuEntryIcon, name = startMenuEntryText }, new Vector2Int( 0, 1 ), ( obj ) => CreateWindow() );
+    }
+
+    private Window CreateWindow()
+    {
+        if( window != null )
+            return null;
+
+        var windowCmp = desktop.CreateWindow( "Bouncy Balls", true ).GetComponent<Window>();
+
+        windowCmp.onClose += ( _ ) => 
+        {
+            if( flag != null )
+            {
+                flag.GetComponent<CanvasGroup>().SetVisibility( false );
+                flag.transform.SetParent( desktop.DesktopCanvas, true );
+            }
+
+            objects[0].transform.SetParent( desktop.DesktopCanvas, true );
+        };
+
+        window = windowCmp.gameObject;
+        window.AddComponent<RectMask2D>();
+        window.GetComponent<Draggable>().updatePosition = ( _, pos ) =>
+        {
+            if( flag != null ) flag.transform.SetParent( desktop.DesktopCanvas, true );
+            ( window.transform as RectTransform ).anchoredPosition = pos;
+            if( flag != null ) flag.transform.SetParent( window.transform, true );
+        };
+
+        if( flag != null ) flag.transform.SetParent( window.transform, true );
+        objects[0].transform.SetParent( windowCmp.windowCamera.gameObject.transform, true );
+
+        return windowCmp;
     }
 
     private void CreateBall()
@@ -126,6 +154,8 @@ public class Level1_BouncingBall : BaseLevel
 
         if( flag != null )
             flag.GetComponent<CanvasGroup>().SetVisibility( false );
+
+        desktop.RemoveShortcut( shortcut );
     }
 
     private void CheckComplete()
