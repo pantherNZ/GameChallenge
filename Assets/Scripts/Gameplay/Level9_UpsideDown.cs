@@ -37,7 +37,7 @@ public class Level9_UpsideDown : BaseLevel
     {
         base.Cleanup( fromRestart );
 
-        Utility.FunctionTimer.CreateTimer( fromRestart ? desktop.restartGameFadeOutTime : 0.0f, () =>
+        Utility.FunctionTimer.CreateTimer( fromRestart ? desktop.restartGameFadeOutTime : 0.01f, () =>
         {
             desktop.DesktopCanvas.localRotation = Quaternion.identity;
             subtitlesCanvas.localRotation = Quaternion.identity;
