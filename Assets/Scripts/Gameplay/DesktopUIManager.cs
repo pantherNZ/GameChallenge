@@ -266,8 +266,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         music.volume = reader.ReadSingle();
         audio.volume = reader.ReadSingle();
         var sliders = optionsWindow.GetComponentsInChildren<Slider>();
-        sliders[0].value = audio.volume;
-        sliders[1].value = music.volume;
+        sliders[0].value = audio.volume * 100.0f;
+        sliders[1].value = music.volume * 100.0f;
         int flags = reader.ReadInt32();
 
         for( int i = 0; i < flags; ++i )
@@ -934,21 +934,23 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void SetAudioVolume( float scale )
     {
         audio.volume = scale;
+        Game.SaveGameSystem.LoadGame( "UGC" );
     }
 
     public void SetMusicVolume( float scale )
     {
         music.volume = scale;
+        Game.SaveGameSystem.LoadGame( "UGC" );
     }
 
     public void SetMusicVolume( Slider slider )
     {
-        SetMusicVolume( slider.value );
+        SetMusicVolume( slider.value / slider.maxValue );
     }
 
     public void SetAudioVolume( Slider slider )
     {
-        SetAudioVolume( slider.value );
+        SetAudioVolume( slider.value / slider.maxValue );
     }
 
     public void SetAudoEnabled( bool enabled )

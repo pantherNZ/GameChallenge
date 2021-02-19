@@ -18,13 +18,14 @@ public class Level1_BouncingBall : BaseLevel
     [SerializeField] AudioClip inGoalAudio = null;
 
     List<GameObject> objects = new List<GameObject>();
-    GameObject flag, shortcut, window;
+    [SerializeField] GameObject flag = null;
+    GameObject shortcut, window;
     bool alternate;
     bool[] complete = new bool[3];
 
     private void Start()
     {
-        flag = desktop.CreateFlag( new Vector2( 0.0f, -desktop.MainCamera.pixelHeight / 2.0f + 100.0f ), 2, true, true, "1" );
+        flag.GetComponent<CanvasGroup>().SetVisibility( false );
     }
 
     public override void OnStartLevel()
