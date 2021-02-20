@@ -28,7 +28,7 @@ public class Level2_BridgeBall : BaseLevel
 
         var goal = levelObj.transform.GetChild( levelObj.transform.childCount - 1 );
         goal.GetComponent<EventDispatcher>().OnTriggerEnter2DEvent += ( Collider2D ) => { desktop.PlayAudio( inGoalAudio ); timer = Utility.FunctionTimer.CreateTimer( 1.0f, CheckComplete ); };
-        goal.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { timer.StopTimer(); };
+        goal.GetComponent<EventDispatcher>().OnTriggerExit2DEvent += ( Collider2D ) => { timer.Stop(); };
 
         if( desktop.IsEasyMode() )
         {

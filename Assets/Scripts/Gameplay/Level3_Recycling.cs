@@ -22,9 +22,11 @@ public class Level3_Recycling : BaseLevel
     [SerializeField] int fixedSeed = 0;
     [SerializeField] AudioClip roundCompleteAudio = null;
     List<GameObject> shortcuts = new List<GameObject>();
-
+    Utility.FunctionTimer timer;
+    
     public override void OnStartLevel()
     {
+        roundNumber = 0;
         if( fixedSeed != 0 )
             UnityEngine.Random.InitState( fixedSeed );
         GetComponent<CanvasGroup>().SetVisibility( true );
@@ -64,13 +66,14 @@ public class Level3_Recycling : BaseLevel
         var duration = desktop.IsEasyMode() ? rounds[roundNumber].timerEasySec : rounds[roundNumber].timerHardSec;
         if( duration > 0.0f )
         {
-            var timer = Utility.FunctionTimer.CreateTimer( duration, () =>
+            timer = Utility.FunctionTimer.CreateTimer( duration, () =>
             {
                 SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_3_Failed" );
                 desktop.LevelFailed();
             }, "Level_3" );
 
             SubtitlesManager.Instance.AssignTimer( timer );
+            timer.Pause();
         }
 
         if( roundNumber > 0 )
@@ -79,7 +82,8 @@ public class Level3_Recycling : BaseLevel
 
     protected override void OnLevelUpdate()
     {
-        shortcuts.RemoveAll( x => x == null );
+        if( shortcuts.RemoveAll( x => x == null ) > 0 )
+            timer.Resume();
 
         if( desktop != null && shortcuts.Count == 0 )
         {

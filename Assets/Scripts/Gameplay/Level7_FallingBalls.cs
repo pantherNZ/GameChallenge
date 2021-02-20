@@ -47,7 +47,9 @@ public class Level7_FallingBalls : BaseLevel
         desktopBound = desktop.GetWorldBound();
         var position = desktopBound.RandomPosition().ToVector3( 40.0f );
         balls.Add( Instantiate( ballPrefab, position, Quaternion.identity ) );
-        balls.Back().GetComponent<Rigidbody2D>().AddForce( new Vector2( UnityEngine.Random.Range( -xVelocityRange, xVelocityRange ), 0.0f ) );
+        var rb = balls.Back().GetComponent<Rigidbody2D>();
+        rb.AddForce( new Vector2( UnityEngine.Random.Range( -xVelocityRange, xVelocityRange ), 0.0f ) );
+        rb.gravityScale = desktop.IsEasyMode() ? 0.8f : 1.1f;
         balls.Back().GetComponent<EventDispatcher>().OnCollisionEnter2DEvent += ( collision ) =>
         {
             if( !balls.Contains( collision.gameObject ) )

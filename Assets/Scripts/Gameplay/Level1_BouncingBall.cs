@@ -158,6 +158,7 @@ public class Level1_BouncingBall : BaseLevel
             flag.GetComponent<CanvasGroup>().SetVisibility( false );
 
         desktop.RemoveShortcut( shortcut );
+        desktop.DestroyWindow( window );
     }
 
     private void CheckComplete()

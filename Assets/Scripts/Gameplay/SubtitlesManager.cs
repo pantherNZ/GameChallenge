@@ -136,6 +136,8 @@ public class SubtitlesManager : MonoBehaviour
                 texts[0].text = selections.Front().first;
                 texts[1].text = selections.Front().second;
                 var events = selections.Front().obj.GetComponentsInChildren<EventDispatcher>();
+                var originalColor1 = texts[0].color;
+                var originalColor2 = texts[1].color;
 
                 Action<int, Color> updateColour = ( int index, Color colour ) =>
                 {
@@ -146,9 +148,9 @@ public class SubtitlesManager : MonoBehaviour
                 var selectionColour = new Color( 0.47f, 0.57f, 1.0f );
 
                 events[0].OnPointerEnterEvent += ( x ) => { updateColour( 0, selectionColour ); };
-                events[0].OnPointerExitEvent += ( x ) => { updateColour( 0, Color.white ); };
+                events[0].OnPointerExitEvent += ( x ) => { updateColour( 0, originalColor1 ); };
                 events[1].OnPointerEnterEvent += ( x ) => { updateColour( 1, selectionColour ); };
-                events[1].OnPointerExitEvent += ( x ) => { updateColour( 1, Color.white ); };
+                events[1].OnPointerExitEvent += ( x ) => { updateColour( 1, originalColor2 ); };
 
                 Action< int > selectionEvent = ( int index ) =>
                 {

@@ -116,17 +116,17 @@ public static partial class Utility
             return true;
         }
 
-        public bool StopTimer()
+        public bool Stop()
         {
             return FunctionTimerHandler.Instance.RemoveTimer( this );
         }
 
-        public void PauseTimer()
+        public void Pause()
         {
             active = false;
         }
 
-        public void ResumeTimer()
+        public void Resume()
         {
             active = true;
         }

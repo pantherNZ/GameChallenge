@@ -140,6 +140,9 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         var audioSources = GetComponents<AudioSource>();
         audio = audioSources[0];
         music = audioSources[1];
+        var sliders = optionsWindow.GetComponentsInChildren<Slider>();
+        audio.volume = sliders[0].value / sliders[0].maxValue;
+        music.volume = sliders[1].value / sliders[1].maxValue;
         currentTime = DateTime.Now;
         blueScreenCamera.gameObject.SetActive( false );
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
@@ -266,8 +269,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         music.volume = reader.ReadSingle();
         audio.volume = reader.ReadSingle();
         var sliders = optionsWindow.GetComponentsInChildren<Slider>();
-        sliders[0].value = audio.volume * 100.0f;
-        sliders[1].value = music.volume * 100.0f;
+        sliders[0].value = audio.volume * sliders[0].maxValue;
+        sliders[1].value = music.volume * sliders[1].maxValue;
         int flags = reader.ReadInt32();
 
         for( int i = 0; i < flags; ++i )
@@ -303,7 +306,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         base.Cleanup( fromRestart );
 
         if( difficultyTimer != null )
-            difficultyTimer.StopTimer();
+            difficultyTimer.Stop();
         Utility.FunctionTimer.StopTimer( "selectionDelay" );
     }
 
@@ -453,11 +456,16 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         } );
     }
 
-    public void CreateOptionsWindow()
+    public void CreateOptionsWindow( Vector3 position )
     {
-        ( optionsWindow.transform as RectTransform ).anchoredPosition = GetMousePosScreen();
+        ( optionsWindow.transform as RectTransform ).anchoredPosition = position;
         optionsWindow.GetComponent<CanvasGroup>().SetVisibility( true );
         SetContextMenuVisibility( false );
+    }
+
+    public void CreateOptionsWindow()
+    {
+        CreateOptionsWindow( GetMousePosScreen() );
     }
 
     public void CreateHelpWindow()
@@ -670,6 +678,9 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     private void Update()
     {
+        if( Input.GetKeyDown( KeyCode.Escape ) )
+            CreateOptionsWindow( MainCamera.rect.center );
+
         if( ( Input.GetMouseButtonDown( 0 ) || Input.GetMouseButtonDown( 1 ) ) && selectionStartPos == null )
         {
             var pointerData = new PointerEventData( EventSystem.current ) { pointerId = -1, position = Input.mousePosition };
@@ -934,13 +945,13 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void SetAudioVolume( float scale )
     {
         audio.volume = scale;
-        Game.SaveGameSystem.LoadGame( "UGC" );
+        Game.SaveGameSystem.SaveGame( "UGC" );
     }
 
     public void SetMusicVolume( float scale )
     {
         music.volume = scale;
-        Game.SaveGameSystem.LoadGame( "UGC" );
+        Game.SaveGameSystem.SaveGame( "UGC" );
     }
 
     public void SetMusicVolume( Slider slider )
