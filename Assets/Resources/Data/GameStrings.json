@@ -21,13 +21,13 @@
     {
       "Key": "Narrator_Level_1_DifficultySelect",
       "Value": {
-        "english": "To begin his day, Alex liked to play some <select=easy|hard> games."
+        "english": "To begin his day, Alex liked to play some (<select=easy|hard>) games."
       }
     },
     {
       "Key": "Narrator_Level_1_DifficultySelectHard",
       "Value": {
-        "english": "Excuse me... He liked to play some difficult games."
+        "english": "Excuse me... He liked to play some <i>hard</i> games."
       }
     },
     {
@@ -55,6 +55,12 @@
       }
     },
     {
+      "Key": "Narrator_Level_2_2",
+      "Value": {
+        "english": "Alex just needed to find something to replace the missing platform!"
+      }
+    },
+    {
       "Key": "Narrator_Level_2_Complete",
       "Value": {
         "english": "Alex was satisfied with his creative ability to catch the coconuts."
@@ -63,13 +69,13 @@
     {
       "Key": "Narrator_Level_3_1_hard",
       "Value": {
-        "english": "Alex needed to clean up his mess! <timer=Level_3>"
+        "english": "Uh oh, Alex needed to clean up his mess! <timer=Level_3>"
       }
     },
     {
       "Key": "Narrator_Level_3_1_easy",
       "Value": {
-        "english": "Alex needed to clean up his mess!"
+        "english": "Uh oh, Alex needed to clean up his mess!"
       }
     },
     {
@@ -117,7 +123,7 @@
     {
       "Key": "Narrator_Level_7_1",
       "Value": {
-        "english": "Chaos.. Alex never liked things this chaotic. Usually the best solution was to stay calm and find a way to get to the target."
+        "english": "Chaos.. Alex never liked things this chaotic. Clicking the targets would require a steady hand."
       }
     },
     {

@@ -23,7 +23,7 @@ public class Level2_BridgeBall : BaseLevel
         GetComponent<CanvasGroup>().SetVisibility( true );
         Utility.FunctionTimer.CreateTimer( ballFrequency, CreateBall, "CreateBall", true );
         SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_2_1" );
-
+        SubtitlesManager.Instance.QueueSubtitleGameString( 5.0f, "Narrator_Level_2_2" );
         levelObj = Instantiate( levelPrefab, new Vector3( 0.0f, 0.0f, 5.0f ), Quaternion.identity );
 
         var goal = levelObj.transform.GetChild( levelObj.transform.childCount - 1 );
@@ -82,5 +82,6 @@ public class Level2_BridgeBall : BaseLevel
         levelObj.Destroy();
         objects.DestroyAll();
         Utility.FunctionTimer.StopTimer( "CreateBall" );
+        Utility.FunctionTimer.StopTimer( "Narrator_Level_2_2" );
     }
 }

@@ -33,7 +33,8 @@ public class Level1_BouncingBall : BaseLevel
         complete = new bool[3];
         GetComponent<CanvasGroup>().SetVisibility( true );
 
-        SubtitlesManager.Instance.QueueSubtitleGameString( 5.0f, "Narrator_Level_1_1" );
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_1_1" );
+        SubtitlesManager.Instance.QueueSubtitleGameString( 5.0f, "Narrator_Level_1_2" );
 
         objects.DestroyAll();
         var newPlatform = Instantiate( platform );

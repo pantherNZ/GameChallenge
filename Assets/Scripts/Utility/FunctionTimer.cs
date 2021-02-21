@@ -57,7 +57,7 @@ public static partial class Utility
             {
                 var timer = timerList[idx];
 
-                if( timer.timeLeft > 0.0f )
+                if( timer.timeLeft > 0.0f && timer.active )
                 {
                     timer.timeLeft -= ( timer.useUnscaledDeltaTime ? Time.unscaledDeltaTime : Time.deltaTime );
 
@@ -78,9 +78,8 @@ public static partial class Utility
 
             if( timerList.IsEmpty() )
             {
-
-                if( functionTimerHandler.gameObject != null )
-                    functionTimerHandler.gameObject.Destroy();
+                if( Instance.gameObject != null )
+                    Instance.gameObject.Destroy();
                 functionTimerHandler = null;
             }
         }
@@ -139,7 +138,7 @@ public static partial class Utility
         public float duration;
         public float timeLeft;
         public string name;
-        public bool active;
+        public bool active = true;
         public bool useUnscaledDeltaTime;
         public bool loop;
         public Action action;

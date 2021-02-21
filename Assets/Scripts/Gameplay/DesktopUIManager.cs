@@ -29,6 +29,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public RectTransform DesktopCanvas;
     [SerializeField] GameObject windowBasePrefab = null;
     [SerializeField] GameObject optionsWindow = null;
+    [SerializeField] Dropdown optionsWindowResolutions = null;
+    [SerializeField] Toggle optionsWindowFullscreen = null;
     [SerializeField] GameObject helpWindow = null;
     [SerializeField] Text helpWindowSpoilerText = null;
     [SerializeField] Button helpWindowSpoilerButton = null;
@@ -137,12 +139,20 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     private void Start()
     {
+        Screen.fullScreen = false;
+        List<string> resOptions = new List<string>();
+        optionsWindowResolutions.ClearOptions();
+        foreach( var res in Screen.resolutions )
+            resOptions.Add( string.Format( "{0}x{1}", res.width, res.height ) );
+
+        optionsWindowResolutions.AddOptions( resOptions );
+
         var audioSources = GetComponents<AudioSource>();
         audio = audioSources[0];
         music = audioSources[1];
         var sliders = optionsWindow.GetComponentsInChildren<Slider>();
-        audio.volume = sliders[0].value / sliders[0].maxValue;
-        music.volume = sliders[1].value / sliders[1].maxValue;
+        audio.volume = sliders[0].value;
+        music.volume = sliders[1].value;
         currentTime = DateTime.Now;
         blueScreenCamera.gameObject.SetActive( false );
         errorTextures = Resources.LoadAll( "Textures/Errors/", typeof( Texture2D ) ).Cast<Texture2D>().ToList();
@@ -171,6 +181,19 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             Game.SaveGameSystem.folderName = string.Empty;
             Game.SaveGameSystem.LoadGame( "UGC" );
         }
+
+        foreach( var( index, res ) in Screen.resolutions.Enumerate() )
+        {
+            if( res.width == Screen.currentResolution.width &&
+                res.height == Screen.currentResolution.height &&
+                res.refreshRate == Screen.currentResolution.refreshRate )
+            {
+                optionsWindowResolutions.value = index;
+                break;
+            }
+        }
+
+        optionsWindowFullscreen.isOn = Screen.fullScreen;
 
         Utility.FunctionTimer.CreateTimer( 0.1f, () =>
         {
@@ -255,8 +278,14 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         writer.Write( easyDifficulty );
         writer.Write( music.volume );
         writer.Write( audio.volume );
-        writer.Write( flagsFound.Count );
+        writer.Write( updateTimeLeftSec );
 
+        writer.Write( Screen.currentResolution.width );
+        writer.Write( Screen.currentResolution.height );
+        writer.Write( Screen.currentResolution.refreshRate );
+        writer.Write( Screen.fullScreen );
+
+        writer.Write( flagsFound.Count );
         foreach( var flag in flagsFound )
             writer.Write( flag );
     }
@@ -269,10 +298,17 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         music.volume = reader.ReadSingle();
         audio.volume = reader.ReadSingle();
         var sliders = optionsWindow.GetComponentsInChildren<Slider>();
-        sliders[0].value = audio.volume * sliders[0].maxValue;
-        sliders[1].value = music.volume * sliders[1].maxValue;
-        int flags = reader.ReadInt32();
+        sliders[0].value = audio.volume;
+        sliders[1].value = music.volume;
+        updateTimeLeftSec = reader.ReadInt32();
 
+        var resWidth = reader.ReadInt32();
+        var resHeight = reader.ReadInt32();
+        var refreshRate = reader.ReadInt32();
+        var fullscreen = reader.ReadBoolean();
+        Screen.SetResolution( resWidth, resHeight, fullscreen, refreshRate );
+
+        int flags = reader.ReadInt32();
         for( int i = 0; i < flags; ++i )
             flagsFound.Add( reader.ReadInt32() );
     }
@@ -289,7 +325,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             {
                 PlayAudio( difficultySelectionAudio );
 
-                if( selection == "hard" )
+                if( selection == "hard"  )
                 {
                     easyDifficulty = false;
                     SubtitlesManager.Instance.AddSubtitle( DataManager.Instance.GetGameString( "Narrator_Level_1_DifficultySelectHard" ) );
@@ -298,7 +334,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
             } );
         }, "selectionDelay" );
 
-        difficultyTimer = Utility.FunctionTimer.CreateTimer( 10.0f, StartNextLevel );;
+        Utility.FunctionTimer.CreateTimer( 8.0f, () =>
+        {
+            SubtitlesManager.Instance.SelectOption( 0 );
+        } );
+        difficultyTimer = Utility.FunctionTimer.CreateTimer( 10.0f, StartNextLevel );
     }
 
     protected override void Cleanup( bool fromRestart )
@@ -679,7 +719,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     private void Update()
     {
         if( Input.GetKeyDown( KeyCode.Escape ) )
-            CreateOptionsWindow( MainCamera.rect.center );
+            CreateOptionsWindow( new Vector3( MainCamera.pixelWidth / 2.0f, MainCamera.pixelHeight / 2.0f, 1.0f ) );
 
         if( ( Input.GetMouseButtonDown( 0 ) || Input.GetMouseButtonDown( 1 ) ) && selectionStartPos == null )
         {
@@ -956,12 +996,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public void SetMusicVolume( Slider slider )
     {
-        SetMusicVolume( slider.value / slider.maxValue );
+        SetMusicVolume( slider.value );
     }
 
     public void SetAudioVolume( Slider slider )
     {
-        SetAudioVolume( slider.value / slider.maxValue );
+        SetAudioVolume( slider.value );
     }
 
     public void SetAudoEnabled( bool enabled )
@@ -972,6 +1012,14 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     public void SetAudoEnabled( Toggle toggle )
     {
         SetAudoEnabled( toggle.isOn );
+    }
+
+    public void UpdateResolution()
+    {
+        var res = Screen.resolutions[optionsWindowResolutions.value];
+        var fullscreen = optionsWindowFullscreen.isOn;
+        Screen.SetResolution( res.width, res.height, fullscreen, res.refreshRate );
+        Game.SaveGameSystem.SaveGame( "UGC" );
     }
 
     public void RestartLevel()

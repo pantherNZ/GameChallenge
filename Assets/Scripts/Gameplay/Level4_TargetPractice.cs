@@ -26,6 +26,7 @@ public class Level4_TargetPractice : BaseLevel
     [SerializeField] AudioClip shootAudio = null;
     [SerializeField] AudioClip hitAudio = null;
     [SerializeField] Color crosshairColour = Color.white;
+    [SerializeField] GameObject missTextPrefab = null;
 
     // Dynamic data
     int targetsCount, countdown, fails;
@@ -138,9 +139,9 @@ public class Level4_TargetPractice : BaseLevel
                     desktop.PlayAudio( hitAudio );
                     CheckLevelComplete();
                 }
-                else
+                else if( !desktop.IsEasyMode() )
                 { 
-                    Miss();
+                    Miss( mousePos );
                 }
             }
         }
@@ -202,16 +203,23 @@ public class Level4_TargetPractice : BaseLevel
                     {
                         target.Destroy();
                         if( target != flag )
-                            Miss();
+                            Miss( target.transform.position );
                     }
                 } );
             }
         } );
     }
 
-    private void Miss()
+    private void Miss( Vector3 position )
     {
         fails++;
         CheckLevelComplete();
+
+        var obj = Instantiate( missTextPrefab, desktop.DesktopCanvas );
+        obj.GetComponent<Text>().color = Color.black;
+        obj.transform.position = position;
+        this.FadeToColour( obj.GetComponent<Text>(), Color.black.SetA( 0.0f ), 1.0f );
+        this.InterpolatePosition( obj.transform, obj.transform.position + new Vector3( 0.0f, 1.0f, 0.0f ), 1.0f );
+        Utility.FunctionTimer.CreateTimer( 1.0f, () => obj.Destroy() );
     }
 }

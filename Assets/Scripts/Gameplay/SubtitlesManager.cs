@@ -42,6 +42,8 @@ public class SubtitlesManager : MonoBehaviour
 
     [HideInInspector] public CanvasGroup canvasGroup;
 
+    Color selectionColour = new Color( 0.47f, 0.57f, 1.0f );
+
     void Start()
     {
         Instance = this;
@@ -133,39 +135,44 @@ public class SubtitlesManager : MonoBehaviour
                 selection.obj.SetActive( true );
                 ( selection.obj.transform as RectTransform ).localPosition = GetCharacterPosition( text, selection.index + selectionMargin + Mathf.Max( selection.first.Length, selection.second.Length ) / 2 );
                 var texts = selections.Front().obj.GetComponentsInChildren<Text>();
-                texts[0].text = selections.Front().first;
-                texts[1].text = selections.Front().second;
-                var events = selections.Front().obj.GetComponentsInChildren<EventDispatcher>();
+                texts[0].text = selection.first;
+                texts[1].text = selection.second;
+                var events = selection.obj.GetComponentsInChildren<EventDispatcher>();
                 var originalColor1 = texts[0].color;
                 var originalColor2 = texts[1].color;
 
-                Action<int, Color> updateColour = ( int index, Color colour ) =>
-                {
-                    if( !selection.complete && selections.Contains( selection ) )
-                        texts[index].color = colour;
-                };
+                events[0].OnPointerEnterEvent += ( x ) => { UpdateColour( 0, selectionColour ); };
+                events[0].OnPointerExitEvent += ( x ) => { UpdateColour( 0, originalColor1 ); };
+                events[1].OnPointerEnterEvent += ( x ) => { UpdateColour( 1, selectionColour ); };
+                events[1].OnPointerExitEvent += ( x ) => { UpdateColour( 1, originalColor2 ); };
 
-                var selectionColour = new Color( 0.47f, 0.57f, 1.0f );
-
-                events[0].OnPointerEnterEvent += ( x ) => { updateColour( 0, selectionColour ); };
-                events[0].OnPointerExitEvent += ( x ) => { updateColour( 0, originalColor1 ); };
-                events[1].OnPointerEnterEvent += ( x ) => { updateColour( 1, selectionColour ); };
-                events[1].OnPointerExitEvent += ( x ) => { updateColour( 1, originalColor2 ); };
-
-                Action< int > selectionEvent = ( int index ) =>
-                {
-                    if( !selection.complete )
-                    {
-                        selection.obj.transform.GetChild( 1 - index ).gameObject.Destroy();
-                        updateColour( index, selectionColour );
-                        selection.complete = true;
-                        onSelectionEvent?.Invoke( subtitle, texts[index].text );
-                    }
-                };
-
-                events[0].OnPointerDownEvent += ( x ) => { selectionEvent( 0 ); };
-                events[1].OnPointerDownEvent += ( x ) => { selectionEvent( 1 ); };
+                events[0].OnPointerDownEvent += ( x ) => { SelectOption( 0 ); };
+                events[1].OnPointerDownEvent += ( x ) => { SelectOption( 1 ); };
             }
+        }
+    }
+
+    private void UpdateColour( int index, Color colour )
+    {
+        var selection = selections.Front();
+        if( !selection.complete && selections.Contains( selection ) )
+        {
+            var texts = selection.obj.GetComponentsInChildren<Text>();
+            texts[index].color = colour;
+        }
+    }
+
+    public void SelectOption( int index )
+    {
+        var selection = selections.Front();
+
+        if( !selection.complete )
+        {
+            selection.obj.transform.GetChild( 1 - index ).gameObject.Destroy();
+            UpdateColour( index, selectionColour );
+            selection.complete = true;
+            var texts = selection.obj.GetComponentsInChildren<Text>();
+            onSelectionEvent?.Invoke( currentText, texts[index].text );
         }
     }
 

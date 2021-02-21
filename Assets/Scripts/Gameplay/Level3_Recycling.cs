@@ -83,7 +83,7 @@ public class Level3_Recycling : BaseLevel
     protected override void OnLevelUpdate()
     {
         if( shortcuts.RemoveAll( x => x == null ) > 0 )
-            timer.Resume();
+            timer?.Resume();
 
         if( desktop != null && shortcuts.Count == 0 )
         {
