@@ -24,26 +24,31 @@ public class Level11_Typing : BaseLevel
     // Dynamic data
     int numWindowsToSpawn = 0;
 
-    class Window
+    class WindowData
     {
         public GameObject obj;
         public Text text;
         public string str;
         public int index;
     }
-    List<Window> windows = new List<Window>();
+    List<WindowData> windows = new List<WindowData>();
     List<string> gameStrings = new List<string>();
 
     // Functions
     public override void OnStartLevel()
     {
-        gameStrings = DataManager.Instance.GetGameString( "Level11_Random_Strings" ).Split( new [] { ", " }, StringSplitOptions.RemoveEmptyEntries ).ToList();
+        PopulateStrings();
         numWindowsToSpawn = desktop.IsEasyMode() ? numWindowsEasy : numWindowsHard;
 
-        CreateWindow();
+        CreateWindow( true );
     }
 
-    private void CreateWindow()
+    private void PopulateStrings()
+    {
+        gameStrings = DataManager.Instance.GetGameString( "Level11_Random_Strings" ).Split( new[] { ", " }, StringSplitOptions.RemoveEmptyEntries ).ToList();
+    }
+
+    private void CreateWindow( bool createTimer )
     {
         if( !levelActive )
             return;
@@ -53,7 +58,7 @@ public class Level11_Typing : BaseLevel
         var window = desktop.CreateWindow( "Information", windowPrefab, false, desktop.GetScreenBound( 125.0f, false ).RandomPosition() );
         var index = UnityEngine.Random.Range( 0, gameStrings.Count - 1 );
 
-        windows.Add( new Window()
+        windows.Add( new WindowData()
         {
             obj = window,
             text = window.GetComponentsInChildren<Text>()[2],
@@ -61,14 +66,24 @@ public class Level11_Typing : BaseLevel
             index = 0
         } );
 
+        window.GetComponent<Window>().onClose += ( _ ) => 
+        {
+            ++numWindowsToSpawn;
+            CreateWindow( false );
+        };
+
         UpdateText( windows.Back() );
         gameStrings.RemoveBySwap( index );
+
+        if( gameStrings.IsEmpty() )
+            PopulateStrings();
+
         desktop.PlayAudio( createWindowAudio.RandomItem() );
 
-        if( numWindowsToSpawn > 0 )
+        if( numWindowsToSpawn > 0 && createTimer )
         {
             var range = desktop.IsEasyMode() ? speedIntervalEasy : speedIntervalHard;
-            Utility.FunctionTimer.CreateTimer( UnityEngine.Random.Range( range.First, range.Second ), CreateWindow );
+            Utility.FunctionTimer.CreateTimer( UnityEngine.Random.Range( range.First, range.Second ), () => CreateWindow( true ) );
         }
     }
 
@@ -120,13 +135,13 @@ public class Level11_Typing : BaseLevel
                     if( numWindowsToSpawn == 0 )
                         LevelFinished( 3.0f );
                     else
-                        CreateWindow();
+                        CreateWindow( false );
                 }
             }
         }
     }
 
-    private void UpdateText( Window window )
+    private void UpdateText( WindowData window )
     {
         var text = window.str;
 
