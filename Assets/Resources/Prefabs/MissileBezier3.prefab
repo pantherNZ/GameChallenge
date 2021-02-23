@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8523947162025121215}
   - component: {fileID: 4234196079956117323}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MissileBezier3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,16 +46,16 @@ MonoBehaviour:
   editorData:
     _bezierPath:
       points:
-      - {x: -4.754822, y: 0.41626552, z: 0}
-      - {x: -3.7574158, y: 0.42747256, z: 0}
-      - {x: -3.1352177, y: 3.1058996, z: 0}
-      - {x: -0.87924385, y: 2.564466, z: 0}
-      - {x: 2.1067927, y: 1.8478174, z: 0}
-      - {x: 0.8971195, y: -1.317915, z: 0}
-      - {x: 2.919157, y: -1.4190168, z: 0}
-      - {x: 5.263832, y: -1.5362506, z: 0}
-      - {x: 4.588829, y: 0.4348204, z: 0}
-      - {x: 7.785866, y: 0.47349405, z: 0}
+      - {x: -5.68498, y: -0.2538543, z: 0}
+      - {x: -4.687574, y: -0.24264726, z: 0}
+      - {x: -3.8163235, y: 3.0202878, z: 0}
+      - {x: -1.5603498, y: 2.4788542, z: 0}
+      - {x: 1.4256867, y: 1.7622056, z: 0}
+      - {x: 0.3347764, y: -2.3379064, z: 0}
+      - {x: 1.9299474, y: -2.5868638, z: 0}
+      - {x: 3.3511925, y: -2.8086765, z: 0}
+      - {x: 3.174993, y: -0.4252066, z: 0}
+      - {x: 5.6000223, y: -0.25923496, z: 0}
       isClosed: 0
       space: 1
       controlMode: 0
@@ -71,7 +71,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1

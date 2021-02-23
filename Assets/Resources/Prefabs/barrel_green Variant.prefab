@@ -10,7 +10,12 @@ PrefabInstance:
     - target: {fileID: 1768654627322011924, guid: f7876b3f8a5ff5f41b59e9d33cbd905f,
         type: 3}
       propertyPath: m_Name
-      value: barrel_green
+      value: barrel_green Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 1768654627322011924, guid: f7876b3f8a5ff5f41b59e9d33cbd905f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2947003639466655860, guid: f7876b3f8a5ff5f41b59e9d33cbd905f,
         type: 3}

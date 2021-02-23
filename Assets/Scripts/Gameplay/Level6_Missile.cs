@@ -23,7 +23,7 @@ public class Level6_Missile : BaseLevel
     [SerializeField] AudioClip stageCompleteAudio = null;
     [SerializeField] string finalStageHintGameString = string.Empty;
     List<Window> windows = new List<Window>();
-    GameObject shortcut, missileLauncher, level;
+    GameObject shortcut, missileLauncher, missileLauncher2, level;
     List<GameObject> paths;
 
     class Missile
@@ -38,7 +38,7 @@ public class Level6_Missile : BaseLevel
     bool fireLeft;
     int maxWindows;
     int index;
-    int lastHitIndex = -1;
+    int hitCount = 0;
 
     public override void OnStartLevel()
     {
@@ -50,11 +50,11 @@ public class Level6_Missile : BaseLevel
             icon = startMenuEntryIcon
         };
 
-        levelCounter = 0;
+        levelCounter = 2;
         shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), CreateWindow );
         SetupLevel();
 
-        Utility.FunctionTimer.CreateTimer( 2.0f, FireMissile, "FireMissile", true );
+        Utility.FunctionTimer.CreateTimer( 4.0f, FireMissile, "FireMissile", true );
     }
 
     void CreateWindow( GameObject shortcut )
@@ -127,43 +127,48 @@ public class Level6_Missile : BaseLevel
 
     void FireMissile()
     {
+        var launcher = ( fireLeft && missileLauncher2 != null ) ? missileLauncher2 : missileLauncher;
+
         var found = windows.Any( window =>
         {
             var rect = window.GetCameraViewWorldRect();
-            return rect.Contains( missileLauncher.transform.position );
+            return rect.Contains( launcher.transform.position );
         } );
 
         if( !found )
             return;
 
-        missileLauncher.GetComponent<Animator>().Play( "Fire" );
+        launcher.GetComponent<Animator>().Play( "Fire" );
         desktop.PlayAudio( fireAudio, 0.4f );
+
+        bool fireLeftLocal = fireLeft;
 
         Utility.FunctionTimer.CreateTimer( 0.5f, () =>
         {
             var missile = Instantiate( missilePrefab );
-            var spawnLocation = missileLauncher.GetComponentInChildren<Transform>();
+            var spawnLocation = launcher.GetComponentInChildren<Transform>();
             missile.transform.position = spawnLocation.position;
             missile.transform.rotation = spawnLocation.rotation;
-            fireLeft = !fireLeft;
             missiles.Add( new Missile()
             {
                 missile = missile,
-                movement = StartCoroutine( MoveMissileRoutine( missile ) ),
+                movement = StartCoroutine( MoveMissileRoutine( missile, fireLeftLocal ) ),
                 index = index,
             } );
 
             Physics2D.SyncTransforms();
-
-            if( fireLeft )
-                index++;
         } );
 
-        if( levelCounter == 2 && !fireLeft )
-            Utility.FunctionTimer.CreateTimer( 0.75f, FireMissile, "FireMissile2" );
+        if( !fireLeft )
+            index++;
+
+        fireLeft = !fireLeft;
+
+        if( levelCounter == 2 && fireLeft )
+            FireMissile();
     }
 
-    public IEnumerator MoveMissileRoutine( GameObject missile )
+    public IEnumerator MoveMissileRoutine( GameObject missile, bool fireLeftLocal )
     {
         var paths = level.GetComponentsInChildren<PathCreation.PathCreator>();
 
@@ -177,7 +182,7 @@ public class Level6_Missile : BaseLevel
                 break;
             case 2:
             {
-                if( fireLeft )
+                if( fireLeftLocal )
                     yield return Utility.InterpolateAlongPath( missile.transform, paths[0], paths[0].path.length / moveSpeed2 );
                 else
                     yield return Utility.InterpolateAlongPath( missile.transform, paths[1], paths[1].path.length / moveSpeed2 );
@@ -213,10 +218,11 @@ public class Level6_Missile : BaseLevel
 
         if( reached_end )
         {
-            var prevIndex = lastHitIndex;
-            lastHitIndex = newIndex;
+            hitCount++;
 
-            if( levelCounter == 2 && prevIndex != newIndex )
+            Utility.FunctionTimer.CreateTimer( 0.25f, () => { hitCount = 0; } );
+
+            if( levelCounter == 2 && hitCount < 2 )
                 return;
 
             var overlaps = Physics2D.OverlapCircleAll( missile.transform.position, explosionRadius );
@@ -271,6 +277,10 @@ public class Level6_Missile : BaseLevel
         level = Instantiate( levelCounter == 0 ? stage1Prefab : levelCounter == 1 ? stage2Prefab : stage3Prefab );
         level.transform.position = desktop.windowCameraStartPosition.SetZ( 10.0f );
         missileLauncher = level.transform.GetChild( 0 ).gameObject;
+
+        if( levelCounter == 2 )
+            missileLauncher2 = level.transform.GetChild( 1 ).gameObject;
+
         paths = level.GetComponentsInChildren<PathCreation.PathCreator>().Select( x => x.gameObject ).ToList();
 
         if( levelCounter > 0 )
