@@ -8,8 +8,6 @@ public class Draggable : MonoBehaviour
     bool dragging;
     Vector3 offset;
     new RectTransform transform;
-    Transform parentRef;
-
     public Action<Draggable, Vector3> updatePosition;
 
     void Start()
@@ -19,25 +17,13 @@ public class Draggable : MonoBehaviour
 
     public void StartDrag()
     {
-        StartDrag( null );
-    }
-
-    public void StartDrag( Transform parent )
-    {
         if( dragging || !enabled )
             return;
 
         dragging = true;
-        parentRef = parent;
-        var targetPos = GetMousePosScreen();
+        var targetPos = DesktopUIManager.Instance.GetMousePosScreen();
         targetPos.z = 150.0f;
         offset = transform.anchoredPosition - new Vector2( targetPos.x, targetPos.y );
-    }
-
-    public Vector3 GetMousePosScreen()
-    {
-        var centre = new Vector3( Screen.width, Screen.height, 0.0f ) / 2.0f;
-        return ( Input.mousePosition - centre ).RotateZ( parentRef != null ? parentRef.rotation.eulerAngles.z : 0.0f ) + centre;
     }
 
     public void EndDrag()
@@ -45,7 +31,6 @@ public class Draggable : MonoBehaviour
         if( !dragging || !enabled )
             return;
         dragging = false;
-        parentRef = null;
     }
 
     public bool IsDragging()
@@ -57,7 +42,7 @@ public class Draggable : MonoBehaviour
     {
         if( dragging )
         {
-            var targetPos = GetMousePosScreen() + offset;
+            var targetPos = DesktopUIManager.Instance.GetMousePosScreen() + offset;
             if( updatePosition != null )
                 updatePosition.Invoke( this, targetPos );
             else

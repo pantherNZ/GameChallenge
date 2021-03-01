@@ -18,6 +18,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 {
     public Camera MainCamera { get; private set; }
     public GameObject Taskbar { get => taskBar; private set { } }
+    public static DesktopUIManager Instance;
 
     [Header( "Levels" )]
     [SerializeField] List<BaseLevel> levels = new List<BaseLevel>();
@@ -139,6 +140,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     private void Start()
     {
+        Instance = this;
         Screen.fullScreen = false;
         List<string> resOptions = new List<string>();
         optionsWindowResolutions.ClearOptions();
@@ -260,7 +262,9 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public void ShowDesktopFlag()
     {
-        flags.Find( ( x ) => x.index == 1 ).flag?.GetComponent<CanvasGroup>().SetVisibility( true );
+        var found = flags.Find( ( x ) => x.index == 1 );
+        if( found != null && found.flag != null )
+            found.flag.GetComponent<CanvasGroup>().SetVisibility( true );
     }
 
     private void PlayMusic()
@@ -827,8 +831,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public Vector3 GetMousePosScreen()
     {
-        var centre = new Vector3( MainCamera.pixelWidth, MainCamera.pixelHeight, 0.0f ) / 2.0f;
-        return ( Input.mousePosition - centre ).RotateZ( DesktopCanvas.rotation.eulerAngles.z ) + centre;
+        var pos = new Vector3( 
+            Input.mousePosition.x / MainCamera.pixelWidth * ( transform as RectTransform ).rect.width, 
+            Input.mousePosition.y / MainCamera.pixelHeight * ( transform as RectTransform ).rect.height, 10.0f );
+
+        var centre = new Vector3( MainCamera.scaledPixelWidth, MainCamera.scaledPixelHeight, 0.0f ) / 2.0f;
+        return ( pos - centre ).RotateZ( DesktopCanvas.rotation.eulerAngles.z ) + centre;
     }
 
     public void SetContextMenuVisibility( bool visible )
