@@ -141,7 +141,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     private void Start()
     {
         Instance = this;
-        Screen.fullScreen = false;
+
         List<string> resOptions = new List<string>();
         optionsWindowResolutions.ClearOptions();
         foreach( var res in Screen.resolutions )
@@ -1024,6 +1024,13 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public void UpdateResolution()
     {
+        if( optionsWindowResolutions.value > Screen.resolutions.Length )
+        {
+            Screen.fullScreen = optionsWindowFullscreen.isOn;
+            Game.SaveGameSystem.SaveGame( "UGC" );
+            return;
+        }
+
         var res = Screen.resolutions[optionsWindowResolutions.value];
         var fullscreen = optionsWindowFullscreen.isOn;
         Screen.SetResolution( res.width, res.height, fullscreen, res.refreshRate );

@@ -164,6 +164,9 @@ public class SubtitlesManager : MonoBehaviour
 
     public void SelectOption( int index )
     {
+        if( selections.IsEmpty() || index >= selections.Count )
+            return;
+
         var selection = selections.Front();
 
         if( !selection.complete )
@@ -286,26 +289,29 @@ public class SubtitlesManager : MonoBehaviour
         }
 
         string str = text.text.Replace( ' ', '.' );
+        var avgPos = new Vector3();
 
-        TextGenerator textGen = new TextGenerator( str.Length );
-        Vector2 extents = text.gameObject.GetComponent<RectTransform>().rect.size;
-        textGen.Populate( str, text.GetGenerationSettings( extents ) );
+        using( TextGenerator textGen = new TextGenerator( str.Length ) )
+        {
+            Vector2 extents = text.gameObject.GetComponent<RectTransform>().rect.size;
+            textGen.Populate( str, text.GetGenerationSettings( extents ) );
 
-        int newLine = str.Substring( 0, charIndex ).Split( '\n' ).Length - 1;
-        int indexOfTextQuad = ( ( charIndex ) * 4 ) + ( newLine * 4 ) - 4;
-        if( indexOfTextQuad < textGen.vertexCount )
-        {
-            Vector3 avgPos = ( textGen.verts[indexOfTextQuad].position +
-                textGen.verts[indexOfTextQuad + 1].position +
-                textGen.verts[indexOfTextQuad + 2].position +
-                textGen.verts[indexOfTextQuad + 3].position ) / 4f;
-            avgPos.y = text.gameObject.transform.localPosition.y;
-            return avgPos;
+            int newLine = str.Substring( 0, charIndex ).Split( '\n' ).Length - 1;
+            int indexOfTextQuad = ( ( charIndex ) * 4 ) + ( newLine * 4 ) - 4;
+            if( indexOfTextQuad < textGen.vertexCount )
+            {
+                avgPos = ( textGen.verts[indexOfTextQuad].position +
+                    textGen.verts[indexOfTextQuad + 1].position +
+                    textGen.verts[indexOfTextQuad + 2].position +
+                    textGen.verts[indexOfTextQuad + 3].position ) / 4f;
+                avgPos.y = text.gameObject.transform.localPosition.y;
+            }
+            else
+            {
+                Debug.LogError( "GetCharacterPosition: Out of text bound" );
+            }
         }
-        else
-        {
-            Debug.LogError( "GetCharacterPosition: Out of text bound" );
-            return new Vector3();
-        }
+
+        return avgPos;
     }
 }
