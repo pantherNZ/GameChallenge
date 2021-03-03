@@ -133,7 +133,7 @@ public class SubtitlesManager : MonoBehaviour
             {
                 var selection = selections.Front();
                 selection.obj.SetActive( true );
-                ( selection.obj.transform as RectTransform ).localPosition = GetCharacterPosition( text, selection.index + selectionMargin + Mathf.Max( selection.first.Length, selection.second.Length ) / 2 );
+                ( selection.obj.transform as RectTransform ).anchoredPosition = GetCharacterPosition( text, selection.index + selectionMargin + Mathf.Max( selection.first.Length, selection.second.Length ) / 2 );
                 var texts = selections.Front().obj.GetComponentsInChildren<Text>();
                 texts[0].text = selection.first;
                 texts[1].text = selection.second;
@@ -288,7 +288,7 @@ public class SubtitlesManager : MonoBehaviour
             return new Vector3();
         }
 
-        string str = text.text.Replace( ' ', '.' );
+        string str = text.text.Replace( ' ', '_' );
         var avgPos = new Vector3();
 
         using( TextGenerator textGen = new TextGenerator( str.Length ) )
@@ -297,7 +297,8 @@ public class SubtitlesManager : MonoBehaviour
             textGen.Populate( str, text.GetGenerationSettings( extents ) );
 
             int newLine = str.Substring( 0, charIndex ).Split( '\n' ).Length - 1;
-            int indexOfTextQuad = ( ( charIndex ) * 4 ) + ( newLine * 4 ) - 4;
+            int whiteSpace = str.Substring( 0, charIndex ).Split( ' ' ).Length - 1;
+            int indexOfTextQuad = ( charIndex * 4 ) + ( newLine * 4 ) + ( whiteSpace * 4 ) - 4;
             if( indexOfTextQuad < textGen.vertexCount )
             {
                 avgPos = ( textGen.verts[indexOfTextQuad].position +
@@ -305,6 +306,8 @@ public class SubtitlesManager : MonoBehaviour
                     textGen.verts[indexOfTextQuad + 2].position +
                     textGen.verts[indexOfTextQuad + 3].position ) / 4f;
                 avgPos.y = text.gameObject.transform.localPosition.y;
+                var sf = GetComponentInParent<CanvasScaler>().scaleFactor;
+                avgPos /= sf;
             }
             else
             {
