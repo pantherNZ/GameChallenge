@@ -2508,7 +2508,7 @@ MonoBehaviour:
   - timerEasySec: 20
     timerHardSec: 20
     numShortcutsEasy: 10
-    numShortcutsHard: 20
+    numShortcutsHard: 25
     subtitleEasy: Narrator_Level_3_2
     subtitleHard: Narrator_Level_3_2
   roundNumber: 0
@@ -2576,7 +2576,7 @@ MonoBehaviour:
     targetFadeDuration: 2
   dataHard:
     targetSize: 1
-    targetSpawnRateBaseSec: 0.6
+    targetSpawnRateBaseSec: 0.4
     targetSpawnRateVarianceSec: 0.2
     targetsMax: 35
     targetDuration: 0.5

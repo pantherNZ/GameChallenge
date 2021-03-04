@@ -385,9 +385,14 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public Rect GetScreenBound( float margin = 0.0f, bool includeStartBar = false )
     {
+        var sf = GetComponent<Canvas>().scaleFactor;
+        margin *= sf;
+
         var rect = ( transform as RectTransform ).rect;
-        rect.x += MainCamera.pixelWidth / 2.0f + margin;
-        rect.y += MainCamera.pixelHeight / 2.0f + margin;
+        rect.x += ( rect.width / 2.0f + margin );
+        rect.y += ( rect.height / 2.0f + margin );
+        rect.width *= sf;
+        rect.height *= sf;
         rect.width -= margin * 2.0f;
         rect.height -= margin * 2.0f;
 
@@ -1024,7 +1029,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
     public void UpdateResolution()
     {
-        if( optionsWindowResolutions.value > Screen.resolutions.Length )
+        if( optionsWindowResolutions.value >= Screen.resolutions.Length )
         {
             Screen.fullScreen = optionsWindowFullscreen.isOn;
             Game.SaveGameSystem.SaveGame( "UGC" );

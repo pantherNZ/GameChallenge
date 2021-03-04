@@ -50,7 +50,7 @@ public class Level6_Missile : BaseLevel
             icon = startMenuEntryIcon
         };
 
-        levelCounter = 2;
+        levelCounter = 0;
         shortcut = desktop.CreateShortcut( icon, new Vector2Int( 0, 1 ), CreateWindow );
         SetupLevel();
 

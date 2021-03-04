@@ -165,7 +165,7 @@ public class SubtitlesManager : MonoBehaviour
 
     public void SelectOption( int index )
     {
-        if( selections.IsEmpty() || index >= selections.Count )
+        if( selections.IsEmpty() )
             return;
 
         var selection = selections.Front();
