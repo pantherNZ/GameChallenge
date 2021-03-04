@@ -8,6 +8,7 @@ public class SubtitlesManager : MonoBehaviour
 {
     [HideInInspector] public static SubtitlesManager Instance { get; private set; }
     [SerializeField] GameObject selectionGroup = null;
+    [SerializeField] Transform selectionPos = null;
 
     string currentText = string.Empty;
     int index;
@@ -133,7 +134,7 @@ public class SubtitlesManager : MonoBehaviour
             {
                 var selection = selections.Front();
                 selection.obj.SetActive( true );
-                ( selection.obj.transform as RectTransform ).anchoredPosition = GetCharacterPosition( text, selection.index + selectionMargin + Mathf.Max( selection.first.Length, selection.second.Length ) / 2 );
+                ( selection.obj.transform as RectTransform ).anchoredPosition = selectionPos.localPosition; //  GetCharacterPosition( text, selection.index + selectionMargin + Mathf.Max( selection.first.Length, selection.second.Length ) / 2 );
                 var texts = selections.Front().obj.GetComponentsInChildren<Text>();
                 texts[0].text = selection.first;
                 texts[1].text = selection.second;

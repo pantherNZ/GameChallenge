@@ -2321,7 +2321,7 @@ MonoBehaviour:
   - {fileID: 203328311}
   - {fileID: 203328312}
   - {fileID: 203328307}
-  startingLevelId: 2
+  startingLevelId: 0
   DesktopCanvas: {fileID: 610674837}
   windowBasePrefab: {fileID: 1267343809992987229, guid: 88a9175c2ca6d7446a534f1059131bf9,
     type: 3}
@@ -4983,8 +4983,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'It was a regular day for Alex, he turned on his computer and entered his
-    password. His password was simple; He never forgot it. '
+  m_Text: It was a regular day for Alex, he turned on his computer and entered his
+    password. His password was simple, he never forgot it.
 --- !u!222 &517596453
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8580,6 +8580,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 517596451}
+  - {fileID: 1215982105}
   m_Father: {fileID: 88444447}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8623,6 +8624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionGroup: {fileID: 9174273927833266752, guid: 593330e72cb25de4381c1ce325d4e4af,
     type: 3}
+  selectionPos: {fileID: 1215982105}
   text: {fileID: 517596452}
   appearInstantly: 1
   updateIntervalSec: 0.05
@@ -10673,6 +10675,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214427315}
   m_CullTransparentMesh: 0
+--- !u!1 &1215982104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1215982105}
+  m_Layer: 5
+  m_Name: SubtitleSelectionMarker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1215982105
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215982104}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1009632336}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 299, y: 0.0000076293945}
+  m_SizeDelta: {x: -1333.1, y: -109.3}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1231497820
 GameObject:
   m_ObjectHideFlags: 0
@@ -11477,10 +11514,10 @@ RectTransform:
   m_Father: {fileID: 1980839321}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.900024, y: 205.29999}
-  m_SizeDelta: {x: -589.6, y: -652.3}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 18.5, y: 204.65002}
+  m_SizeDelta: {x: 1011.4, y: 257.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1324537618
 MonoBehaviour:
@@ -12388,10 +12425,10 @@ RectTransform:
   m_Father: {fileID: 1980839321}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 47, y: -264.05}
-  m_SizeDelta: {x: -401.8, y: -632.2}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 62, y: -254}
+  m_SizeDelta: {x: 1198.2, y: 277.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451187123
 MonoBehaviour:
@@ -14424,10 +14461,10 @@ RectTransform:
   m_Father: {fileID: 1980839321}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -127.29999, y: 12.799988}
-  m_SizeDelta: {x: -1279.76, y: -856.54}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -112.17999, y: 1.2000122}
+  m_SizeDelta: {x: 350.40002, y: 76.599976}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1692335690
 MonoBehaviour:
@@ -14451,7 +14488,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 50
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 79
     m_Alignment: 0
