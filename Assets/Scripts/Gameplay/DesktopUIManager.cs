@@ -105,7 +105,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
     [SerializeField] AudioClip updateStartedAudio = null;
 
     Vector3 physicsRootOffset = new Vector3( -20.0f, 0.0f, 0.0f );
-    GameObject taskbarPhysics;
+    GameObject taskbarPhysics, leftWall, rightWall;
 
     List<Pair<Window, string>> windows = new List<Pair<Window, string>>();
     int lives = 3;
@@ -383,19 +383,35 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         return rect;
     }
 
+    public Rect GetScreenCoordinates( RectTransform uiElement )
+    {
+        var worldCorners = new Vector3[4];
+        uiElement.GetWorldCorners( worldCorners );
+        var result = new Rect(
+                      worldCorners[0].x,
+                      worldCorners[0].y,
+                      worldCorners[2].x - worldCorners[0].x,
+                      worldCorners[2].y - worldCorners[0].y );
+        return result;
+    }
+
     public Rect GetScreenBound( float margin = 0.0f, bool includeStartBar = false )
     {
-        var sf = GetComponent<Canvas>().scaleFactor;
-        margin *= sf;
+        //var sf = GetComponent<Canvas>().scaleFactor;
+        //margin *= sf;
 
+        //var screenSize = new Vector2( Screen.width, Screen.height );
+        //var rect = new Rect( new Vector2(), screenSize );
         var rect = ( transform as RectTransform ).rect;
-        rect.x += ( rect.width / 2.0f + margin );
-        rect.y += ( rect.height / 2.0f + margin );
-        rect.width *= sf;
-        rect.height *= sf;
+        //rect.x += ( rect.width / 2.0f + margin );
+        //rect.y += ( rect.height / 2.0f + margin );
+        rect.x += margin;
+        rect.y += margin;
+        //rect.width *= sf;// * transform.localScale.x;
+        //rect.height *= sf;// * transform.localScale.y;
         rect.width -= margin * 2.0f;
         rect.height -= margin * 2.0f;
-
+        
         if( !includeStartBar )
         {
             rect.height -= ( taskBar.transform as RectTransform ).rect.height;
@@ -536,6 +552,7 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
         var window = Instantiate( windowPrefab, DesktopCanvas ).GetComponent<Window>();
         ( window.transform as RectTransform ).anchoredPosition = offset.ToVector3();
+
         var createCam = window.HasViewPort();
         window.Initialise( title, this, createCam ? Instantiate( windowCameraPrefab ) : null, createCam ? Instantiate( windowCamRTPrefab ) : null );
         windows.Add( new Pair<Window, string>( window, title ) );
@@ -701,12 +718,12 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
 
         var desktopRect = ( transform as RectTransform ).GetWorldRect();
 
-        var leftWall = Utility.CreateWorldObjectFromScreenSpaceRect( new Rect( -desktopRect.width / 2.0f, 0.0f, 0.1f, desktopRect.height ) );
+        leftWall = Utility.CreateWorldObjectFromScreenSpaceRect( new Rect( -desktopRect.width / 2.0f, 0.0f, 0.1f, desktopRect.height ) );
         leftWall.transform.position = leftWall.transform.position + physicsRootOffset;
         leftWall.AddComponent<Quad>();
         leftWall.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
 
-        var rightWall = Utility.CreateWorldObjectFromScreenSpaceRect( new Rect( desktopRect.width / 2.0f, 0.0f, 0.1f, desktopRect.height ) );
+        rightWall = Utility.CreateWorldObjectFromScreenSpaceRect( new Rect( desktopRect.width / 2.0f, 0.0f, 0.1f, desktopRect.height ) );
         rightWall.transform.position = rightWall.transform.position + physicsRootOffset;
         rightWall.AddComponent<Quad>();
         rightWall.AddComponent<BoxCollider2D>().size = new Vector2( 1.0f, 1.0f );
@@ -717,6 +734,8 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         if( taskbarPhysics == null )
             return;
         taskbarPhysics.Destroy();
+        leftWall.Destroy();
+        rightWall.Destroy();
     }
 
     public Shortcut GetShortcut( int index )

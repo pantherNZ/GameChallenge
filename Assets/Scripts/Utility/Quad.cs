@@ -8,8 +8,8 @@ public class Quad : MonoBehaviour
 
     public void Start()
     {
-        MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material( Shader.Find( "Standard" ) );
+        //MeshRenderer meshRenderer = gameObject.AddComponent<MeshRenderer>();
+        //meshRenderer.sharedMaterial = new Material( Shader.Find( "Standard" ) );
 
         MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
 

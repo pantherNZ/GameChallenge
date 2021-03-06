@@ -48,9 +48,10 @@ public class Level8_SmallestSquare : BaseLevel
             int safety = 0;
             do
             {
-                var pos = desktop.GetScreenBound( 100.0f ).RandomPosition().ToVector3( 10.0f );
-                pos -= new Vector3( desktop.MainCamera.pixelWidth / 2.0f, desktop.MainCamera.pixelHeight / 2.0f, 0.0f );
-                squareTransform.localPosition = pos;
+                var pos = desktop.GetScreenBound( 200.0f ).RandomPosition().ToVector3( 10.0f );
+                //pos -= new Vector3( ( desktop.transform as RectTransform ).rect.width / 2.0f, ( desktop.transform as RectTransform ).rect.height / 2.0f, 0.0f );
+                //squareTransform.anchoredPosition = pos.SetZ( 0.0f );
+                squareTransform.localPosition = pos.SetZ( 0.0f );
                 squareTransform.ForceUpdateRectTransforms();
             }
             while( ++safety < 20 && squares.Any( x => ( ( x.transform as RectTransform ).GetWorldRect().Overlaps( squareTransform.GetWorldRect() ) ) ) );

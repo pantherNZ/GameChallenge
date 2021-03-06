@@ -20,7 +20,8 @@ public class Level9_UpsideDown : BaseLevel
 
         timeSetter.OnTimeChangedEvent += ( _, oldT, newT ) => 
         {
-            if( ( newT.TotalHours - startTime.TotalHours ) >= 2.5f )
+            var diff = newT.TotalHours - startTime.TotalHours;
+            if( Mathf.Abs( ( float )diff ) >= 2.5f )
                 LevelFinished();
         };
 

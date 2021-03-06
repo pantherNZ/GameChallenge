@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Text;
+using System.Collections;
 
 [Serializable]
 public class Interval : Pair<float, float> { }
@@ -14,7 +15,8 @@ public class Level11_Typing : BaseLevel
     [SerializeField] GameObject windowPrefab = null;
     [SerializeField] int numWindowsEasy = 8;
     [SerializeField] int numWindowsHard = 12;
-
+    [SerializeField] float moveSpeedEasy = 1.0f;
+    [SerializeField] float moveSpeedHard = 5.0f;
     [SerializeField] Interval speedIntervalEasy = new Interval();
     [SerializeField] Interval speedIntervalHard = new Interval();
 
@@ -55,8 +57,14 @@ public class Level11_Typing : BaseLevel
 
         numWindowsToSpawn--;
 
-        var window = desktop.CreateWindow( "Information", windowPrefab, false, desktop.GetScreenBound( 125.0f, false ).RandomPosition() );
+        var rect = ( desktop.transform as RectTransform ).rect;
+        var pos = ( desktop.GetScreenBound( 125.0f, false ).RandomPosition() + rect.size / 2.0f ).SetY( rect.size.y );
+        var window = desktop.CreateWindow( "Information", windowPrefab, false, pos );
         var index = UnityEngine.Random.Range( 0, gameStrings.Count - 1 );
+
+        var finishPos = pos.SetY( 0.0f );
+        var finishPosWorld = window.transform.position.SetY( -window.transform.position.y );
+        StartCoroutine( MoveWindow( window.transform, finishPosWorld, ( finishPosWorld - window.transform.position ).magnitude / ( desktop.IsEasyMode() ? moveSpeedEasy : moveSpeedHard ) ) );
 
         windows.Add( new WindowData()
         {
@@ -85,6 +93,14 @@ public class Level11_Typing : BaseLevel
             var range = desktop.IsEasyMode() ? speedIntervalEasy : speedIntervalHard;
             Utility.FunctionTimer.CreateTimer( UnityEngine.Random.Range( range.First, range.Second ), () => CreateWindow( true ) );
         }
+    }
+
+    public IEnumerator MoveWindow( Transform transform, Vector3 pos, float duration )
+    {
+        yield return Utility.InterpolatePosition( transform, pos, duration );
+
+        if( transform != null )
+            desktop.LevelFailed();
     }
 
     private readonly Dictionary<char, KeyCode> keycodeCache = new Dictionary<char, KeyCode>();

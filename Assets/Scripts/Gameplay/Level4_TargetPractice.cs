@@ -118,7 +118,8 @@ public class Level4_TargetPractice : BaseLevel
         var direction = mousePos - gun.transform.position;
         Vector3 rotatedVectorToTarget = Quaternion.Euler( 0, 0, 90 ) * direction.RotateZ( -90.0f );
         gun.transform.rotation = Quaternion.LookRotation( Vector3.forward, rotatedVectorToTarget );
-        
+        gun.transform.localScale = gun.transform.localScale.SetX( Mathf.Abs( gun.transform.localScale.x ) * ( gun.transform.rotation.eulerAngles.z >= 180.0f ? 1.0f : -1.0f ) );
+
         if( Input.GetMouseButtonDown( 0 ) && !desktop.ContextMenuVisibile() )
         {
             var barrelEnd = gun.transform.GetChild( 0 ).transform.position;

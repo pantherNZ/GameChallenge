@@ -2957,11 +2957,13 @@ MonoBehaviour:
     type: 3}
   numWindowsEasy: 8
   numWindowsHard: 12
+  moveSpeedEasy: 0.2
+  moveSpeedHard: 0.8
   speedIntervalEasy:
     First: 4
     Second: 7
   speedIntervalHard:
-    First: 2
+    First: 1
     Second: 4
   createWindowAudio:
   - {fileID: 8300000, guid: 4e3ce3d8a99ae5e4a8e79133dd95c42b, type: 3}
