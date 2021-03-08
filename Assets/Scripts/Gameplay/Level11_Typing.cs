@@ -122,22 +122,22 @@ public class Level11_Typing : BaseLevel
 
     protected override void OnLevelUpdate()
     {
+        if( checkRemove )
+        {
+            checkRemove = false;
+            windows.RemoveAll( ( window ) => window.obj == null );
+
+            if( windows.IsEmpty() )
+            {
+                if( numWindowsToSpawn == 0 )
+                    LevelFinished( 3.0f );
+                else
+                    CreateWindow( false );
+            }
+        }
+
         if( Input.anyKeyDown )
         {
-            if( checkRemove )
-            {
-                checkRemove = false;
-                windows.RemoveAll( ( window ) => window.obj == null );
-
-                if( windows.IsEmpty() )
-                {
-                    if( numWindowsToSpawn == 0 )
-                        LevelFinished( 3.0f );
-                    else
-                        CreateWindow( false );
-                }
-            }
-
             foreach( var window in windows )
             {
                 if( Input.GetKeyDown( GetKeyCode( char.ToLower( window.str[window.index] ) ) ) ||

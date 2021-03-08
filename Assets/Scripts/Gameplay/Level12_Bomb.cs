@@ -108,8 +108,8 @@ public class Level12_Bomb : BaseLevel
 
     protected override void OnLevelUpdate()
     {
-        if( Input.GetKeyDown( KeyCode.Space ) )
-            IncrementStage();
+        //if( Input.GetKeyDown( KeyCode.Space ) )
+        //    IncrementStage();
 
         switch( subLevelStage )
         {
