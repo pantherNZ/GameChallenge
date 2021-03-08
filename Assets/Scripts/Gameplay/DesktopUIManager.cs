@@ -248,10 +248,13 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         PlayMusic();
     }
 
-    public GameObject CreateFlag( Vector2 offset, int index, bool blackText = false, bool startHidden = false, string text = "" )
+    public GameObject CreateFlag( Vector2 offset, int index, bool blackText = false, bool startHidden = false, string text = "", bool setLocalPos = false )
     {
         var flag = Instantiate( flagPrefab, DesktopCanvas );
-        ( flag.transform as RectTransform ).anchoredPosition = offset.ToVector3();
+        if( setLocalPos )
+            ( flag.transform as RectTransform ).localPosition = offset.ToVector3();
+        else
+            ( flag.transform as RectTransform ).anchoredPosition = offset.ToVector3();
         flags.Add( new Flag() { flag = flag, index = index, blackAquireText = blackText } );
         flags.Sort( ( x, y ) => x.index - y.index);
         flag.GetComponent<CanvasGroup>().SetVisibility( !startHidden );
@@ -540,18 +543,21 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         SetContextMenuVisibility( false );
     }
 
-    public GameObject CreateWindow( string title, bool destroyExisting = false, Vector2 offset = new Vector2() )
+    public GameObject CreateWindow( string title, bool destroyExisting = false, Vector2 offset = new Vector2(), bool setLocalPos = false )
     {
-        return CreateWindow( title, windowBasePrefab, destroyExisting, offset );
+        return CreateWindow( title, windowBasePrefab, destroyExisting, offset, setLocalPos );
     }
 
-    public GameObject CreateWindow( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset )
+    public GameObject CreateWindow( string title, GameObject windowPrefab, bool destroyExisting, Vector2 offset, bool setLocalPos = false )
     {
         if( destroyExisting )
             DestroyWindowByTitle( title );
 
         var window = Instantiate( windowPrefab, DesktopCanvas ).GetComponent<Window>();
-        ( window.transform as RectTransform ).anchoredPosition = offset.ToVector3();
+        if( setLocalPos )
+            ( window.transform as RectTransform ).localPosition = offset.ToVector3();
+        else
+            ( window.transform as RectTransform ).anchoredPosition = offset.ToVector3();
 
         var createCam = window.HasViewPort();
         window.Initialise( title, this, createCam ? Instantiate( windowCameraPrefab ) : null, createCam ? Instantiate( windowCamRTPrefab ) : null );

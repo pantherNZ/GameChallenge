@@ -16239,7 +16239,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1878824036}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 0.5
+  m_MaxValue: 0.4
   m_WholeNumbers: 0
   m_Value: 0.2
   m_OnValueChanged:
@@ -18412,12 +18412,12 @@ PrefabInstance:
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -1524.7
+      value: -1860
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -76.3
+      value: -236
       objectReference: {fileID: 0}
     - target: {fileID: 751276505754746149, guid: 29a3cdb4915b86e4386fb33e4600bfef,
         type: 3}

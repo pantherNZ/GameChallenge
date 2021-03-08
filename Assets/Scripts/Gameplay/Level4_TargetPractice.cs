@@ -39,9 +39,15 @@ public class Level4_TargetPractice : BaseLevel
 
     private void Start()
     {
-        var pos = ( desktop.DesktopCanvas.transform as RectTransform ).rect.BottomLeft() + desktop.GetScreenBound( 100.0f, false ).RandomPosition();
-        flag = desktop.CreateFlag( pos, 4, true, true, "4" );
-        flagSpawnIdx = UnityEngine.Random.Range( 0, GetData().targetsMax );
+        var pos = desktop.GetScreenBound( 100.0f, false ).RandomPosition();// + ( desktop.transform as RectTransform ).rect.size / 2.0f;
+        flag = desktop.CreateFlag( pos, 4, true, true, "4", true );
+        flagSpawnIdx = 1;//UnityEngine.Random.Range( 0, GetData().targetsMax ); //  
+
+        Utility.FunctionTimer.CreateTimer( 1.0f, () =>
+        {
+            if( flag != null )
+                ( flag.transform as RectTransform ).localPosition = desktop.GetScreenBound( 100.0f, false ).RandomPosition();
+        }, "Dfg", true );
     }
 
     public override void OnStartLevel()
@@ -62,6 +68,8 @@ public class Level4_TargetPractice : BaseLevel
 
     void CheckLevelComplete()
     {
+        targets.RemoveAll( x => x == null );
+
         // Failed
         if( fails >= maxFails )
         {

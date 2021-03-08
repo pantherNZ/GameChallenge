@@ -35,6 +35,7 @@ public class Level11_Typing : BaseLevel
     }
     List<WindowData> windows = new List<WindowData>();
     List<string> gameStrings = new List<string>();
+    bool checkRemove;
 
     // Functions
     public override void OnStartLevel()
@@ -50,7 +51,7 @@ public class Level11_Typing : BaseLevel
         gameStrings = DataManager.Instance.GetGameString( "Level11_Random_Strings" ).Split( new[] { ", " }, StringSplitOptions.RemoveEmptyEntries ).ToList();
     }
 
-    private void CreateWindow( bool createTimer )
+    private void CreateWindow( bool createTimer, Vector2? position_override = null )
     {
         if( !levelActive )
             return;
@@ -58,13 +59,16 @@ public class Level11_Typing : BaseLevel
         numWindowsToSpawn--;
 
         var rect = ( desktop.transform as RectTransform ).rect;
-        var pos = ( desktop.GetScreenBound( 125.0f, false ).RandomPosition() + rect.size / 2.0f ).SetY( rect.size.y );
-        var window = desktop.CreateWindow( "Information", windowPrefab, false, pos );
+       // var pos = ( desktop.GetScreenBound( 125.0f, false ).RandomPosition() + rect.size / 2.0f ).SetY( rect.size.y );
+        var pos = position_override ?? desktop.GetScreenBound( 125.0f, false ).RandomPosition().SetY( rect.size.y / 2.0f );
+        var window = desktop.CreateWindow( "Information", windowPrefab, false, pos, true );
         var index = UnityEngine.Random.Range( 0, gameStrings.Count - 1 );
 
-        var finishPos = pos.SetY( 0.0f );
+       // var finishPos = pos.SetY( 0.0f );
+        var finishPos = pos.SetY( -rect.size.y / 2.0f );
         var finishPosWorld = window.transform.position.SetY( -window.transform.position.y );
-        StartCoroutine( MoveWindow( window.transform, finishPosWorld, ( finishPosWorld - window.transform.position ).magnitude / ( desktop.IsEasyMode() ? moveSpeedEasy : moveSpeedHard ) ) );
+        var speed = ( desktop.IsEasyMode() ? moveSpeedEasy : moveSpeedHard );
+        StartCoroutine( MoveWindow( window.transform, finishPosWorld, ( finishPosWorld - window.transform.position ).magnitude / speed ) );
 
         windows.Add( new WindowData()
         {
@@ -76,8 +80,9 @@ public class Level11_Typing : BaseLevel
 
         window.GetComponent<Window>().onClose += ( _ ) => 
         {
+            checkRemove = true;
             ++numWindowsToSpawn;
-            CreateWindow( false );
+            CreateWindow( false, desktop.GetScreenBound( 125.0f, false ).RandomPosition().SetY( ( window.transform as RectTransform ).localPosition.y ) );
         };
 
         UpdateText( windows.Back() );
@@ -119,7 +124,19 @@ public class Level11_Typing : BaseLevel
     {
         if( Input.anyKeyDown )
         {
-            bool checkRemove = false;
+            if( checkRemove )
+            {
+                checkRemove = false;
+                windows.RemoveAll( ( window ) => window.obj == null );
+
+                if( windows.IsEmpty() )
+                {
+                    if( numWindowsToSpawn == 0 )
+                        LevelFinished( 3.0f );
+                    else
+                        CreateWindow( false );
+                }
+            }
 
             foreach( var window in windows )
             {
@@ -139,19 +156,6 @@ public class Level11_Typing : BaseLevel
                         window.obj = null;
                         desktop.PlayAudio( completeWindowAudio );
                     }
-                }
-            }
-
-            if( checkRemove )
-            {
-                windows.RemoveAll( ( window ) => window.obj == null );
-
-                if( windows.IsEmpty() )
-                {
-                    if( numWindowsToSpawn == 0 )
-                        LevelFinished( 3.0f );
-                    else
-                        CreateWindow( false );
                 }
             }
         }
