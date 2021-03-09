@@ -1,4 +1,4 @@
-# GameChallenge
+# Ultimate PC Challenge
 Ultimate PC Challenge - Prototype / Demo / Proof of Concept
 
 Ultimate PC Challenge is a puzzle and problem solving game based on a simulation of a Windows desktop. Think outside the box and use different hints and tricks to progress through multiple levels, all while the narrator makes remarks and you are pressured with a Windows update!
