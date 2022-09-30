@@ -9,9 +9,6 @@ Ultimate PC Challenge is a puzzle and problem solving game based on a simulation
 - Easy & hard mode versions
 - Progress is saved locally
 
-Play online (or for free download) on Itch:
-https://panthernz.itch.io/ultimate-pc-challenge
-
 ![S1](https://github.com/pantherNZ/GameChallenge/blob/master/Screenshots/screenshot1.png)
 ![S2](https://github.com/pantherNZ/GameChallenge/blob/master/Screenshots/screenshot2.png)
 ![S3](https://github.com/pantherNZ/GameChallenge/blob/master/Screenshots/screenshot3.png)
