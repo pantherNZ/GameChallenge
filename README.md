@@ -9,6 +9,9 @@ Ultimate PC Challenge is a puzzle and problem solving game based on a simulation
 - Easy & hard mode versions
 - Progress is saved locally
 
+Give it a try here:
+https://panthernz.github.io/GameChallenge/
+
 ![S1](https://github.com/pantherNZ/GameChallenge/blob/master/Screenshots/screenshot1.png)
 ![S2](https://github.com/pantherNZ/GameChallenge/blob/master/Screenshots/screenshot2.png)
 ![S3](https://github.com/pantherNZ/GameChallenge/blob/master/Screenshots/screenshot3.png)
