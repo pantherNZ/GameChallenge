@@ -44,6 +44,8 @@ public class Level11_Typing : BaseLevel
         numWindowsToSpawn = desktop.IsEasyMode() ? numWindowsEasy : numWindowsHard;
 
         CreateWindow( true );
+
+        SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_11_Start" );
     }
 
     private void PopulateStrings()
@@ -57,6 +59,9 @@ public class Level11_Typing : BaseLevel
             return;
 
         numWindowsToSpawn--;
+
+        if( numWindowsToSpawn == ( desktop.IsEasyMode() ? numWindowsEasy : numWindowsHard ) / 2 )
+            SubtitlesManager.Instance.AddSubtitleGameString( "Narrator_Level_11_1" );
 
         var rect = ( desktop.transform as RectTransform ).rect;
        // var pos = ( desktop.GetScreenBound( 125.0f, false ).RandomPosition() + rect.size / 2.0f ).SetY( rect.size.y );
