@@ -66,7 +66,7 @@ TextureImporter:
       213: -4400707033769654136
     second: 6_20
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -86,6 +86,8 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -94,9 +96,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
-    mipBias: -100
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -117,9 +119,13 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -599,6 +605,28 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      6_11: 4785832514649052289
+      6_1: 6653994858678897968
+      6_13: 1450001349122011874
+      6_3: 781045095500365311
+      6_6: 5315541035012876717
+      6_14: -1429104992643050931
+      6_18: -5465840575609006351
+      6_5: 6039802702475973591
+      6_15: -6780353597698120861
+      6_19: -6476347335761983709
+      6_0: 3465286685962602723
+      6_2: -9091539399625358973
+      6_9: -3385692701772905508
+      6_20: -4400707033769654136
+      6_7: -7281210608727119603
+      6_12: -6778499591859196576
+      6_10: -5698469588154600187
+      6_16: -755337768716430943
+      6_4: -5358480406590413813
+      6_8: -3213505208676114249
+      6_17: -5533006462685910801
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

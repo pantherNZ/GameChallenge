@@ -58,9 +58,14 @@ public class Level5_Earthquake : BaseLevel
         } );
 
         // Create icons
-        for( int i = 0; i < ( desktop.IsEasyMode() ? numIconsEasy : numIconsHard ) && data.Count > 0; ++i )
+        var dataCopy = new List<DesktopIcon>();
+
+        foreach( var x in data )
+            dataCopy.Add( x );
+
+        for( int i = 0; i < ( desktop.IsEasyMode() ? numIconsEasy : numIconsHard ) && dataCopy.Count > 0; ++i )
         {
-            var item = i == 0 ? data[0] : data.RandomItem();
+            var item = i == 0 ? dataCopy[0] : dataCopy.RandomItem();
             var icon = desktop.CreateShortcut( item, desktop.GetGridBounds().RandomPosition(), ( x ) =>
             {
                 if( canCreateLights && x == shortcuts[0] )
@@ -68,7 +73,7 @@ public class Level5_Earthquake : BaseLevel
             } );
 
             shortcuts.Add( icon );
-            data.Remove( item );
+            dataCopy.Remove( item );
         }
 
         generator = shortcuts[0].GetComponent<EventDispatcher>();
@@ -105,6 +110,8 @@ public class Level5_Earthquake : BaseLevel
 
         foreach( var x in shortcuts )
             desktop.RemoveShortcut( x );
+
+        shortcuts.Clear();
 
         darkness.Destroy();
         desktop.contextMenuEnabled = true;

@@ -171,7 +171,7 @@ TextureImporter:
       213: 4400154515600994788
     second: elements_55
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -191,6 +191,8 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -199,9 +201,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
-    mipBias: -100
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -222,9 +224,13 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -1439,6 +1445,63 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      elements_17: 423605440508702846
+      elements_23: -6829392826066141881
+      elements_28: -1185156069853120339
+      elements_7: 3120384529538254799
+      elements_19: 1039384551613093888
+      elements_46: -4115351253472635292
+      elements_5: -2165821876479576607
+      elements_33: 4712537725945604637
+      elements_21: 7645654662201184555
+      elements_39: 5973917385362363594
+      elements_31: -3176181476495618468
+      elements_50: -1069793125584492680
+      elements_38: 3146589215605440072
+      elements_44: -3553927230185751524
+      elements_6: 3035516792126375084
+      elements_20: -4225339513409241284
+      elements_26: 1388512207951813294
+      elements_49: -5821309095128597483
+      elements_16: 2844923009556453745
+      elements_27: 121974444637265294
+      elements_53: 3034530936610766900
+      elements_1: -5391307981071726051
+      elements_55: 4400154515600994788
+      elements_43: -3839098365718509072
+      elements_15: 5190090530299845402
+      elements_40: -5718304652673602238
+      elements_14: 7522057410018712496
+      elements_0: 869762779325548650
+      elements_52: 6347155008131280015
+      elements_11: 7582964038499862110
+      elements_3: -8115037194750826008
+      elements_45: -2063289831389869427
+      elements_42: 6733358224410965991
+      elements_47: -219801106183008783
+      elements_34: -2650457137970626630
+      elements_24: -6499880414477926584
+      elements_32: -7967394290055307264
+      elements_2: -3293433503042108997
+      elements_30: 7421376891836555153
+      elements_12: -6123155731546979588
+      elements_13: -830853010422553840
+      elements_35: -603420144969217272
+      elements_48: -6636515649705598491
+      elements_25: -7770517394667394791
+      elements_41: 1308288662139092257
+      elements_51: -2256663202827876095
+      elements_36: 5891831650104768423
+      elements_8: -2460338916415796878
+      elements_10: 137151238046979877
+      elements_29: -5798743968369977861
+      elements_54: -5209039100888913198
+      elements_18: 6535756550885404928
+      elements_37: 1890014894177099053
+      elements_9: -7650491522465657418
+      elements_22: -3058687002279738329
+      elements_4: 6921521097408137175
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

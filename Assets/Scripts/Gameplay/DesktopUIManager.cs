@@ -515,8 +515,11 @@ public class DesktopUIManager : BaseLevel, Game.ISavableObject
         if( enabledSaveLoad )
             Game.SaveGameSystem.SaveGame( "UGC" );
 
-        Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime, () =>
+        Utility.FunctionTimer.CreateTimer( restartGameFadeOutTime + 0.1f, () =>
         {
+            var group = GetComponent<CanvasGroup>();
+            group.SetVisibility( true );
+            group.alpha = 1.0f;
             MainCamera.gameObject.SetActive( true );
             blueScreenCamera.gameObject.SetActive( false );
             SubtitlesManager.Instance.canvasGroup.SetVisibility( true );
